@@ -6,7 +6,7 @@ import HeaderButton from "../components/HeaderButton";
 
 export const screenOptions = ({ navigation }) => {
   return {
-    headerTitle: "Account",
+    headerTitle: "Accoun",
     headerLeft: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
