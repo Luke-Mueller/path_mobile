@@ -1,9 +1,3 @@
-/*  TODO:
-
-1. Create a new item reducer to simplify state.
-
-*/
-
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
