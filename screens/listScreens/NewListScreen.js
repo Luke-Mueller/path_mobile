@@ -20,38 +20,83 @@ import Modal from "../../components/Modal";
 import Color from "../../constants/color";
 import * as listsActions from "../../store/actions/lists";
 
-const newListActions = {
+const listActions = {
   ADDITEM: "ADDITEM",
+  ADDSUBITEM: "ADDSUBITEM",
   REMOVEITEM: "REMOVEITEM",
+  RESETSUB: "RESETSUB",
   SETNAME: "SETNAME",
+  SETSUBNAME: "SETSUBNAME",
 };
 
 const listReducer = (state, action) => {
   switch (action.type) {
-    case newListActions.ADDITEM:
-      const addItems = state.items;
-      let newItem = new ListItem();
+    case listActions.ADDITEM:
+      const addItems = state.newList.items;
+      addItems.push(action.item);
+      return {
+        ...state,
+        newList: {
+          ...state.newList,
+          items: addItems,
+        },
+      };
+    case listActions.ADDSUBITEM:
+      const newSubItems = state.subList.subItems;
+      newSubItems.push(action.subItem);
+      return {
+        ...state,
+        subList: {
+          ...state.subList,
+          subItems: newSubItems,
+        },
+      };
+    case listActions.REMOVEITEM:
+      let removeItems;
       if (action.itemType === "item") {
-        newItem.itemType = action.itemType;
-        newItem.item = action.item;
-        newItem.subName = null;
-        newItem.subItems = null;
+        removeItems = state.newList.items;
+        removeItems.slice(action.idx, 1);
+        return {
+          ...state,
+          newList: {
+            ...state.newList,
+            items: removeItems,
+          },
+        };
+      } else if (action.itemType === "sublist") {
+        removeItems = state.subList.subItems;
+        removeItems.slice(action.idx, 1);
+        return {
+          ...state,
+          subList: {
+            ...state.subList,
+            subItems: removeItems,
+          },
+        };
       }
-      addItems.push(newItem);
+    case listActions.RESETSUB:
       return {
         ...state,
-        items: addItems,
+        subList: {
+          subName: "",
+          subItems: [],
+        },
       };
-    case newListActions.REMOVEITEM:
-      const removeItems = state.items.slice(action.idx, 1);
+    case listActions.SETSUBNAME:
       return {
         ...state,
-        items: removeItems,
+        subList: {
+          ...state.subList,
+          subName: action.subName,
+        },
       };
-    case newListActions.SETNAME:
+    case listActions.SETNAME:
       return {
         ...state,
-        name: action.name,
+        newList: {
+          ...state.newList,
+          name: action.name,
+        },
       };
     default:
       return state;
@@ -69,21 +114,27 @@ const NewListScreen = ({ navigation }) => {
 
   // NEW LIST STATE
   const userId = useSelector((state) => state.auth.user._id);
-  const [newList, dispatchNL] = useReducer(listReducer, {
-    items: [],
-    name: "",
-    ownerIds: [userId],
+  const [list, dispatchNL] = useReducer(listReducer, {
+    newList: {
+      items: [],
+      name: "",
+      ownerIds: [userId],
+    },
+    subList: {
+      subName: "",
+      subItems: [],
+    },
   });
 
   const dispatch = useDispatch();
 
   const saveHandler = useCallback(async () => {
-    dispatch(listsActions.postList(newList, navigation));
-  }, [dispatch, newList]);
+    dispatch(listsActions.postList(list.newList, navigation));
+  }, [dispatch, list]);
 
   useEffect(() => {
     let title = "New List";
-    if (newList.name) title = newList.name;
+    if (list.newList.name) title = list.newList.name;
     navigation.setOptions({
       headerTitle: title,
       headerRight: () => (
@@ -97,18 +148,39 @@ const NewListScreen = ({ navigation }) => {
         </HeaderButtons>
       ),
     });
-  }, [navigation, newList, saveHandler]);
+  }, [navigation, list, saveHandler]);
 
   const addItem = (type) => {
+    let newItem;
     if (type === "item") {
+      newItem = new ListItem(type, newItemInput, null, null);
       dispatchNL({
-        type: newListActions.ADDITEM,
+        type: listActions.ADDITEM,
         itemType: type,
-        item: newItemInput,
+        item: newItem,
       });
       setNewItemInput("");
       setShowAddItemModal(false);
+    } else if (type === "sublist") {
+      newItem = new ListItem(
+        type,
+        null,
+        list.subList.subName,
+        list.subList.subItems
+      );
+      dispatchNL({
+        type: listActions.ADDITEM,
+        itemType: type,
+        item: newItem,
+      });
+      setNewItemInputSub("");
+      setShowAddListModal(false);
     }
+  };
+
+  const addSubItem = () => {
+    dispatchNL({ type: listActions.ADDSUBITEM, subItem: newItemInputSub });
+    setNewItemInputSub("");
   };
 
   return (
@@ -145,28 +217,30 @@ const NewListScreen = ({ navigation }) => {
           <Modal>
             <View>
               <TextInput
-                onChangeText={setSubListName}
+                onChangeText={(input) =>
+                  dispatchNL({ type: listActions.SETSUBNAME, subName: input })
+                }
                 placeholder="Enter sub-list name"
                 style={styles.input}
                 textAlignVertical="top"
-                value={subListName}
+                value={list.subList.subName}
               />
               <TextInput
                 multiline={true}
-                onChangeText={setSubListItem}
+                onChangeText={setNewItemInputSub}
                 placeholder="Enter sub-list item"
                 style={styles.input}
                 textAlignVertical="top"
-                value={subListItem}
+                value={newItemInputSub}
               />
               <Feather
                 name="plus"
                 size={24}
                 color="white"
-                onPress={addItemSub}
+                onPress={() => addSubItem()}
               />
               {/* <View> */}
-              <FlatList
+              {/* <FlatList
                 data={subListItems}
                 keyExtractor={(_, index) => index.toString()}
                 renderItem={({ item }) => (
@@ -176,16 +250,15 @@ const NewListScreen = ({ navigation }) => {
                     </Text>
                   </View>
                 )}
-              />
+              /> */}
               {/* </View> */}
               <View style={{ flexDirection: "row", alignSelf: "center" }}>
                 <Button
                   title="Cancel"
                   onPress={() => {
                     setShowAddListModal(false);
-                    setSubListItems([]);
-                    setSubListItem("");
-                    setSubListName("");
+                    setNewItemInputSub("");
+                    dispatchNL({ type: listActions.RESETSUB });
                   }}
                   color="white"
                 />
@@ -200,11 +273,11 @@ const NewListScreen = ({ navigation }) => {
         )}
         <TextInput
           onChangeText={(input) => {
-            dispatchNL({ type: newListActions.SETNAME, name: input });
+            dispatchNL({ type: listActions.SETNAME, name: input });
           }}
           placeholder="Enter list name"
           style={{ ...styles.input, color: "black" }}
-          value={newList.name}
+          value={list.newList.name}
         />
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <MaterialIcons
@@ -222,12 +295,15 @@ const NewListScreen = ({ navigation }) => {
             style={{ marginHorizontal: 50, marginVertical: 25 }}
             color={Color.black}
             onPress={() => {
+              dispatchNL({ type: listActions.RESETSUB });
               setShowAddListModal(true);
             }}
           />
           <Button
             title="see new list"
-            onPress={() => console.log("newList: ", newList)}
+            onPress={() =>
+              console.log("List: ", list.newList)
+            }
           />
         </View>
         {/* <View style={styles.listContainer}>
