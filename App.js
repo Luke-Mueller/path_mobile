@@ -5,11 +5,11 @@ import Thunk from "redux-thunk";
 
 import AppNavigator from "./navigation/AppNavigator";
 import AuthReducer from "./store/reducers/auth";
-import ListReducer from './store/reducers/list';
+import ListsReducer from "./store/reducers/lists";
 
 const rootReducer = combineReducers({
   auth: AuthReducer,
-  list: ListReducer
+  lists: ListsReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(Thunk));
