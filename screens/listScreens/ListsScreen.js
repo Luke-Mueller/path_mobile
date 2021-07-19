@@ -8,8 +8,7 @@ import HeaderButton from "../../components/HeaderButton";
 import ListEmptyComponent from '../../components/ListEmptyComponent';
 import ListsItem from "../../components/ListsItem";
 
-import ArchiveContext from '../../navigation/ArchiveNavigator';
-import * as listActions from "../../store/actions/list";
+import * as listsActions from "../../store/actions/lists";
 
 export const screenOptions = ({ navigation }) => {
   return {
@@ -38,29 +37,28 @@ export const screenOptions = ({ navigation }) => {
 };
 
 const ListsScreen = ({ navigation }) => {
-  const arc = useContext(ArchiveContext);
-  const lists = useSelector((state) => state.list.lists);
-  const { user } = useSelector((state) => state.auth.user);
+  // const lists = useSelector((state) => state.lists.myLists);
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
 
-  const getListsHandler = useCallback(() => {
-    dispatch(listActions.getLists(user._id, "ownerIds"));
-  }, [dispatch, user, lists]);
+  // const getListsHandler = useCallback(() => {
+  //   dispatch(listActions.getLists(user._id, "ownerIds"));
+  // }, [dispatch, user, lists]);
 
-  useEffect(() => {
-    getListsHandler();
-  }, [getListsHandler]);
+  // useEffect(() => {
+  //   getListsHandler();
+  // }, [getListsHandler]);
 
   return (
     <View style={styles.screen}>
-      <FlatList
+      {/* <FlatList
         data={lists}
         keyExtractor={(_, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={({ item }) => (
           <ListsItem list={item} navigation={navigation} />
         )}
-      />
+      /> */}
     </View>
   );
 };

@@ -11,11 +11,11 @@ export const logOut = () => {
 
 export const logIn = (username) => {
   return async (dispatch) => {
-    const returnedUser = await login(username);
-    if (returnedUser) {
+    const { user } = await login(username);
+    if (user) {
       dispatch({
         type: AUTH,
-        user: returnedUser,
+        user: user,
       });
     }
   };
@@ -35,7 +35,7 @@ export const signUp = (user) => {
       );
       dispatch({
         type: AUTH,
-        user: returnedUser,
+        user: returnedUser.user,
       });
     }
   };

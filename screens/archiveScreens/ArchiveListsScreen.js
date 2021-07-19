@@ -9,7 +9,7 @@ import ListEmptyComponent from "../../components/ListEmptyComponent";
 
 import Color from '../../constants/color';
 
-import * as listActions from "../../store/actions/list";
+import * as listsActions from "../../store/actions/lists";
 
 export const screenOptions = ({ navigation }) => {
   return {
@@ -33,7 +33,7 @@ const ArchiveListsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const getArcListsHandler = useCallback(() => {
-    dispatch(listActions.getLists(user._id, "arcOwnerIds"));
+    dispatch(listsActions.getLists(user._id, "arcOwnerIds"));
   }, [dispatch, user, arcLists]);
 
   useEffect(() => {

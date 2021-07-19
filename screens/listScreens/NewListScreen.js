@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
   Button,
   FlatList,
@@ -14,36 +14,70 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 
 import HeaderButton from "../../components/HeaderButton";
-import List from "../../models/List";
 import ListItem from "../../models/ListItem";
 import Modal from "../../components/Modal";
 
 import Color from "../../constants/color";
-import * as listActions from "../../store/actions/list";
+import * as listsActions from "../../store/actions/lists";
+
+const newListActions = {
+  ADDITEM: "ADDITEM",
+  REMOVEITEM: "REMOVEITEM",
+  SETNAME: "SETNAME",
+};
+
+const listReducer = (state, action) => {
+  switch (action.type) {
+    case newListActions.ADDITEM:
+      const addItems = state.items;
+      newItems.push(action.item);
+      return {
+        ...state,
+        items: addItems,
+      };
+    case newListActions.REMOVEITEM:
+      const removeItems = state.items.slice(action.idx, 1);
+      return {
+        ...state,
+        items: removeItems,
+      };
+    case newListActions.SETNAME:
+      console.log("action: ", action.name);
+      return {
+        ...state,
+        name: action.name,
+      };
+    default:
+      return state;
+  }
+};
 
 const NewListScreen = ({ navigation }) => {
-  const [item, setItem] = useState("");
-  const [items, setItems] = useState([]);
-  const [listName, setListName] = useState("");
+  // MODAL STATE
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [showAddListModal, setShowAddListModal] = useState(false);
 
-  const [subListItem, setSubListItem] = useState("");
-  const [subListItems, setSubListItems] = useState([]);
-  const [subListName, setSubListName] = useState("");
+  // ITEM INPUTS STATE
+  const [newItemInput, setNewItemInput] = useState("");
+  const [newItemInputSub, setNewItemInputSub] = useState("");
 
-  const userId = useSelector((state) => state.auth.user.user._id);
+  // NEW LIST STATE
+  const userId = useSelector((state) => state.auth.user._id);
+  const [newList, dispatchNL] = useReducer(listReducer, {
+    items: [],
+    name: "",
+    ownerIds: [userId],
+  });
 
   const dispatch = useDispatch();
 
   const saveHandler = useCallback(async () => {
-    const list = new List(listName, items);
-    dispatch(listActions.postList(list, userId, navigation));
-  }, [dispatch, items, listName, userId]);
+    dispatch(listsActions.postList(newList, navigation));
+  }, [dispatch, newList]);
 
   useEffect(() => {
     let title = "New List";
-    if (listName) title = listName;
+    if (newList.name) title = newList.name;
     navigation.setOptions({
       headerTitle: title,
       headerRight: () => (
@@ -57,28 +91,9 @@ const NewListScreen = ({ navigation }) => {
         </HeaderButtons>
       ),
     });
-  }, [listName, navigation, saveHandler]);
+  }, [navigation, newList, saveHandler]);
 
-  const addItem = (type) => {
-    const newArr = items;
-    const newItem = new ListItem(item, subListItems, subListName, type);
-
-    newArr.push(newItem);
-    setItems(newArr);
-    setItem("");
-    setSubListItems([]);
-    setSubListName("");
-    setShowAddItemModal(false);
-    setShowAddListModal(false);
-  };
-
-  const addItemSub = () => {
-    const newSubList = subListItems;
-    const newSubListItem = { item: subListItem };
-    newSubList.push(newSubListItem);
-    setSubListItems(newSubList);
-    setSubListItem("");
-  };
+  const addItem = () => {};
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -144,31 +159,33 @@ const NewListScreen = ({ navigation }) => {
                 )}
               />
               {/* </View> */}
-              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-              <Button
-                title="Cancel"
-                onPress={() => {
-                  setShowAddListModal(false);
-                  setSubListItems([]);
-                  setSubListItem("");
-                  setSubListName("");
-                }}
-                color="white"
-              />
-              <Button
-                title="Ok"
-                onPress={() => addItem("sublist")}
-                color="white"
-              />
+              <View style={{ flexDirection: "row", alignSelf: "center" }}>
+                <Button
+                  title="Cancel"
+                  onPress={() => {
+                    setShowAddListModal(false);
+                    setSubListItems([]);
+                    setSubListItem("");
+                    setSubListName("");
+                  }}
+                  color="white"
+                />
+                <Button
+                  title="Ok"
+                  onPress={() => addItem("sublist")}
+                  color="white"
+                />
               </View>
             </View>
           </Modal>
         )}
         <TextInput
-          onChangeText={setListName}
+          onChangeText={(input) => {
+            dispatchNL({ type: newListActions.SETNAME, name: input });
+          }}
           placeholder="Enter list name"
-          style={{ ...styles.input, color: 'black' }}
-          value={listName}
+          style={{ ...styles.input, color: "black" }}
+          value={newList.name}
         />
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <MaterialIcons
@@ -177,7 +194,7 @@ const NewListScreen = ({ navigation }) => {
             style={{ marginHorizontal: 50, marginVertical: 25 }}
             color={Color.black}
             onPress={() => {
-              setItem("");
+              // setItem("");
               setShowAddItemModal(true);
             }}
           />
@@ -187,21 +204,22 @@ const NewListScreen = ({ navigation }) => {
             style={{ marginHorizontal: 50, marginVertical: 25 }}
             color={Color.black}
             onPress={() => {
-              setItem(""), setShowAddListModal(true);
+              // setItem(""),
+              setShowAddListModal(true);
             }}
           />
         </View>
-        <View style={styles.listContainer}>
+        {/* <View style={styles.listContainer}>
           <FlatList
-            data={items}
+            data={newList.items}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item }) => (
               <View style={styles.item}>
-                <Text>{item.name ? item.name : item.item}</Text>
+                <Text>{item.item ? item.item : item.subName}</Text>
               </View>
             )}
           />
-        </View>
+        </View> */}
       </View>
     </TouchableWithoutFeedback>
   );
