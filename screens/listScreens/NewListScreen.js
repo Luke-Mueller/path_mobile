@@ -30,7 +30,14 @@ const listReducer = (state, action) => {
   switch (action.type) {
     case newListActions.ADDITEM:
       const addItems = state.items;
-      newItems.push(action.item);
+      let newItem = new ListItem();
+      if (action.itemType === "item") {
+        newItem.itemType = action.itemType;
+        newItem.item = action.item;
+        newItem.subName = null;
+        newItem.subItems = null;
+      }
+      addItems.push(newItem);
       return {
         ...state,
         items: addItems,
@@ -42,7 +49,6 @@ const listReducer = (state, action) => {
         items: removeItems,
       };
     case newListActions.SETNAME:
-      console.log("action: ", action.name);
       return {
         ...state,
         name: action.name,
@@ -93,7 +99,17 @@ const NewListScreen = ({ navigation }) => {
     });
   }, [navigation, newList, saveHandler]);
 
-  const addItem = () => {};
+  const addItem = (type) => {
+    if (type === "item") {
+      dispatchNL({
+        type: newListActions.ADDITEM,
+        itemType: type,
+        item: newItemInput,
+      });
+      setNewItemInput("");
+      setShowAddItemModal(false);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -103,15 +119,18 @@ const NewListScreen = ({ navigation }) => {
             <View style={{ flex: 1, justifyContent: "center" }}>
               <TextInput
                 multiline={true}
-                onChangeText={setItem}
+                onChangeText={setNewItemInput}
                 placeholder="Enter list item"
                 style={styles.input}
                 textAlignVertical="top"
-                value={item}
+                value={newItemInput}
               />
               <Button
                 title="Cancel"
-                onPress={() => setShowAddItemModal(false)}
+                onPress={() => {
+                  setShowAddItemModal(false);
+                  setNewItemInput("");
+                }}
                 color="white"
               />
               <Button
@@ -194,7 +213,6 @@ const NewListScreen = ({ navigation }) => {
             style={{ marginHorizontal: 50, marginVertical: 25 }}
             color={Color.black}
             onPress={() => {
-              // setItem("");
               setShowAddItemModal(true);
             }}
           />
@@ -204,9 +222,12 @@ const NewListScreen = ({ navigation }) => {
             style={{ marginHorizontal: 50, marginVertical: 25 }}
             color={Color.black}
             onPress={() => {
-              // setItem(""),
               setShowAddListModal(true);
             }}
+          />
+          <Button
+            title="see new list"
+            onPress={() => console.log("newList: ", newList)}
           />
         </View>
         {/* <View style={styles.listContainer}>
