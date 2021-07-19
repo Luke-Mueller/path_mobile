@@ -1,9 +1,9 @@
 class ListItem {
-  constructor(item, items, name, itemType) {
-    (this.item = item),
-      (this.items = items),
-      (this.name = name),
-      (this.itemType = itemType);
+  constructor(itemType, item, subName, subItems) {
+    (this.itemType = itemType),
+      (this.item = item),
+      (this.subName = subName),
+      (this.subItems = subItems);
   }
 }
 
