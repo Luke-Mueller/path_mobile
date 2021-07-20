@@ -306,7 +306,6 @@ const NewListScreen = ({ navigation }) => {
               setShowAddListModal(true);
             }}
           />
-          <Button title="see" onPress={() => console.log(list.newList)} />
         </View>
         <View style={styles.listContainer}>
           <FlatList
