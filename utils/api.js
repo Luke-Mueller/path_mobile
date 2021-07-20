@@ -39,9 +39,9 @@ export const editList = (list) => {
   });
 };
 
-export const getlists = (userId, arr) => {
+export const getlists = (arr) => {
   return request({
-    url: `${API_BASE_URL}/lists/getLists/${userId}/${arr}`,
+    url: `${API_BASE_URL}/lists/getLists/${arr}`,
     method: "GET",
   });
 };

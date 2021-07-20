@@ -1,7 +1,13 @@
 import { Alert } from "react-native";
 
 import { POSTLIST } from "../actionCreators";
-import { postlist } from "../../utils/api";
+import { getlists, postlist } from "../../utils/api";
+
+export const getLists = (arr) => {
+  return async (dispatch) => {
+    const response = await getlists(arr);
+  }
+}
 
 export const postList = (list, navigation) => {
   return async (dispatch) => {

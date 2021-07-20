@@ -39,15 +39,18 @@ export const screenOptions = ({ navigation }) => {
 const ListsScreen = ({ navigation }) => {
   // const lists = useSelector((state) => state.lists.myLists);
   const user = useSelector((state) => state.auth.user);
+  const myLists = useSelector((state) => state.auth.user.myLists)
   const dispatch = useDispatch();
 
-  // const getListsHandler = useCallback(() => {
-  //   dispatch(listActions.getLists(user._id, "ownerIds"));
-  // }, [dispatch, user, lists]);
+  const getListsHandler = useCallback(() => {
+    dispatch(listsActions.getLists(myLists));
+  }, [dispatch, myLists]);
 
-  // useEffect(() => {
-  //   getListsHandler();
-  // }, [getListsHandler]);
+  useEffect(() => {
+    if (myLists.length) {
+      getListsHandler();
+    }
+  }, [getListsHandler]);
 
   return (
     <View style={styles.screen}>
