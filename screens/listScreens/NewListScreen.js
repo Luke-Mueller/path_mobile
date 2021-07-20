@@ -150,7 +150,7 @@ const NewListScreen = ({ navigation }) => {
     });
   }, [navigation, list, saveHandler]);
 
-  const addItem = (type) => {
+  const addItem = async (type) => {
     let newItem;
     if (type === "item") {
       newItem = new ListItem(type, newItemInput, null, null);
@@ -168,11 +168,13 @@ const NewListScreen = ({ navigation }) => {
         list.subList.subName,
         list.subList.subItems
       );
-      dispatchNL({
+      // DO NOT REMOVE THE AWAIT KEYWORD
+      await dispatchNL({
         type: listActions.ADDITEM,
         itemType: type,
         item: newItem,
       });
+      dispatchNL({ type: listActions.RESETSUB });
       setNewItemInputSub("");
       setShowAddListModal(false);
     }
@@ -295,15 +297,12 @@ const NewListScreen = ({ navigation }) => {
             style={{ marginHorizontal: 50, marginVertical: 25 }}
             color={Color.black}
             onPress={() => {
-              dispatchNL({ type: listActions.RESETSUB });
               setShowAddListModal(true);
             }}
           />
           <Button
             title="see new list"
-            onPress={() =>
-              console.log("List: ", list.newList)
-            }
+            onPress={() => console.log("List: ", list)}
           />
         </View>
         {/* <View style={styles.listContainer}>
