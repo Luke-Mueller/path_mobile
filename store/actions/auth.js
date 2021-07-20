@@ -11,12 +11,17 @@ export const logOut = () => {
 
 export const logIn = (username) => {
   return async (dispatch) => {
-    const { user } = await login(username);
-    if (user) {
-      dispatch({
-        type: AUTH,
-        user: user,
-      });
+    try {
+      const { user } = await login(username);
+      if (user) {
+        dispatch({
+          type: AUTH,
+          user: user,
+        });
+      }
+    } catch (error) {
+      // ERROR HANDLED IN UTILS/API
+      return
     }
   };
 };

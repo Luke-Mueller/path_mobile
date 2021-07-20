@@ -3,10 +3,10 @@ import { Alert } from "react-native";
 import { POSTLIST } from "../actionCreators";
 import { postlist } from "../../utils/api";
 
-export const postList = (list, userId, navigation) => {
+export const postList = (list, navigation) => {
   return async (dispatch) => {
     try {
-      const response = await postlist({ list, userId });
+      const response = await postlist(list);
       if (response.ok) {
         Alert.alert(
           "List Saved",

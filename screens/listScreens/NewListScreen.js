@@ -51,11 +51,11 @@ const listReducer = (state, action) => {
           subItems: newSubItems,
         },
       };
-    case listActions.REMOVEITEM:
+    case listActions.REMOVEITEM:      
       let removeItems;
       if (action.itemType === "item") {
         removeItems = state.newList.items;
-        removeItems.slice(action.idx, 1);
+        removeItems.splice(action.idx, 1);
         return {
           ...state,
           newList: {
@@ -65,7 +65,7 @@ const listReducer = (state, action) => {
         };
       } else if (action.itemType === "sublist") {
         removeItems = state.subList.subItems;
-        removeItems.slice(action.idx, 1);
+        removeItems.splice(action.idx, 1);
         return {
           ...state,
           subList: {
@@ -128,9 +128,9 @@ const NewListScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  const saveHandler = useCallback(async () => {
+  const saveHandler = useCallback(() => {
     dispatch(listsActions.postList(list.newList, navigation));
-  }, [dispatch, list]);
+  }, [dispatch, list, navigation]);
 
   useEffect(() => {
     let title = "New List";
@@ -153,7 +153,7 @@ const NewListScreen = ({ navigation }) => {
   const addItem = async (type) => {
     let newItem;
     if (type === "item") {
-      newItem = new ListItem(type, newItemInput, null, null);
+      newItem = new ListItem(type, newItemInput.toString(), null, null);
       dispatchNL({
         type: listActions.ADDITEM,
         itemType: type,
@@ -181,7 +181,7 @@ const NewListScreen = ({ navigation }) => {
   };
 
   const addSubItem = () => {
-    dispatchNL({ type: listActions.ADDSUBITEM, subItem: newItemInputSub });
+    dispatchNL({ type: listActions.ADDSUBITEM, subItem: newItemInputSub.toString() });
     setNewItemInputSub("");
   };
 
@@ -241,19 +241,25 @@ const NewListScreen = ({ navigation }) => {
                 color="white"
                 onPress={() => addSubItem()}
               />
-              {/* <View> */}
-              {/* <FlatList
-                data={subListItems}
+              <FlatList
+                data={list.subList.subItems}
                 keyExtractor={(_, index) => index.toString()}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                   <View style={styles.item}>
                     <Text style={{ color: "white" }}>
-                      {item.name ? item.name : item.item}
+                      {item}
                     </Text>
+                    <Feather
+                      name="trash"
+                      size={24}
+                      color="white"
+                      onPress={() =>
+                        dispatchNL({ type: "REMOVEITEM", itemType: "sublist", idx: index })
+                      }
+                    />
                   </View>
                 )}
-              /> */}
-              {/* </View> */}
+              />
               <View style={{ flexDirection: "row", alignSelf: "center" }}>
                 <Button
                   title="Cancel"
@@ -300,22 +306,27 @@ const NewListScreen = ({ navigation }) => {
               setShowAddListModal(true);
             }}
           />
-          <Button
-            title="see new list"
-            onPress={() => console.log("List: ", list)}
-          />
+          <Button title="see" onPress={() => console.log(list.newList)} />
         </View>
-        {/* <View style={styles.listContainer}>
+        <View style={styles.listContainer}>
           <FlatList
-            data={newList.items}
+            data={list.newList.items}
             keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <View style={styles.item}>
                 <Text>{item.item ? item.item : item.subName}</Text>
+                <Feather
+                      name="trash"
+                      size={24}
+                      color="black"
+                      onPress={() =>
+                        dispatchNL({ type: "REMOVEITEM", itemType: "item", idx: index })
+                      }
+                    />
               </View>
             )}
           />
-        </View> */}
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -344,6 +355,8 @@ const styles = StyleSheet.create({
     color: "white",
   },
   item: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     width: "100%",
     padding: 20,
     marginVertical: 8,
