@@ -1,4 +1,4 @@
-import { AUTH, LOGOUT } from "../actionCreators";
+import { AUTH, LOGOUT, POSTLIST } from "../actionCreators";
 
 const initialState = {
   user: null,
@@ -10,6 +10,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         user: action.user,
+      };
+    case POSTLIST:
+      const newMyLists = state.user.myLists;
+      newMyLists.push(action.list._id);
+      return {
+        user: {
+          ...state.user,
+          myLists: newMyLists,
+        },
       };
     case LOGOUT:
       return initialState;
