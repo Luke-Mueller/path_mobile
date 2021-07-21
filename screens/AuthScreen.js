@@ -8,29 +8,26 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import * as authActions from "../store/actions/auth";
 import Color from "../constants/color";
 
-const AuthScreen = (props) => {
+const AuthScreen = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
 
   const logIn = () => {
     if (!username) {
-      return Alert.alert("Login failed", "A username and password are required to login.");
+      return Alert.alert(
+        "Login failed",
+        "A username and password are required to login."
+      );
     }
     dispatch(authActions.logIn(username));
   };
-
-  const logOut = () => {
-    Keyboard.dismiss();
-    dispatch(authActions.logOut());
-  }
 
   const signUp = () => {
     if (!username || !password) {
@@ -65,8 +62,7 @@ const AuthScreen = (props) => {
         />
         <View style={styles.buttonContainer}>
           <Button title="Signup" onPress={signUp} />
-          {user && <Button title="Logout" onPress={logOut} />}
-          {!user && <Button title="Login" onPress={logIn} />}
+          <Button title="Login" onPress={logIn} />
         </View>
       </View>
     </TouchableWithoutFeedback>

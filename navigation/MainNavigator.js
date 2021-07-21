@@ -10,11 +10,11 @@ import { useDispatch } from "react-redux";
 import AccountNavigator from './AccountNavigator';
 import ListsNavigator from "./ListsNavigator";
 
-import * as actionTypes from "../store/actions/auth";
+import * as authActions from "../store/actions/auth";
 
 const MainDrawerNavigator = createDrawerNavigator();
 
-const MainNavigator = (props) => {
+const MainNavigator = () => {
   const dispatch = useDispatch();
   return (
     <MainDrawerNavigator.Navigator
@@ -30,7 +30,7 @@ const MainNavigator = (props) => {
               />
               <DrawerItem
                 label="Logout"
-                onPress={() => dispatch(actionTypes.logOut())}
+                onPress={() => dispatch(authActions.logOut())}
               />
             </SafeAreaView>
           </View>
