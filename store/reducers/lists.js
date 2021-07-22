@@ -1,4 +1,4 @@
-import { EDITLIST, GETLISTS, LOGOUT, POSTLIST } from "../actionCreators";
+import { GETLISTS, LOGOUT, POSTLIST } from "../actionCreators";
 
 const initialState = {
   activeLists: [],
@@ -21,9 +21,7 @@ export default (state = initialState, action) => {
         myLists: newMyLists,
       };
     case LOGOUT:
-      return {
-        ...initialState,
-      };
+      return initialState
     default:
       return state;
   }

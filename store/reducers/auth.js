@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
       const newMyLists = state.user.myLists;
       newMyLists.push(action.list._id);
       return {
+        ...state,
         user: {
           ...state.user,
           myLists: newMyLists,

@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as authActions from "../store/actions/auth";
 import Color from "../constants/color";
@@ -16,6 +16,7 @@ import Color from "../constants/color";
 const AuthScreen = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const state = useSelector((state) => state);
 
   const dispatch = useDispatch();
 
@@ -63,6 +64,7 @@ const AuthScreen = () => {
         <View style={styles.buttonContainer}>
           <Button title="Signup" onPress={signUp} />
           <Button title="Login" onPress={logIn} />
+          <Button title="see state" onPress={() => console.log('state: ', state)} />
         </View>
       </View>
     </TouchableWithoutFeedback>
