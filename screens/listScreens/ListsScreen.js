@@ -62,7 +62,6 @@ const ListsScreen = ({ navigation }) => {
           <ListsItem list={item} navigation={navigation} />
         )}
       />
-      <Button title="See State" onPress={() => console.log("state: ", state)} />
     </View>
   );
 };
