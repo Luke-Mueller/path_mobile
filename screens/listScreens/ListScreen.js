@@ -1,25 +1,16 @@
-import React, { useContext, useEffect } from "react";
-import { FlatList, View } from "react-native";
+import React, { useEffect } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { useSelector } from "react-redux";
 import { Feather } from "@expo/vector-icons";
 
+import Color from '../../constants/color';
+
 import HeaderButton from "../../components/HeaderButton";
-import ListItem from "../../components/ListItem";
 
 const ListScreen = (props) => {
   const { navigation, route } = props;
 
-  const list = useSelector((state) => {
-    if (props.arc) {
-      return state.list.arcLists.filter(
-        (list) => list._id === route.params.listId
-      )[0];
-    }
-    return state.list.lists.filter(
-      (list) => list._id === route.params.listId
-    )[0];
-  }) || { name: "", items: [] };
+  const list = route.params.list;
 
   let headerRight = () => (
     <HeaderButtons HeaderButtonComponent={HeaderButton}>
@@ -27,7 +18,8 @@ const ListScreen = (props) => {
         title="edit list"
         iconName="edit-2"
         IconComponent={Feather}
-        onPress={() => navigation.navigate("Edit List", { listId: list._id })}
+        // onPress={() => navigation.navigate("Edit List", { listId: list._id })}
+        onPress={() => console.log("entering edit list")}
       />
     </HeaderButtons>
   );
@@ -42,14 +34,45 @@ const ListScreen = (props) => {
   }, [list, navigation]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        data={list.items}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => <ListItem item={item} />}
-      />
+    <View style={{flex: 1}}>
+      {!!list.items.length && (
+        <FlatList
+          data={list.items}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.container}>
+              <Text style={styles.text}>{item.item ? item.item : item.subName}</Text>
+              {!!item.subName && (
+                <FlatList
+                  data={item.subItems}
+                  keyExtractor={(_, idx) => idx.toString()}
+                  renderItem={({ item }) => <Text>{item}</Text>}
+                />
+              )}
+            </View>
+          )}
+        />
+      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Color.highlight,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginHorizontal: 20,
+    marginVertical: 2.5,
+    paddingHorizontal: 10,
+  },
+  text: {
+    flex: 1,
+    backgroundColor: Color.highlight,
+    paddingVertical: 20,
+  },
+});
 
 export default React.memo(ListScreen);
