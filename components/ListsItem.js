@@ -6,7 +6,7 @@ const ListsItem = ({ list, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate("List", { listId: list._id })}
+        onPress={() => navigation.navigate("List", { list })}
       >
         <View style={styles.button}>
           <Text>{list.name}</Text>
