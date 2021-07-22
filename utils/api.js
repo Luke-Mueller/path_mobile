@@ -40,6 +40,8 @@ export const editList = (list) => {
 };
 
 export const getlists = (arr) => {
+  if (!arr.length) arr = 'none';
+
   return request({
     url: `${API_BASE_URL}/lists/getLists/${arr}`,
     method: "GET",
