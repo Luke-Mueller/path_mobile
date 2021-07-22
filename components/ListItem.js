@@ -6,7 +6,7 @@ import Color from "../constants/color";
 
 const ListItem = (props) => {
   let buttonGroup = null;
-  const { editable, item, itemIndex, listItemIndex, openModal, removeItem, sub } = props;
+  const { editable, item, listItemIndex, openModal, removeItem, sub } = props;
 
   if (editable) {
     buttonGroup = (
