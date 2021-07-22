@@ -1,12 +1,18 @@
 import { Alert } from "react-native";
 
-import { GETLISTS, POSTLIST } from "../actionCreators";
+import { GETLISTS, LOGOUT, POSTLIST } from "../actionCreators";
 import { getlists, postlist } from "../../utils/api";
 
 export const getLists = (arr, arrType) => {
   return async (dispatch) => {
-    const { lists } = await getlists(arr);
-    dispatch({ type: GETLISTS, arrType, lists });
+    const response = await getlists(arr);
+    dispatch({ type: GETLISTS, arrType, lists: response.lists });
+  };
+};
+
+export const logOut = () => {
+  return async (dispatch) => {
+    dispatch({ type: LOGOUT });
   };
 };
 
