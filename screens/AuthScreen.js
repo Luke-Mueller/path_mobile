@@ -64,7 +64,6 @@ const AuthScreen = () => {
         <View style={styles.buttonContainer}>
           <Button title="Signup" onPress={signUp} />
           <Button title="Login" onPress={logIn} />
-          <Button title="see state" onPress={() => console.log('state: ', state)} />
         </View>
       </View>
     </TouchableWithoutFeedback>
