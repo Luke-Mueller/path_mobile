@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { Button, FlatList, StyleSheet, View } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { Feather } from "@expo/vector-icons";
@@ -39,18 +39,18 @@ export const screenOptions = ({ navigation }) => {
 const ListsScreen = ({ navigation }) => {
   const myLists = useSelector((state) => state.lists.myLists);
   const myListsIds = useSelector((state) => state.auth.user.myLists);
+  const state = useSelector((state) => state);
+  const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
 
   const getListsHandler = useCallback(() => {
     dispatch(listsActions.getLists(myListsIds, "myLists"));
-  }, [dispatch, myListsIds]);
+  }, [dispatch, myListsIds, user]);
 
   useEffect(() => {
-    if (myListsIds.length) {
-      getListsHandler();
-    }
-  }, [getListsHandler, myListsIds]);
+    getListsHandler();
+  }, [getListsHandler, myListsIds, myLists]);
 
   return (
     <View style={styles.screen}>
@@ -62,6 +62,7 @@ const ListsScreen = ({ navigation }) => {
           <ListsItem list={item} navigation={navigation} />
         )}
       />
+      <Button title="See State" onPress={() => console.log("state: ", state)} />
     </View>
   );
 };
