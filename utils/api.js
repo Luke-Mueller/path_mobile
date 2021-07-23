@@ -12,17 +12,28 @@ const request = async (args) => {
     return data;
   } catch (err) {
     console.log("Request err: ", err);
-    Alert.alert("Request not completed...", 'The server is not connected.  Try again later.')
+    Alert.alert(
+      "Request not completed...",
+      "The server is not connected.  Try again later."
+    );
   }
+};
+
+export const activatelist = (payload) => {
+  return request({
+    url: `${API_BASE_URL}/user/activateList`,
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
 };
 
 export const archiveList = (payload) => {
   return request({
     url: `${API_BASE_URL}/lists/archiveList`,
     method: "PUT",
-    body: JSON.stringify(payload)
-  })
-}
+    body: JSON.stringify(payload),
+  });
+};
 
 export const deleteList = (listId, userId) => {
   return request({
@@ -40,7 +51,7 @@ export const editList = (list) => {
 };
 
 export const getlists = (arr) => {
-  if (!arr.length) arr = 'none';
+  if (!arr.length) arr = "none";
 
   return request({
     url: `${API_BASE_URL}/lists/getLists/${arr}`,
