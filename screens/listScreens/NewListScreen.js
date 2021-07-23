@@ -195,7 +195,8 @@ const NewListScreen = ({ navigation }) => {
                 multiline={true}
                 onChangeText={setNewItemInput}
                 placeholder="Enter list item"
-                style={styles.input}
+                placeholderTextColor="#888"
+                style={{...styles.input, color: 'white' }}
                 textAlignVertical="top"
                 value={newItemInput}
               />
@@ -223,6 +224,7 @@ const NewListScreen = ({ navigation }) => {
                   dispatchNL({ type: listActions.SETSUBNAME, subName: input })
                 }
                 placeholder="Enter sub-list name"
+                placeholderTextColor="#888"
                 style={styles.input}
                 textAlignVertical="top"
                 value={list.subList.subName}
@@ -231,6 +233,7 @@ const NewListScreen = ({ navigation }) => {
                 multiline={true}
                 onChangeText={setNewItemInputSub}
                 placeholder="Enter sub-list item"
+                placeholderTextColor="#888"
                 style={styles.input}
                 textAlignVertical="top"
                 value={newItemInputSub}
@@ -284,6 +287,7 @@ const NewListScreen = ({ navigation }) => {
             dispatchNL({ type: listActions.SETNAME, name: input });
           }}
           placeholder="Enter list name"
+          placeholderTextColor="#888"
           style={{ ...styles.input, color: "black" }}
           value={list.newList.name}
         />
