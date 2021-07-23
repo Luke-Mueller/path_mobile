@@ -1,7 +1,18 @@
 import { Alert } from "react-native";
 
-import { AUTH, LOGOUT } from "../actionCreators";
-import { login, signup } from "../../utils/api";
+import { AUTH, LOGOUT, UPDATEUSER } from "../actionCreators";
+import { activatelist, login, signup } from "../../utils/api";
+
+export const activateList = (payload, navigation) => {
+  return async (dispatch) => {
+    const { user } = await activatelist(payload);
+    dispatch({
+      type: UPDATEUSER,
+      user,
+    });
+    if (user) navigation.navigate("Active Lists");
+  };
+};
 
 export const logOut = () => {
   return async (dispatch) => {
@@ -21,7 +32,7 @@ export const logIn = (username) => {
       }
     } catch (error) {
       // ERROR HANDLED IN UTILS/API
-      return
+      return;
     }
   };
 };
