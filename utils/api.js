@@ -21,8 +21,8 @@ const request = async (args) => {
 
 export const activatelist = (payload) => {
   return request({
-    url: `${API_BASE_URL}/user/activateList`,
-    method: "PUT",
+    url: `${API_BASE_URL}/activeLists/postList`,
+    method: "POST",
     body: JSON.stringify(payload),
   });
 };
@@ -50,11 +50,23 @@ export const editList = (list) => {
   });
 };
 
-export const getlists = (arr) => {
+export const getActiveLists = (arr) => {
   if (!arr.length) arr = "none";
 
   return request({
-    url: `${API_BASE_URL}/lists/getLists/${arr}`,
+    url: `${API_BASE_URL}/activeLists/getLists/${arr}`,
+    method: "GET",
+  });
+};
+
+export const getlists = (arr, arrType) => {
+  if (!arr.length) arr = "none";
+
+  let url = `${API_BASE_URL}/lists/getLists/${arr}`;
+  if (arrType === "activeLists")
+    url = `${API_BASE_URL}/activeLists/getLists/${arr}`;
+  return request({
+    url: url,
     method: "GET",
   });
 };
