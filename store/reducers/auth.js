@@ -1,4 +1,4 @@
-import { AUTH, LOGOUT, POSTLIST, UPDATEUSER } from "../actionCreators";
+import { AUTH, LOGOUT, POSTLIST } from "../actionCreators";
 
 const initialState = {
   user: null,
@@ -20,11 +20,6 @@ export default (state = initialState, action) => {
           ...state.user,
           myLists: newMyLists,
         },
-      };
-    case UPDATEUSER:
-      return {
-        ...state,
-        user: action.user,
       };
     case LOGOUT:
       return initialState;

@@ -1,4 +1,4 @@
-import { GETLISTS, LOGOUT, POSTLIST } from "../actionCreators";
+import { ACTIVATELIST, GETLISTS, LOGOUT, POSTLIST } from "../actionCreators";
 
 const initialState = {
   activeLists: [],
