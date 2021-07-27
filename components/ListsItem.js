@@ -2,11 +2,11 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Color from "../constants/color";
 
-const ListsItem = ({ list, navigation }) => {
+const ListsItem = ({ list, path, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate("List", { list })}
+        onPress={() => navigation.navigate(path, { list })}
       >
         <View style={styles.button}>
           <Text>{list.name}</Text>
