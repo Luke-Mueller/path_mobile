@@ -5,9 +5,11 @@ import ActiveListsScreen, {
   screenOptions as ActiveListsScreenOptions,
 } from "../screens/listScreens/ActiveListsScreen";
 
+import ListScreen from "../screens/listScreens/ListScreen";
+
 const Stack = createStackNavigator();
 
-const AllListsNavigator = (props) => {
+const ActiveListsNavigator = (props) => {
   return (
     <Stack.Navigator initialRouteName="Active Lists">
       <Stack.Screen
@@ -15,8 +17,9 @@ const AllListsNavigator = (props) => {
         component={ActiveListsScreen}
         options={ActiveListsScreenOptions}
       />
+      <Stack.Screen name="Active List" component={ListScreen} act={true} />
     </Stack.Navigator>
   );
 };
 
-export default AllListsNavigator;
+export default ActiveListsNavigator;
