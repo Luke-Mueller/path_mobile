@@ -28,13 +28,14 @@ export const screenOptions = ({ navigation }) => {
 };
 
 const ArchiveListsScreen = ({ navigation }) => {
-  const arcLists = useSelector((state) => state.list.arcLists);
+  const arcListsIds = useSelector((state) => state.auth.user.archivedLists);
+  const archivedLists =  useSelector((state) => state.lists.archivedLists);
   const { user } = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
 
   const getArcListsHandler = useCallback(() => {
-    dispatch(listsActions.getLists(user._id, "arcOwnerIds"));
-  }, [dispatch, user, arcLists]);
+    dispatch(listsActions.getLists(arcListsIds, "archivedLists"));
+  }, [dispatch, user, arcListsIds]);
 
   useEffect(() => {
     getArcListsHandler();
@@ -43,7 +44,7 @@ const ArchiveListsScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={arcLists}
+        data={archivedLists}
         keyExtractor={(_, index) => index.toString()}
         ListEmptyComponent={<ListEmptyComponent arc />}
         renderItem={({ item }) => (

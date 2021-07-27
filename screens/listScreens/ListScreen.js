@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  Button,
   FlatList,
   StyleSheet,
   Text,
@@ -8,18 +9,39 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { HeaderBackButton } from "@react-navigation/stack";
 import { Feather } from "@expo/vector-icons";
 
 import HeaderButton from "../../components/HeaderButton";
 import Color from "../../constants/color";
-import * as authActions from "../../store/actions/auth";
+import * as listsActions from "../../store/actions/lists";
 
 const ListScreen = (props) => {
   const { navigation, route } = props;
   const userId = useSelector((state) => state.auth.user._id);
+  const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   const list = route.params.list;
+
+  let bottomButtons = (
+    <View style={styles.bottomContainer}>
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => archiveList()}
+      >
+        <Feather name="archive" size={24} color="black" />
+        <Text style={{ marginHorizontal: 25 }}>Archive List</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => activateList()}
+      >
+        <Feather name="play" size={24} color="black" />
+        <Text style={{ marginHorizontal: 25 }}>Start List</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   let headerRight = () => (
     <HeaderButtons HeaderButtonComponent={HeaderButton}>
@@ -33,8 +55,6 @@ const ListScreen = (props) => {
     </HeaderButtons>
   );
 
-  if (props.arc) headerRight = null;
-
   useEffect(() => {
     navigation.setOptions({
       headerTitle: list.name,
@@ -44,13 +64,20 @@ const ListScreen = (props) => {
 
   const activateList = async () => {
     const payload = { list: list, userId: userId };
-    dispatch(authActions.activateList(payload, navigation));
+    dispatch(listsActions.activateList(payload, navigation));
   };
+
+  const archiveList = async () => {};
+
+  if (route.name === "Active List" || route.name === "Archived List") {
+    bottomButtons = <Button title="SEE STATE" onPress={() => console.log('STATE: ', state)} />;
+    headerRight = null;
+  }
 
   return (
     <View style={{ flex: 1 }}>
       <View>
-        {!!list.items.length && (
+        {list && !!list.items.length && (
           <FlatList
             data={list.items}
             keyExtractor={(_, index) => index.toString()}
@@ -63,7 +90,7 @@ const ListScreen = (props) => {
                   <FlatList
                     data={item.subItems}
                     keyExtractor={(_, idx) => idx.toString()}
-                    renderItem={({ item }) => <Text>{item}</Text>}
+                    renderItem={({ item }) => <Text>{item.item}</Text>}
                   />
                 )}
               </View>
@@ -71,15 +98,7 @@ const ListScreen = (props) => {
           />
         )}
       </View>
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => activateList()}
-        >
-          <Feather name="play" size={24} color="black" />
-          <Text style={{ marginHorizontal: 25 }}>Start List</Text>
-        </TouchableOpacity>
-      </View>
+      {bottomButtons}
     </View>
   );
 };

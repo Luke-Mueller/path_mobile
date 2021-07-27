@@ -59,7 +59,7 @@ const ListsScreen = ({ navigation }) => {
         keyExtractor={(_, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={({ item }) => (
-          <ListsItem list={item} navigation={navigation} />
+          <ListsItem list={item} navigation={navigation} path="List" />
         )}
       />
     </View>
