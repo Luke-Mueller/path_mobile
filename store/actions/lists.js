@@ -1,13 +1,7 @@
 import { Alert } from "react-native";
 
-import {
-  ACTIVATELIST,
-  AUTH,
-  GETLISTS,
-  LOGOUT,
-  POSTLIST,
-} from "../actionCreators";
-import { activatelist, getlists, postlist } from "../../utils/api";
+import { AUTH, GETLISTS, LOGOUT, POSTLIST } from "../actionCreators";
+import { archiveList, activatelist, getlists, postlist } from "../../utils/api";
 
 export const activateList = (payload, navigation) => {
   return async (dispatch) => {
@@ -23,6 +17,21 @@ export const activateList = (payload, navigation) => {
       });
     } catch (error) {
       console.log("[ERROR: listsActions:16]: await activatelist", error);
+    }
+  };
+};
+
+export const archivelist = (payload, navigation) => {
+  return async (dispatch) => {
+    try {
+      const { list, user } = await archiveList(payload);
+      dispatch({ type: AUTH, user });
+      navigation.navigate("Archive", {
+        screen: "Archived List",
+        params: { list: list },
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 };
@@ -50,7 +59,7 @@ export const postList = (list, navigation) => {
           list: response.list,
         });
         Alert.alert("List Saved", response.message, [
-          { onPress: () => navigation.navigate("My Lists") },
+          { onPress: () => navigation.navigate("All Lists") },
         ]);
       }
     } catch (error) {
