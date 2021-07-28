@@ -50,15 +50,6 @@ export const editList = (list) => {
   });
 };
 
-export const getActiveLists = (arr) => {
-  if (!arr.length) arr = "none";
-
-  return request({
-    url: `${API_BASE_URL}/activeLists/getLists/${arr}`,
-    method: "GET",
-  });
-};
-
 export const getlists = (arr, arrType) => {
   if (!arr.length) arr = "none";
 
