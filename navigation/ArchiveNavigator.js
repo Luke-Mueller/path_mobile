@@ -10,15 +10,13 @@ const Stack = createStackNavigator();
 
 const ArchiveNavigator = (props) => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Archive">
       <Stack.Screen
         name="Archive"
         component={ArchiveListsScreen}
         options={ArchiveListsScreenOptions}
       />
-      <Stack.Screen name="Archived List">
-        {(props) => <ListScreen {...props} arc={true} />}
-      </Stack.Screen>
+      <Stack.Screen name="Archived List" component={ListScreen} arc={true} />
     </Stack.Navigator>
   );
 };
