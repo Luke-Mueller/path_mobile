@@ -67,12 +67,18 @@ const ListScreen = (props) => {
     dispatch(listsActions.activateList(payload, navigation));
   };
 
-  const archiveList = async () => {};
+  const archiveList = async () => {
+    const payload = { listId: list._id, userId };
+    dispatch(listsActions.archivelist(payload, navigation));
+  };
 
-  if (route.name === "Active List" || route.name === "Archived List") {
-    bottomButtons = <Button title="SEE STATE" onPress={() => console.log('STATE: ', state)} />;
-    headerRight = null;
-  }
+  // if (route.name === "Active List" || route.name === "Archived List") {
+  //   bottomButtons = null
+  //   // (
+  //   //   <Button title="SEE STATE" onPress={() => console.log("STATE: ", state)} />
+  //   // );
+  //   headerRight = null;
+  // }
 
   return (
     <View style={{ flex: 1 }}>
