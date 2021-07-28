@@ -12,7 +12,7 @@ import * as listsActions from "../../store/actions/lists";
 
 export const screenOptions = ({ navigation }) => {
   return {
-    headerTitle: "My Lists",
+    headerTitle: "All Lists",
     headerLeft: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item

@@ -129,7 +129,7 @@ const EditListScreen = ({ navigation, route }) => {
     });
     if (response.ok) {
       Alert.alert("List Archived", response.message, [
-        { onPress: () => navigation.navigate("My Lists") },
+        { onPress: () => navigation.navigate("All Lists") },
       ]);
     }
   }, [list, navigation, userId]);
@@ -147,7 +147,7 @@ const EditListScreen = ({ navigation, route }) => {
     const response = await deleteList(list._id, userId);
     if (response.ok) {
       Alert.alert("List Deleted", response.message, [
-        { onPress: () => navigation.navigate("My Lists") },
+        { onPress: () => navigation.navigate("All Lists") },
       ]);
     }
   }, [list, navigation, userId]);
