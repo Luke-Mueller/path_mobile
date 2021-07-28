@@ -8,9 +8,9 @@ const Tab = createBottomTabNavigator();
 
 const ListsNavigator = (props) => {
   return (
-    <Tab.Navigator name="My Lists" >
-      <Tab.Screen name="My Lists" component={AllListsNavigator} />
-      <Tab.Screen name="Active Lists" component={ActiveListsNavigator} />
+    <Tab.Navigator name="All Lists" >
+      <Tab.Screen name="All Lists" component={AllListsNavigator} />
+      <Tab.Screen name="Started Lists" component={ActiveListsNavigator} />
       <Tab.Screen name="Archive" component={ArchiveNavigator} />
     </Tab.Navigator>
   );
