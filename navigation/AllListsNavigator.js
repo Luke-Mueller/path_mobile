@@ -12,11 +12,11 @@ const Stack = createStackNavigator();
 
 const AllListsNavigator = (props) => {
   return (
-    <Stack.Navigator initialRouteName="My Lists">
+    <Stack.Navigator initialRouteName="All Lists">
       <Stack.Screen name="Edit List" component={EditListScreen} />
       <Stack.Screen name="List" component={ListScreen} />
       <Stack.Screen
-        name="My Lists"
+        name="All Lists"
         component={ListsScreen}
         options={ListsScreenOptions}
       />
