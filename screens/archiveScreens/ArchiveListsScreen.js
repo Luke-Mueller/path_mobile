@@ -51,7 +51,7 @@ const ArchiveListsScreen = ({ navigation }) => {
           <View style={styles.container}>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("Archived List", { listId: item._id })
+                navigation.navigate("Archived List", { list: item })
               }
             >
               <View style={styles.button}>
