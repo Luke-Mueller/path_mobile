@@ -10,10 +10,10 @@ import {
   View,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 
-import { archiveList, deleteList, editList } from "../../utils/api";
+import { editList } from "../../utils/api";
 import Color from "../../constants/color";
 import EditModal from "../../components/EditModal";
 import HeaderButton from "../../components/HeaderButton";
@@ -21,20 +21,25 @@ import ListItem from "../../components/ListItem";
 import ListItemModel from "../../models/ListItem";
 import Modal from "../../components/Modal";
 
+import * as listsActions from "../../store/actions/lists";
+
+const listActions = {
+  ADDITEM: "ADDITEM",
+  EDITITEM: "EDITITEM",
+  LISTNAME: "LISTNAME",
+  REMOVEITEM: "REMOVEITEM",
+};
+
 const listReducer = (state, action) => {
   switch (action.type) {
-    case "addItem":
+    case listActions.ADDITEM:
       let items = state.items;
       items.push(action.newItem);
       return {
         ...state,
         items: items,
       };
-    case "cancel":
-      return {
-        ...action.state,
-      };
-    case "editItem":
+    case listActions.EDITITEM:
       items = state.items;
       const index = state.items.findIndex((item) => item === action.item);
       items[index] = action.item;
@@ -42,7 +47,7 @@ const listReducer = (state, action) => {
         ...state,
         items: items,
       };
-    case "removeItem":
+    case listActions.REMOVEITEM:
       if (action.itemType === "item") {
         return {
           ...state,
@@ -60,7 +65,7 @@ const listReducer = (state, action) => {
           items: items,
         };
       }
-    case "setListName":
+    case listActions.LISTNAME:
       return {
         ...state,
         name: action.name,
@@ -71,123 +76,27 @@ const listReducer = (state, action) => {
 };
 
 const EditListScreen = ({ navigation, route }) => {
-  const [item, setItem] = useState({});
-  const userList = useSelector(
-    (state) =>
-      state.list.lists.filter((list) => list._id === route.params.listId)[0]
-  );
-  const [list, dispatch] = useReducer(listReducer, userList);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [newItem, setNewItem] = useState();
-  const [showAddItemModal, setShowAddItemModal] = useState(false);
-  const [showAddListModal, setShowAddListModal] = useState(false);
-  const userId = useSelector((state) => state.auth.user.user._id);
+  const userList = route.params.list;
+  const [item, setItem] = useState(null);
+  const [list, dispatchList] = useReducer(listReducer, userList);
 
-  const [subListItem, setSubListItem] = useState("");
-  const [subListItems, setSubListItems] = useState([]);
-  const [subListName, setSubListName] = useState("");
+  const userId = useSelector((state) => state.auth.user._id);
+  const dispatch = useDispatch();
 
-  const addItemHandler = useCallback(
-    (sublist) => {
-      if (sublist) {
-        const item = new ListItemModel(
-          "",
-          subListItems,
-          subListName,
-          "sublist"
-        );
-        dispatch({ type: "addItem", newItem: item });
-        setShowAddListModal(false);
-        setSubListItem("");
-        setSubListItems([]);
-        setSubListName("");
-      } else {
-        const item = new ListItemModel(newItem, [], "", "item");
-        dispatch({ type: "addItem", newItem: item });
-        setNewItem();
-      }
-    },
-    [dispatch, newItem, setNewItem, subListItems, subListName]
-  );
-
-  const addItemSub = () => {
-    const newSubList = subListItems;
-    const newSubListItem = { item: subListItem };
-    newSubList.push(newSubListItem);
-    setSubListItems(newSubList);
-    setSubListItem("");
+  const archiveList = async () => {
+    const payload = { listId: list._id, userId };
+    const done = dispatch(listsActions.archivelist(payload, navigation));
+    if (done) navigation.pop();
   };
 
-  const archiveListHandler = useCallback(async () => {
-    const response = await archiveList({
-      list: {
-        _id: list._id,
-        arcOwnerIds: list.arcOwnerIds,
-        ownerIds: list.ownerIds,
-      },
-      userId: userId,
-    });
-    if (response.ok) {
-      Alert.alert("List Archived", response.message, [
-        { onPress: () => navigation.navigate("All Lists") },
-      ]);
-    }
-  }, [list, navigation, userId]);
-
-  const closeModalHandler = useCallback(() => {
-    setModalVisible(false);
-  }, [setModalVisible]);
-
-  const cancelHandler = useCallback(() => {
-    dispatch({ type: "cancel", state: userList });
-    setModalVisible(false);
-  }, [dispatch, setModalVisible, userList]);
-
-  const deleteHandler = useCallback(async () => {
-    const response = await deleteList(list._id, userId);
-    if (response.ok) {
-      Alert.alert("List Deleted", response.message, [
-        { onPress: () => navigation.navigate("All Lists") },
-      ]);
-    }
-  }, [list, navigation, userId]);
-
-  const editItemHandler = useCallback(
-    (newItem) => {
-      dispatch({ type: "editItem", item: newItem });
-    },
-    [dispatch]
-  );
-
-  const editListHandler = useCallback(async () => {
-    const response = await editList(list);
-    if (response.list) {
-      Alert.alert("List Updated", `${list.name} was updated successfully!`, [
-        { onPress: () => navigation.navigate("List", { listId: list._id }) },
-      ]);
-    }
-  }, [list]);
-
-  const openModalHandler = useCallback(
-    (item) => {
-      setItem(item);
-      setModalVisible(true);
-    },
-    [setItem, setModalVisible]
-  );
-
-  const removeItemHandler = useCallback(
-    (index, sub, listItemIndex) => {
-      const itemType = sub ? "sublist" : "item";
-      dispatch({
-        type: "removeItem",
-        itemIndex: index,
-        itemType,
-        listItemIndex,
-      });
-    },
-    [dispatch]
-  );
+  // const editListHandler = useCallback(async () => {
+  //   const response = await editList(list);
+  //   if (response.list) {
+  //     Alert.alert("List Updated", `${list.name} was updated successfully!`, [
+  //       { onPress: () => navigation.navigate("List", { listId: list._id }) },
+  //     ]);
+  //   }
+  // }, [list]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -198,84 +107,82 @@ const EditListScreen = ({ navigation, route }) => {
             title="edit list"
             IconComponent={MaterialIcons}
             iconName="done"
-            onPress={editListHandler}
+            onPress={() => console.log("editting list")}
           />
         </HeaderButtons>
       ),
     });
-  }, [editListHandler, list, navigation]);
+  }, [list, navigation]);
 
   return (
     <View style={styles.container}>
-      {modalVisible && (
-        <EditModal
-          closeModal={closeModalHandler}
-          editItem={editItemHandler}
-          item={item}
-          listItems={list.items}
-          listItemIndex={list.items.findIndex((i) => i === item)}
-          onCancel={cancelHandler}
-          removeItem={removeItemHandler}
-        />
-      )}
-      {showAddItemModal && (
+      {item && item.itemType === "item" && (
         <Modal>
           <View style={{ flex: 1, justifyContent: "center" }}>
             <TextInput
               multiline={true}
-              onChangeText={setNewItem}
+              onChangeText={(input) => console.log(input)}
               placeholder="Enter list item"
-              style={styles.input}
+              placeholderTextColor="#888"
+              style={{ ...styles.input, color: "white" }}
               textAlignVertical="top"
-              value={newItem}
+              value={item.item}
             />
             <Button
               title="Cancel"
-              onPress={() => {
-                setNewItem("");
-                setShowAddItemModal(false);
-              }}
               color="white"
+              onPress={() => setItem(null)}
             />
-            <Button
-              title="Ok"
-              onPress={() => {
-                addItemHandler();
-                setNewItem("");
-                setShowAddItemModal(false);
-              }}
-              color="white"
-            />
+            <Button title="Ok" color="white" onPress={() => addItem("item")} />
           </View>
         </Modal>
       )}
-      {showAddListModal && (
+      {item && item.itemType === "sublist" && (
         <Modal>
           <View>
             <TextInput
-              onChangeText={setSubListName}
+              onChangeText={(input) =>
+                dispatchNL({ type: listActions.SETSUBNAME, subName: input })
+              }
               placeholder="Enter sub-list name"
+              placeholderTextColor="#888"
               style={styles.input}
               textAlignVertical="top"
-              value={subListName}
+              value={list.subList.subName}
             />
             <TextInput
               multiline={true}
-              onChangeText={setSubListItem}
+              onChangeText={setNewItemInputSub}
               placeholder="Enter sub-list item"
+              placeholderTextColor="#888"
               style={styles.input}
               textAlignVertical="top"
-              value={subListItem}
+              value={newItemInputSub}
             />
-            <Feather name="plus" size={24} color="white" onPress={addItemSub} />
+            <Feather
+              name="plus"
+              size={24}
+              color="white"
+              onPress={() => addSubItem()}
+            />
             <FlatList
-              data={subListItems}
+              data={list.subList.subItems}
               keyExtractor={(_, index) => index.toString()}
-              renderItem={({ item }) => (
+              renderItem={({ item, index }) => (
                 <View style={styles.item}>
-                  <Text style={{ color: "white" }}>
-                    {item.name ? item.name : item.item}
-                  </Text>
+                  <Text style={{ color: "white" }}>{item}</Text>
+                  <Feather
+                    name="trash"
+                    size={24}
+                    color="white"
+                    onPress={() =>
+                      dispatchNL({
+                        type: "REMOVEITEM",
+                        itemType: "sublist",
+                        idx: index,
+                      })
+                    }
+                  />
                 </View>
               )}
             />
@@ -284,84 +191,50 @@ const EditListScreen = ({ navigation, route }) => {
                 title="Cancel"
                 onPress={() => {
                   setShowAddListModal(false);
-                  setSubListItems([]);
-                  setSubListItem("");
-                  setSubListName("");
+                  setNewItemInputSub("");
+                  dispatchNL({ type: listActions.RESETSUB });
                 }}
                 color="white"
               />
               <Button
                 title="Ok"
-                onPress={() => addItemHandler("sublist")}
+                onPress={() => addItem("sublist")}
                 color="white"
               />
             </View>
           </View>
         </Modal>
       )}
+
       <TextInput
-        onChangeText={(listName) =>
-          dispatch({ type: "setListName", name: listName })
+        onChangeText={(input) =>
+          dispatch({ type: listActions.LISTNAME, name: input })
         }
         placeholder="Enter list name"
         style={styles.input}
         value={list.name}
       />
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          alignSelf: "center",
-        }}
+      <FlatList
+        data={list.items}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <View style={styles.container}>
+            <TouchableOpacity onPress={() => setItem(item)}>
+              <View style={styles.button}>
+                <Text>{item.item ? item.item : item.subName}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+      <Button title="See List" onPress={() => console.log("list: ", list)} />
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => archiveList()}
       >
-        <MaterialIcons
-          name="add-task"
-          size={40}
-          style={{ marginHorizontal: 50, marginVertical: 25 }}
-          color={Color.black}
-          onPress={() => setShowAddItemModal(true)}
-        />
-        <MaterialIcons
-          name="playlist-add"
-          size={40}
-          style={{ marginHorizontal: 50, marginVertical: 25 }}
-          color={Color.black}
-          onPress={() => {
-            setItem(""), setShowAddListModal(true);
-          }}
-        />
-      </View>
-      <View style={styles.container_list}>
-        <FlatList
-          data={list.items}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <ListItem
-              editable
-              item={item}
-              listItemIndex={index}
-              openModal={() => openModalHandler(item)}
-              removeItem={removeItemHandler}
-            />
-          )}
-        />
-      </View>
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => deleteHandler()}
-        >
-          <Feather name="trash" size={24} color="black" />
-          <Text style={{ marginHorizontal: 25 }}>Delete</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => archiveListHandler()}
-        >
-          <Feather name="archive" size={24} color="black" />
-          <Text style={{ marginHorizontal: 25 }}>Archive</Text>
-        </TouchableOpacity>
-      </View>
+        <Feather name="archive" size={24} color="black" />
+        <Text style={{ marginHorizontal: 25 }}>Archive List</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -369,6 +242,15 @@ const EditListScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    marginHorizontal: 20,
+    marginVertical: 2.5,
+  },
+  button: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: Color.highlight,
+    paddingVertical: 20,
   },
   container_list: {
     flex: 3,
@@ -377,6 +259,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
   },
+
   buttonContainer: {
     backgroundColor: Color.highlight,
     borderBottomWidth: 1,
