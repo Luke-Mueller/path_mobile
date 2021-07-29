@@ -11,7 +11,7 @@ export const activateList = (payload, navigation) => {
         type: AUTH,
         user,
       });
-      navigation.navigate("Active Lists", {
+      navigation.navigate("Started Lists", {
         screen: "Active List",
         params: { list: list },
       });
