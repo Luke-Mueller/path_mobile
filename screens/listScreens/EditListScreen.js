@@ -25,78 +25,143 @@ import * as listsActions from "../../store/actions/lists";
 
 const listActions = {
   ADDITEM: "ADDITEM",
+  CLEARCHANGES: "CLEARCHANGES",
   EDITITEM: "EDITITEM",
   LISTNAME: "LISTNAME",
   REMOVEITEM: "REMOVEITEM",
 };
 
-const listReducer = (state, action) => {
+const listReducer = (list, action) => {
   switch (action.type) {
     case listActions.ADDITEM:
-      let items = state.items;
+      let items = list.items;
       items.push(action.newItem);
       return {
-        ...state,
+        ...list,
         items: items,
       };
+    case listActions.CLEARCHANGES:
+      return {
+        ...action.list,
+      };
     case listActions.EDITITEM:
-      items = state.items;
-      const index = state.items.findIndex((item) => item === action.item);
+      items = list.items;
+      const index = list.items.findIndex(
+        (item) => item._id === action.item._id
+      );
       items[index] = action.item;
       return {
-        ...state,
+        ...list,
         items: items,
       };
     case listActions.REMOVEITEM:
       if (action.itemType === "item") {
         return {
-          ...state,
-          items: state.items.filter((_, index) => index !== action.itemIndex),
+          ...list,
+          items: list.items.filter((_, index) => index !== action.itemIndex),
         };
       }
       if (action.itemType === "sublist") {
-        const newItems = [...state.items[action.listItemIndex].items];
+        const newItems = [...list.items[action.listItemIndex].items];
         newItems.splice(action.itemIndex, 1);
 
-        items = state.items;
+        items = list.items;
         items[action.listItemIndex].items = newItems;
         return {
-          ...state,
+          ...list,
           items: items,
         };
       }
     case listActions.LISTNAME:
       return {
-        ...state,
+        ...list,
         name: action.name,
       };
     default:
-      return state;
+      return list;
+  }
+};
+
+const itemActions = {
+  ADDSUBITEM: "ADDSUBITEM",
+  ITEM: "ITEM",
+  SUBNAME: "SUBNAME",
+  REMOVESUBITEM: "REMOVESUBITEM",
+  SETITEM: "SETITEM",
+};
+
+const itemReducer = (item, action) => {
+  switch (action.type) {
+    case itemActions.ADDSUBITEM:
+      const addSubItems = item.subItems;
+      addSubItems.push(action.subItem);
+      return {
+        ...item,
+        subItems: addSubItems,
+      };
+    case itemActions.ITEM:
+      return {
+        ...item,
+        item: action.item,
+      };
+    case itemActions.REMOVESUBITEM:
+      const removeSubItems = item.subItems;
+      removeSubItems.splice(action.index, 1);
+      return {
+        ...item,
+        subItems: removeSubItems,
+      };
+    case itemActions.SETITEM:
+      const newItem = { ...action.item };
+      return {
+        ...newItem,
+      };
+    case itemActions.SUBNAME:
+      return {
+        ...item,
+        subName: action.name,
+      };
+    default:
+      return item;
   }
 };
 
 const EditListScreen = ({ navigation, route }) => {
-  const userList = route.params.list;
-  const [item, setItem] = useState(null);
-  const [list, dispatchList] = useReducer(listReducer, userList);
-
   const userId = useSelector((state) => state.auth.user._id);
+  const userList = useSelector(
+    (state) =>
+      state.lists[route.params.arr].filter(
+        (list) => list._id === route.params.listId
+      )[0]
+  );
+  const lists = useSelector((state) => state.lists);
+  const [item, dispatchItem] = useReducer(itemReducer, null);
+  const [list, dispatchList] = useReducer(listReducer, { ...userList });
+  const [newSubItem, setNewSubItem] = useState(null);
+
   const dispatch = useDispatch();
 
   const archiveList = async () => {
     const payload = { listId: list._id, userId };
-    const done = dispatch(listsActions.archivelist(payload, navigation));
-    if (done) navigation.pop();
+    const { done } = await dispatch(
+      listsActions.archivelist(payload, navigation)
+    );
+    if (done) {
+      navigation.navigate("Archive", {
+        screen: "Archived List",
+        params: {
+          listId: list._id,
+          arr: "archivedLists",
+        },
+      });
+      navigation.popToTop();
+    }
+    // console.log('archiveList')
   };
 
-  // const editListHandler = useCallback(async () => {
-  //   const response = await editList(list);
-  //   if (response.list) {
-  //     Alert.alert("List Updated", `${list.name} was updated successfully!`, [
-  //       { onPress: () => navigation.navigate("List", { listId: list._id }) },
-  //     ]);
-  //   }
-  // }, [list]);
+  const editListHandler = useCallback(async () => {
+    dispatch(listsActions.editlist(list, navigation));
+  }, [list]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -107,7 +172,7 @@ const EditListScreen = ({ navigation, route }) => {
             title="edit list"
             IconComponent={MaterialIcons}
             iconName="done"
-            onPress={() => console.log("editting list")}
+            onPress={() => editListHandler()}
           />
         </HeaderButtons>
       ),
@@ -121,7 +186,9 @@ const EditListScreen = ({ navigation, route }) => {
           <View style={{ flex: 1, justifyContent: "center" }}>
             <TextInput
               multiline={true}
-              onChangeText={(input) => console.log(input)}
+              onChangeText={(input) =>
+                dispatchItem({ type: itemActions.ITEM, item: input })
+              }
               placeholder="Enter list item"
               placeholderTextColor="#888"
               style={{ ...styles.input, color: "white" }}
@@ -131,9 +198,22 @@ const EditListScreen = ({ navigation, route }) => {
             <Button
               title="Cancel"
               color="white"
-              onPress={() => setItem(null)}
+              onPress={() =>
+                dispatchItem({ type: itemActions.SETITEM, item: null })
+              }
             />
-            <Button title="Ok" color="white" onPress={() => addItem("item")} />
+            <Button
+              title="Ok"
+              color="white"
+              onPress={() => {
+                dispatchList({
+                  type: listActions.EDITITEM,
+                  item,
+                });
+
+                dispatchItem({ type: itemActions.SETITEM, item: null });
+              }}
+            />
           </View>
         </Modal>
       )}
@@ -142,31 +222,37 @@ const EditListScreen = ({ navigation, route }) => {
           <View>
             <TextInput
               onChangeText={(input) =>
-                dispatchNL({ type: listActions.SETSUBNAME, subName: input })
+                dispatchItem({ type: itemActions.SUBNAME, name: input })
               }
               placeholder="Enter sub-list name"
               placeholderTextColor="#888"
-              style={styles.input}
+              style={{ ...styles.input, color: "white" }}
               textAlignVertical="top"
-              value={list.subList.subName}
+              value={item.subName}
             />
             <TextInput
               multiline={true}
-              onChangeText={setNewItemInputSub}
+              onChangeText={(input) => setNewSubItem(input)}
               placeholder="Enter sub-list item"
               placeholderTextColor="#888"
-              style={styles.input}
+              style={{ ...styles.input, ...{ color: "white" } }}
               textAlignVertical="top"
-              value={newItemInputSub}
+              value={newSubItem}
             />
             <Feather
               name="plus"
               size={24}
               color="white"
-              onPress={() => addSubItem()}
+              onPress={() => {
+                dispatchItem({
+                  type: itemActions.ADDSUBITEM,
+                  subItem: newSubItem,
+                }),
+                  setNewSubItem(null);
+              }}
             />
             <FlatList
-              data={list.subList.subItems}
+              data={item.subItems}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item, index }) => (
                 <View style={styles.item}>
@@ -176,29 +262,33 @@ const EditListScreen = ({ navigation, route }) => {
                     size={24}
                     color="white"
                     onPress={() =>
-                      dispatchNL({
-                        type: "REMOVEITEM",
-                        itemType: "sublist",
-                        idx: index,
-                      })
+                      dispatchItem({ type: itemActions.REMOVESUBITEM, index })
                     }
                   />
                 </View>
               )}
             />
             <View style={{ flexDirection: "row", alignSelf: "center" }}>
-              <Button
+              {/* <Button
                 title="Cancel"
                 onPress={() => {
-                  setShowAddListModal(false);
-                  setNewItemInputSub("");
-                  dispatchNL({ type: listActions.RESETSUB });
+                  dispatchList({
+                    type: itemActions.SETITEM,
+                    list: null,
+                  });
                 }}
                 color="white"
-              />
+              /> */}
               <Button
                 title="Ok"
-                onPress={() => addItem("sublist")}
+                onPress={() => {
+                  dispatchList({
+                    type: listActions.EDITITEM,
+                    item,
+                  });
+                  dispatchItem({ type: itemActions.SETITEM, item: null });
+                  setNewSubItem(null);
+                }}
                 color="white"
               />
             </View>
@@ -206,9 +296,19 @@ const EditListScreen = ({ navigation, route }) => {
         </Modal>
       )}
 
+      <Button
+        title="Clear Changes"
+        onPress={() =>
+          dispatchList({
+            type: listActions.CLEARCHANGES,
+            list: { ...userList },
+          })
+        }
+      />
+
       <TextInput
         onChangeText={(input) =>
-          dispatch({ type: listActions.LISTNAME, name: input })
+          dispatchList({ type: listActions.LISTNAME, name: input })
         }
         placeholder="Enter list name"
         style={styles.input}
@@ -217,9 +317,13 @@ const EditListScreen = ({ navigation, route }) => {
       <FlatList
         data={list.items}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item, index }) => (
+        renderItem={({ item }) => (
           <View style={styles.container}>
-            <TouchableOpacity onPress={() => setItem(item)}>
+            <TouchableOpacity
+              onPress={() =>
+                dispatchItem({ type: itemActions.SETITEM, item: { ...item } })
+              }
+            >
               <View style={styles.button}>
                 <Text>{item.item ? item.item : item.subName}</Text>
               </View>
@@ -227,7 +331,7 @@ const EditListScreen = ({ navigation, route }) => {
           </View>
         )}
       />
-      <Button title="See List" onPress={() => console.log("list: ", list)} />
+      <Button title="See Lists" onPress={() => console.log("lists: ", lists)} />
       <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => archiveList()}
@@ -284,6 +388,8 @@ const styles = StyleSheet.create({
   },
   item: {
     width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
     padding: 20,
     marginVertical: 8,
     alignItems: "center",
