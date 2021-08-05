@@ -1,15 +1,19 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Color from "../constants/color";
 
-const ListsItem = ({ list, path, navigation }) => {
+const ListsItem = ({ arr, listId, path, navigation }) => {
+  const userList = useSelector(
+    (state) => state.lists[arr].filter((list) => list._id === listId)[0]
+  );
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate(path, { list })}
+        onPress={() => navigation.navigate(path, { listId: userList._id, arr })}
       >
         <View style={styles.button}>
-          <Text>{list.name}</Text>
+          <Text>{userList.name}</Text>
         </View>
       </TouchableOpacity>
     </View>
