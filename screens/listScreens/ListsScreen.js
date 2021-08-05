@@ -39,18 +39,17 @@ export const screenOptions = ({ navigation }) => {
 const ListsScreen = ({ navigation }) => {
   const myLists = useSelector((state) => state.lists.myLists);
   const myListsIds = useSelector((state) => state.auth.user.myLists);
-  const state = useSelector((state) => state);
   const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
 
   const getListsHandler = useCallback(() => {
     dispatch(listsActions.getLists(myListsIds, "myLists"));
-  }, [dispatch, myListsIds, user]);
+  }, [dispatch, myLists, myListsIds, user]);
 
   useEffect(() => {
     getListsHandler();
-  }, [getListsHandler, myListsIds, myLists]);
+  }, [getListsHandler]);
 
   return (
     <View style={styles.screen}>
@@ -59,7 +58,12 @@ const ListsScreen = ({ navigation }) => {
         keyExtractor={(_, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={({ item }) => (
-          <ListsItem list={item} navigation={navigation} path="List" />
+          <ListsItem
+            arr="myLists"
+            listId={item._id}
+            navigation={navigation}
+            path="List"
+          />
         )}
       />
     </View>
