@@ -1,7 +1,20 @@
 import { Alert } from "react-native";
 
-import { AUTH, GETLISTS, LOGOUT, POSTLIST } from "../actionCreators";
-import { archiveList, activatelist, getlists, postlist } from "../../utils/api";
+import {
+  ADDLIST,
+  AUTH,
+  EDITLIST,
+  GETLISTS,
+  LOGOUT,
+  POSTLIST,
+} from "../actionCreators";
+import {
+  archiveList,
+  activatelist,
+  editList,
+  getlists,
+  postlist,
+} from "../../utils/api";
 
 export const activateList = (payload, navigation) => {
   return async (dispatch) => {
@@ -13,7 +26,7 @@ export const activateList = (payload, navigation) => {
       });
       navigation.navigate("Started Lists", {
         screen: "Active List",
-        params: { list: list },
+        params: { arr: "activeLists", listId: list._id },
       });
     } catch (error) {
       console.log("[ERROR: listsActions:16]: await activatelist", error);
@@ -25,13 +38,37 @@ export const archivelist = (payload, navigation) => {
   return async (dispatch) => {
     try {
       const { list, user } = await archiveList(payload);
-      dispatch({ type: AUTH, user });
-      navigation.navigate("Archive", {
-        screen: "Archived List",
-        params: { list: list },
-      });
+      await dispatch({ type: ADDLIST, arr: "archivedLists", list }),
+      await dispatch({ type: AUTH, user })
+      return { done: true }
     } catch (error) {
       console.log(error);
+    }
+  };
+};
+
+export const editlist = (list, navigation) => {
+  return async (dispatch) => {
+    try {
+      const { returnedList } = await editList(list);
+      if (returnedList) {
+        dispatch({ type: EDITLIST, returnedList });
+        Alert.alert(
+          "List Updated...",
+          `${returnedList.name} was updated successfully!`,
+          [
+            {
+              onPress: () =>
+                navigation.navigate("List", {
+                  arr: "myLists",
+                  listId: returnedList._id,
+                }),
+            },
+          ]
+        );
+      }
+    } catch (error) {
+      console.log("listActions.editist err: ", error);
     }
   };
 };
