@@ -1,4 +1,10 @@
-import { ACTIVATELIST, GETLISTS, LOGOUT, POSTLIST } from "../actionCreators";
+import {
+  ADDLIST,
+  EDITLIST,
+  GETLISTS,
+  LOGOUT,
+  POSTLIST,
+} from "../actionCreators";
 
 const initialState = {
   activeLists: [],
@@ -8,6 +14,23 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case ADDLIST:
+      const arr = state[action.arr];
+      arr.push(action.list);
+      return {
+        ...state,
+        [action.arr]: arr,
+      };
+    case EDITLIST:
+      const editIdx = state.myLists.findIndex(
+        (list) => list._id === action.returnedList._id
+      );
+      const edittedMyLists = state.myLists;
+      edittedMyLists[editIdx] = action.returnedList;
+      return {
+        ...state,
+        myLists: edittedMyLists,
+      };
     case GETLISTS:
       return {
         ...state,
@@ -21,7 +44,7 @@ export default (state = initialState, action) => {
         myLists: newMyLists,
       };
     case LOGOUT:
-      return initialState
+      return initialState;
     default:
       return state;
   }
