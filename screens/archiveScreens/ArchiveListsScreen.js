@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect } from "react";
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { Feather } from "@expo/vector-icons";
@@ -7,7 +13,7 @@ import { Feather } from "@expo/vector-icons";
 import HeaderButton from "../../components/HeaderButton";
 import ListEmptyComponent from "../../components/ListEmptyComponent";
 
-import Color from '../../constants/color';
+import Color from "../../constants/color";
 
 import * as listsActions from "../../store/actions/lists";
 
@@ -29,7 +35,7 @@ export const screenOptions = ({ navigation }) => {
 
 const ArchiveListsScreen = ({ navigation }) => {
   const arcListsIds = useSelector((state) => state.auth.user.archivedLists);
-  const archivedLists =  useSelector((state) => state.lists.archivedLists);
+  const archivedLists = useSelector((state) => state.lists.archivedLists);
   const { user } = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
 
@@ -51,7 +57,10 @@ const ArchiveListsScreen = ({ navigation }) => {
           <View style={styles.container}>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("Archived List", { list: item })
+                navigation.navigate("Archived List", {
+                  listId: item._id,
+                  arr: "archivedLists",
+                })
               }
             >
               <View style={styles.button}>
