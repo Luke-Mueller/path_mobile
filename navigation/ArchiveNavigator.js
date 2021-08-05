@@ -10,9 +10,9 @@ const Stack = createStackNavigator();
 
 const ArchiveNavigator = (props) => {
   return (
-    <Stack.Navigator initialRouteName="Archive">
+    <Stack.Navigator initialRouteName="Archived Lists">
       <Stack.Screen
-        name="Archive"
+        name="Archived Lists"
         component={ArchiveListsScreen}
         options={ArchiveListsScreenOptions}
       />
