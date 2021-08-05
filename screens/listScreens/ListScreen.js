@@ -16,7 +16,12 @@ import * as listsActions from "../../store/actions/lists";
 
 const ListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const list = route.params.list;
+  const list = useSelector(
+    (state) =>
+      state.lists[route.params.arr].filter(
+        (list) => list._id.toString() === route.params.listId.toString()
+      )[0]
+  );
   const userId = useSelector((state) => state.auth.user._id);
 
   let bottomButtons = (
@@ -44,8 +49,12 @@ const ListScreen = ({ navigation, route }) => {
         title="edit list"
         iconName="edit-2"
         IconComponent={Feather}
-        onPress={() => navigation.navigate("Edit List", { list })}
-        // onPress={() => console.log("entering edit list")}
+        onPress={() =>
+          navigation.navigate("Edit List", {
+            arr: route.params.arr,
+            listId: route.params.listId,
+          })
+        }
       />
     </HeaderButtons>
   );
@@ -55,15 +64,15 @@ const ListScreen = ({ navigation, route }) => {
       headerRight = null;
     }
     navigation.setOptions({
-      headerTitle: list.name,
+      headerTitle: list && list.name ? list.name : "",
       headerRight: headerRight,
     });
-  }, [list, navigation]);
+  }, [list, navigation, route.name]);
 
   const activateList = async () => {
     const payload = { list: list, userId: userId };
     dispatch(listsActions.activateList(payload, navigation));
-    navigation.pop();
+    // navigation.pop();
   };
 
   // const archiveList = async () => {
@@ -138,4 +147,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(ListScreen);
+export default ListScreen;
