@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { FlatList, Text, View } from "react-native";
+import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather } from "@expo/vector-icons";
@@ -8,7 +8,7 @@ import HeaderButton from "../../components/HeaderButton";
 import ListEmptyComponent from "../../components/ListEmptyComponent";
 import ListsItem from "../../components/ListsItem";
 
-import * as listsActions from '../../store/actions/lists';
+import * as listsActions from "../../store/actions/lists";
 
 export const screenOptions = ({ navigation }) => {
   return {
@@ -27,14 +27,14 @@ export const screenOptions = ({ navigation }) => {
 };
 
 const ActiveListsScreen = ({ navigation }) => {
-  const activeLists = useSelector(state => state.lists.activeLists);
+  const activeLists = useSelector((state) => state.lists.activeLists);
   const activeListsIds = useSelector((state) => state.auth.user.activeLists);
-  const user = useSelector(state => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
 
   const getListsHandler = useCallback(() => {
     dispatch(listsActions.getLists(activeListsIds, "activeLists"));
-  }, [dispatch, activeListsIds, user]);
+  }, [dispatch, activeLists, activeListsIds, user]);
 
   useEffect(() => {
     getListsHandler();
@@ -47,7 +47,7 @@ const ActiveListsScreen = ({ navigation }) => {
         keyExtractor={(_, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={({ item }) => (
-          <ListsItem list={item} navigation={navigation} path="Active List" />
+          <ListsItem arr="activeLists" listId={item._id} navigation={navigation} path="Active List" />
         )}
       />
     </View>
