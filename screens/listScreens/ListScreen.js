@@ -26,13 +26,13 @@ const ListScreen = ({ navigation, route }) => {
 
   let bottomButtons = (
     <View style={styles.bottomContainer}>
-      {/* <TouchableOpacity
+      <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => archiveList()}
       >
         <Feather name="archive" size={24} color="black" />
         <Text style={{ marginHorizontal: 25 }}>Archive List</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => activateList()}
@@ -72,14 +72,25 @@ const ListScreen = ({ navigation, route }) => {
   const activateList = async () => {
     const payload = { list: list, userId: userId };
     dispatch(listsActions.activateList(payload, navigation));
-    // navigation.pop();
+    navigation.popToTop();
   };
 
-  // const archiveList = async () => {
-  //   const payload = { listId: list._id, userId };
-  //   const done = dispatch(listsActions.archivelist(payload, navigation));
-  //   if(done) navigation.pop();
-  // };
+  const archiveList = async () => {
+    const payload = { listId: list._id, userId };
+    const { done } = await dispatch(
+      listsActions.archivelist(payload, navigation)
+    );
+    if (done) {
+      navigation.navigate("Archive", {
+        screen: "Archived List",
+        params: {
+          listId: list._id,
+          arr: "archivedLists",
+        },
+      });
+      navigation.popToTop();
+    }
+  }
 
   if (route.name === "Active List" || route.name === "Archived List") {
     bottomButtons = null;
