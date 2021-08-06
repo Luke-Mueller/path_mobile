@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
-  Alert,
   Button,
   FlatList,
   StyleSheet,
@@ -13,11 +12,8 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 
-import { editList } from "../../utils/api";
 import Color from "../../constants/color";
-import EditModal from "../../components/EditModal";
 import HeaderButton from "../../components/HeaderButton";
-import ListItem from "../../components/ListItem";
 import ListItemModel from "../../models/ListItem";
 import Modal from "../../components/Modal";
 
@@ -34,8 +30,8 @@ const listActions = {
 const listReducer = (list, action) => {
   switch (action.type) {
     case listActions.ADDITEM:
-      let items = list.items;
-      items.push(action.newItem);
+      let items = [...list.items];
+      items.push(action.item);
       return {
         ...list,
         items: items,
@@ -45,7 +41,7 @@ const listReducer = (list, action) => {
         ...action.list,
       };
     case listActions.EDITITEM:
-      items = list.items;
+      items = [...list.items];
       const index = list.items.findIndex(
         (item) => item._id === action.item._id
       );
@@ -58,12 +54,12 @@ const listReducer = (list, action) => {
       if (action.itemType === "item") {
         return {
           ...list,
-          items: list.items.filter((_, index) => index !== action.itemIndex),
+          items: list.items.filter((_, index) => index !== action.index),
         };
       }
       if (action.itemType === "sublist") {
         const newItems = [...list.items[action.listItemIndex].items];
-        newItems.splice(action.itemIndex, 1);
+        newItems.splice(action.index, 1);
 
         items = list.items;
         items[action.listItemIndex].items = newItems;
@@ -127,37 +123,17 @@ const itemReducer = (item, action) => {
 };
 
 const EditListScreen = ({ navigation, route }) => {
-  const userId = useSelector((state) => state.auth.user._id);
   const userList = useSelector(
     (state) =>
       state.lists[route.params.arr].filter(
         (list) => list._id === route.params.listId
       )[0]
   );
-  const lists = useSelector((state) => state.lists);
   const [item, dispatchItem] = useReducer(itemReducer, null);
   const [list, dispatchList] = useReducer(listReducer, { ...userList });
   const [newSubItem, setNewSubItem] = useState(null);
 
   const dispatch = useDispatch();
-
-  const archiveList = async () => {
-    const payload = { listId: list._id, userId };
-    const { done } = await dispatch(
-      listsActions.archivelist(payload, navigation)
-    );
-    if (done) {
-      navigation.navigate("Archive", {
-        screen: "Archived List",
-        params: {
-          listId: list._id,
-          arr: "archivedLists",
-        },
-      });
-      navigation.popToTop();
-    }
-    // console.log('archiveList')
-  };
 
   const editListHandler = useCallback(async () => {
     dispatch(listsActions.editlist(list, navigation));
@@ -196,21 +172,14 @@ const EditListScreen = ({ navigation, route }) => {
               value={item.item}
             />
             <Button
-              title="Cancel"
-              color="white"
-              onPress={() =>
-                dispatchItem({ type: itemActions.SETITEM, item: null })
-              }
-            />
-            <Button
               title="Ok"
               color="white"
               onPress={() => {
+                const newItem = { ...item, new: undefined };
                 dispatchList({
-                  type: listActions.EDITITEM,
-                  item,
+                  type: item.new ? listActions.ADDITEM : listActions.EDITITEM,
+                  item: newItem,
                 });
-
                 dispatchItem({ type: itemActions.SETITEM, item: null });
               }}
             />
@@ -269,22 +238,13 @@ const EditListScreen = ({ navigation, route }) => {
               )}
             />
             <View style={{ flexDirection: "row", alignSelf: "center" }}>
-              {/* <Button
-                title="Cancel"
-                onPress={() => {
-                  dispatchList({
-                    type: itemActions.SETITEM,
-                    list: null,
-                  });
-                }}
-                color="white"
-              /> */}
               <Button
                 title="Ok"
                 onPress={() => {
+                  const newItem = { ...item, new: undefined };
                   dispatchList({
-                    type: listActions.EDITITEM,
-                    item,
+                    type: item.new ? listActions.ADDITEM : listActions.EDITITEM,
+                    item: newItem,
                   });
                   dispatchItem({ type: itemActions.SETITEM, item: null });
                   setNewSubItem(null);
@@ -305,7 +265,6 @@ const EditListScreen = ({ navigation, route }) => {
           })
         }
       />
-
       <TextInput
         onChangeText={(input) =>
           dispatchList({ type: listActions.LISTNAME, name: input })
@@ -314,10 +273,40 @@ const EditListScreen = ({ navigation, route }) => {
         style={styles.input}
         value={list.name}
       />
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <MaterialIcons
+          name="add-task"
+          size={40}
+          style={{ marginHorizontal: 50, marginVertical: 25 }}
+          color={Color.black}
+          onPress={() => {
+            const newItem = new ListItemModel("item", "", "", []);
+            newItem.new = true;
+            dispatchItem({
+              type: itemActions.SETITEM,
+              item: newItem,
+            });
+          }}
+        />
+        <MaterialIcons
+          name="playlist-add"
+          size={40}
+          style={{ marginHorizontal: 50, marginVertical: 25 }}
+          color={Color.black}
+          onPress={() => {
+            const newItem = new ListItemModel("sublist", "", "", []);
+            newItem.new = true;
+            dispatchItem({
+              type: itemActions.SETITEM,
+              item: newItem,
+            });
+          }}
+        />
+      </View>
       <FlatList
         data={list.items}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <View style={styles.container}>
             <TouchableOpacity
               onPress={() =>
@@ -326,19 +315,23 @@ const EditListScreen = ({ navigation, route }) => {
             >
               <View style={styles.button}>
                 <Text>{item.item ? item.item : item.subName}</Text>
+                <MaterialIcons
+                  name="delete-outline"
+                  size={24}
+                  color="black"
+                  onPress={() =>
+                    dispatchList({
+                      type: listActions.REMOVEITEM,
+                      index,
+                      itemType: "item",
+                    })
+                  }
+                />
               </View>
             </TouchableOpacity>
           </View>
         )}
       />
-      <Button title="See Lists" onPress={() => console.log("lists: ", lists)} />
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => archiveList()}
-      >
-        <Feather name="archive" size={24} color="black" />
-        <Text style={{ marginHorizontal: 25 }}>Archive List</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -352,9 +345,11 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: Color.highlight,
-    paddingVertical: 20,
+    padding: 20,
   },
   container_list: {
     flex: 3,
