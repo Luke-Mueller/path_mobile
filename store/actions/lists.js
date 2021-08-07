@@ -3,6 +3,7 @@ import { Alert } from "react-native";
 import {
   ADDLIST,
   AUTH,
+  DELETELIST,
   EDITLIST,
   GETLISTS,
   LOGOUT,
@@ -11,6 +12,7 @@ import {
 import {
   archiveList,
   activatelist,
+  deleteList,
   editList,
   getlists,
   postlist,
@@ -39,10 +41,37 @@ export const archivelist = (payload, navigation) => {
     try {
       const { list, user } = await archiveList(payload);
       await dispatch({ type: ADDLIST, arr: "archivedLists", list }),
-      await dispatch({ type: AUTH, user })
-      return { done: true }
+        await dispatch({ type: AUTH, user });
+      return { done: true };
     } catch (error) {
       console.log(error);
+    }
+  };
+};
+
+export const deletelist = (listId, userId, arr, navigation) => {
+  return async (dispatch) => {
+    try {
+      const { user } = await deleteList(listId, userId);
+      if (user) {
+        console.log(user.username)
+        dispatch({ type: DELETELIST, listId, arr });
+        Alert.alert(
+          "List Deleted...",
+          `The list was deleted successfully!`,
+          [
+            {
+              onPress: () =>
+                navigation.navigate("All Lists", {
+                  screen: "All Lists",
+                }),
+            },
+          ]
+        );
+      }
+
+    } catch (error) {
+      console.log("[DELETELIST ERROR: ", error);
     }
   };
 };

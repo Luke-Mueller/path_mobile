@@ -1,5 +1,6 @@
 import {
   ADDLIST,
+  DELETELIST,
   EDITLIST,
   GETLISTS,
   LOGOUT,
@@ -20,6 +21,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         [action.arr]: arr,
+      };
+    case DELETELIST:
+      const deleteListArr = state[action.arr].filter(
+        (list) => list._id.toString() !== action.listId.toString()
+      );
+      return {
+        ...state,
+        [action.arr]: deleteListArr,
       };
     case EDITLIST:
       const editIdx = state.myLists.findIndex(
