@@ -123,6 +123,7 @@ const itemReducer = (item, action) => {
 };
 
 const EditListScreen = ({ navigation, route }) => {
+  const userId = useSelector((state) => state.auth.user._id);
   const userList = useSelector(
     (state) =>
       state.lists[route.params.arr].filter(
@@ -135,6 +136,10 @@ const EditListScreen = ({ navigation, route }) => {
 
   const dispatch = useDispatch();
 
+  const deleteListHandler = useCallback(async () => {
+    dispatch(listsActions.deletelist(list._id, userId, "myLists", navigation));
+  }, [list, userId]);
+
   const editListHandler = useCallback(async () => {
     dispatch(listsActions.editlist(list, navigation));
   }, [list]);
@@ -144,6 +149,12 @@ const EditListScreen = ({ navigation, route }) => {
       headerTitle: `Edit list`,
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="delete list"
+            IconComponent={Feather}
+            iconName="trash-2"
+            onPress={() => deleteListHandler()}
+          />
           <Item
             title="edit list"
             IconComponent={MaterialIcons}
@@ -255,7 +266,6 @@ const EditListScreen = ({ navigation, route }) => {
           </View>
         </Modal>
       )}
-
       <Button
         title="Clear Changes"
         onPress={() =>
