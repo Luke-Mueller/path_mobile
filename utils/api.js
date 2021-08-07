@@ -51,7 +51,7 @@ export const editList = (list) => {
 };
 
 export const getlists = (arr, arrType) => {
-  if (!arr.length) arr = "none";
+  if (!arr || !arr.length) arr = "none";
 
   let url = `${API_BASE_URL}/lists/getLists/${arr}`;
   if (arrType === "activeLists")
