@@ -81,13 +81,7 @@ const ListScreen = ({ navigation, route }) => {
       listsActions.archivelist(payload, navigation)
     );
     if (done) {
-      navigation.navigate("Archive", {
-        screen: "Archived List",
-        params: {
-          listId: list._id,
-          arr: "archivedLists",
-        },
-      });
+      navigation.navigate("Archive");
       navigation.popToTop();
     }
   }

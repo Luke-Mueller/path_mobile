@@ -26,10 +26,7 @@ export const activateList = (payload, navigation) => {
         type: AUTH,
         user,
       });
-      navigation.navigate("Started Lists", {
-        screen: "Active List",
-        params: { arr: "activeLists", listId: list._id },
-      });
+      navigation.navigate("Active Lists");
     } catch (error) {
       console.log("[ERROR: listsActions:16]: await activatelist", error);
     }
