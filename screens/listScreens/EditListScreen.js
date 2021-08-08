@@ -30,7 +30,6 @@ const listActions = {
 const listReducer = (list, action) => {
   switch (action.type) {
     case listActions.ADDITEM:
-      console.log("addItem");
       let items = [...list.items];
       items.push(action.item);
       return {
@@ -44,7 +43,6 @@ const listReducer = (list, action) => {
     case listActions.EDITITEM:
       items = [...list.items];
       items[action.index] = action.item;
-      console.log(action.index);
       return {
         ...list,
         items: items,
