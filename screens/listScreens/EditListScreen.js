@@ -181,6 +181,14 @@ const EditListScreen = ({ navigation, route }) => {
               value={item.item}
             />
             <Button
+              title="Cancel"
+              color="white"
+              onPress={() => {
+                dispatchItem({ type: itemActions.SETITEM, item: null });
+                setItemIndex(null);
+              }}
+            />
+            <Button
               title="Ok"
               color="white"
               onPress={async () => {
@@ -250,6 +258,17 @@ const EditListScreen = ({ navigation, route }) => {
               )}
             />
             <View style={{ flexDirection: "row", alignSelf: "center" }}>
+              {item && item.itemType === "sublist" && item.new && (
+                <Button
+                  title="Cancel"
+                  color="white"
+                  onPress={() => {
+                    dispatchItem({ type: itemActions.SETITEM, item: null });
+                    setItemIndex(null);
+                    setNewSubItem(null);
+                  }}
+                />
+              )}
               <Button
                 title="Ok"
                 onPress={() => {
