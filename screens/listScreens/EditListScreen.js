@@ -30,6 +30,7 @@ const listActions = {
 const listReducer = (list, action) => {
   switch (action.type) {
     case listActions.ADDITEM:
+      console.log("addItem");
       let items = [...list.items];
       items.push(action.item);
       return {
@@ -42,10 +43,8 @@ const listReducer = (list, action) => {
       };
     case listActions.EDITITEM:
       items = [...list.items];
-      const index = list.items.findIndex(
-        (item) => item._id === action.item._id
-      );
-      items[index] = action.item;
+      items[action.index] = action.item;
+      console.log(action.index);
       return {
         ...list,
         items: items,
@@ -133,6 +132,7 @@ const EditListScreen = ({ navigation, route }) => {
   const [item, dispatchItem] = useReducer(itemReducer, null);
   const [list, dispatchList] = useReducer(listReducer, { ...userList });
   const [newSubItem, setNewSubItem] = useState(null);
+  const [itemIndex, setItemIndex] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -185,13 +185,16 @@ const EditListScreen = ({ navigation, route }) => {
             <Button
               title="Ok"
               color="white"
-              onPress={() => {
-                const newItem = { ...item, new: undefined };
-                dispatchList({
+              onPress={async () => {
+                const newItem = { ...item };
+                delete newItem.new;
+                await dispatchList({
                   type: item.new ? listActions.ADDITEM : listActions.EDITITEM,
                   item: newItem,
+                  index: itemIndex,
                 });
-                dispatchItem({ type: itemActions.SETITEM, item: null });
+                await dispatchItem({ type: itemActions.SETITEM, item: null });
+                setItemIndex(null);
               }}
             />
           </View>
@@ -256,8 +259,10 @@ const EditListScreen = ({ navigation, route }) => {
                   dispatchList({
                     type: item.new ? listActions.ADDITEM : listActions.EDITITEM,
                     item: newItem,
+                    index: itemIndex,
                   });
                   dispatchItem({ type: itemActions.SETITEM, item: null });
+                  setItemIndex(null);
                   setNewSubItem(null);
                 }}
                 color="white"
@@ -296,6 +301,7 @@ const EditListScreen = ({ navigation, route }) => {
               type: itemActions.SETITEM,
               item: newItem,
             });
+            setItemIndex(list.items.length);
           }}
         />
         <MaterialIcons
@@ -310,6 +316,7 @@ const EditListScreen = ({ navigation, route }) => {
               type: itemActions.SETITEM,
               item: newItem,
             });
+            setItemIndex(list.items.length);
           }}
         />
       </View>
@@ -319,9 +326,10 @@ const EditListScreen = ({ navigation, route }) => {
         renderItem={({ item, index }) => (
           <View style={styles.container}>
             <TouchableOpacity
-              onPress={() =>
-                dispatchItem({ type: itemActions.SETITEM, item: { ...item } })
-              }
+              onPress={() => {
+                dispatchItem({ type: itemActions.SETITEM, item: { ...item } });
+                setItemIndex(index);
+              }}
             >
               <View style={styles.button}>
                 <Text>{item.item ? item.item : item.subName}</Text>
