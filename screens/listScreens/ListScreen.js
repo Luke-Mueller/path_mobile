@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 
 import HeaderButton from "../../components/HeaderButton";
 import Color from "../../constants/color";
@@ -61,7 +61,21 @@ const ListScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (route.name === "Active List" || route.name === "Archived List") {
-      headerRight = null;
+      const arr =
+        route.name === "Active List" ? "activeLists" : "archivedLists";
+      const deleteHandler = () => {
+        dispatch(listsActions.deletelist(list._id, userId, arr, navigation));
+      };
+      headerRight = () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="delete list"
+            iconName="delete-outline"
+            IconComponent={MaterialIcons}
+            onPress={() => deleteHandler()}
+          />
+        </HeaderButtons>
+      );
     }
     navigation.setOptions({
       headerTitle: list && list.name ? list.name : "",
@@ -84,9 +98,9 @@ const ListScreen = ({ navigation, route }) => {
       navigation.navigate("Archive");
       navigation.popToTop();
     }
-  }
+  };
 
-  if (route.name === "Active List" || route.name === "Archived List") {
+  if (route.name === "Archived List" || route.name === "Active List") {
     bottomButtons = null;
   }
 
