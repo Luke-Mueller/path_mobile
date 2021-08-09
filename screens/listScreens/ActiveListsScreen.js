@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather } from "@expo/vector-icons";
@@ -47,7 +47,12 @@ const ActiveListsScreen = ({ navigation }) => {
         keyExtractor={(_, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={({ item }) => (
-          <ListsItem arr="activeLists" listId={item._id} navigation={navigation} path="Active List" />
+          <ListsItem
+            arr="activeLists"
+            listId={item._id}
+            navigation={navigation}
+            path="Active List"
+          />
         )}
       />
     </View>
