@@ -21,6 +21,7 @@ export default (state = initialState, action) => {
           myLists: newMyLists,
         },
       };
+      
     case LOGOUT:
       return initialState;
     default:

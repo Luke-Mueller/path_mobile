@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 
 import { AUTH, LOGOUT } from "../actionCreators";
-import { login, signup } from "../../utils/api";
+import { login, restorelist, signup } from "../../utils/api";
 
 export const logOut = () => {
   return async (dispatch) => {
@@ -22,6 +22,21 @@ export const logIn = (username) => {
     } catch (error) {
       // ERROR HANDLED IN UTILS/API
       return;
+    }
+  };
+};
+
+export const restoreList = (listId, userId, navigation) => {
+  return async (dispatch) => {
+    const payload = { listId, userId };
+    try {
+      const { user } = await restorelist(payload);
+      if (user) {
+        dispatch({ type: AUTH, user })
+      }
+      navigation.navigate("All Lists")
+    } catch (error) {
+      return
     }
   };
 };
