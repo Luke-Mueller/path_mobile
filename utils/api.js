@@ -77,6 +77,14 @@ export const postlist = (payload) => {
   });
 };
 
+export const restorelist = (payload) => {
+  return request({
+    url: `${API_BASE_URL}/user/restoreList`,
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+};
+
 export const signup = (payload) => {
   return request({
     url: `${API_BASE_URL}/user/signup`,
