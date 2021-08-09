@@ -49,24 +49,28 @@ export const archivelist = (payload, navigation) => {
 export const deletelist = (listId, userId, arr, navigation) => {
   return async (dispatch) => {
     try {
-      const { user } = await deleteList(listId, userId);
+      const { user } = await deleteList(listId, userId, arr);
+      let onpress;
       if (user) {
-        console.log(user.username)
         dispatch({ type: DELETELIST, listId, arr });
-        Alert.alert(
-          "List Deleted...",
-          `The list was deleted successfully!`,
-          [
-            {
-              onPress: () =>
-                navigation.navigate("All Lists", {
-                  screen: "All Lists",
-                }),
-            },
-          ]
-        );
-      }
+        if (arr === "myLists") {
+          onpress = () => navigation.navigate("All Lists");
+        }
+        if (arr === "activeLists") {
+          onpress = () =>
+            navigation.navigate("Started Lists", { screen: "Active Lists" });
+        }
+        if (arr === "archivedLists") {
+          onpress = () =>
+            navigation.navigate("Archive", { screen: "Archived Lists" });
+        }
 
+        Alert.alert("List Deleted...", `The list was deleted successfully!`, [
+          {
+            onPress: () => onpress(),
+          },
+        ]);
+      }
     } catch (error) {
       console.log("[DELETELIST ERROR: ", error);
     }
