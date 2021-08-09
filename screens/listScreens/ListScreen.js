@@ -13,6 +13,7 @@ import { Feather, MaterialIcons } from "@expo/vector-icons";
 import HeaderButton from "../../components/HeaderButton";
 import Color from "../../constants/color";
 import * as listsActions from "../../store/actions/lists";
+import * as authActions from "../../store/actions/auth";
 
 const ListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -100,8 +101,26 @@ const ListScreen = ({ navigation, route }) => {
     }
   };
 
-  if (route.name === "Archived List" || route.name === "Active List") {
+  if (route.name === "Active List") {
     bottomButtons = null;
+  }
+
+  if (route.name === "Archived List") {
+    const restoreList = () => {
+      dispatch(authActions.restoreList(list._id, userId, navigation));
+      navigation.popToTop();
+    };
+    bottomButtons = (
+      <View style={styles.bottomContainer}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => restoreList()}
+        >
+          <Feather name="archive" size={24} color="black" />
+          <Text style={{ marginHorizontal: 25 }}>Restore List</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   return (
