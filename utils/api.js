@@ -35,9 +35,9 @@ export const archiveList = (payload) => {
   });
 };
 
-export const deleteList = (listId, userId) => {
+export const deleteList = (listId, userId, arr) => {
   return request({
-    url: `${API_BASE_URL}/lists/deleteList/${listId}/${userId}`,
+    url: `${API_BASE_URL}/lists/deleteList/${listId}/${userId}/${arr}`,
     method: "DELETE",
   });
 };
