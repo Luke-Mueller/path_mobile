@@ -28,6 +28,7 @@ const listReducer = (list, action) => {
         (i) => i._id.toString() === action.id.toString()
       )[0];
       doneItem.done = true;
+      newList.progress += 1 / list.items.length;
       return {
         ...list,
         ...newList,
@@ -173,12 +174,6 @@ const ListScreen = ({ navigation, route }) => {
                   )}
                   {Object.keys(item).includes("done") && (
                     <View>
-                      <Button
-                        title="SEE"
-                        onPress={() => {
-                          console.log(list);
-                        }}
-                      />
                       <Button
                         title="DONE!"
                         onPress={() => doneHandler(item._id)}
