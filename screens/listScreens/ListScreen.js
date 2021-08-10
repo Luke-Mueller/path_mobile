@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
 import {
+  Button,
   FlatList,
   StyleSheet,
   Text,
@@ -15,14 +16,37 @@ import Color from "../../constants/color";
 import * as listsActions from "../../store/actions/lists";
 import * as authActions from "../../store/actions/auth";
 
+const listActions = {
+  DONE: "DONE",
+};
+
+const listReducer = (list, action) => {
+  switch (action.type) {
+    case listActions.DONE:
+      const newList = { ...list };
+      const doneItem = newList.items.filter(
+        (i) => i._id.toString() === action.id.toString()
+      )[0];
+      doneItem.done = true;
+      return {
+        ...list,
+        ...newList,
+      };
+    default:
+      return state;
+  }
+};
+
 const ListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const list = useSelector(
+  const userList = useSelector(
     (state) =>
       state.lists[route.params.arr].filter(
         (list) => list._id.toString() === route.params.listId.toString()
       )[0]
   );
+  const [list, dispatchList] = useReducer(listReducer, { ...userList });
+
   const userId = useSelector((state) => state.auth.user._id);
 
   let bottomButtons = (
@@ -101,6 +125,10 @@ const ListScreen = ({ navigation, route }) => {
     }
   };
 
+  const doneHandler = (id) => {
+    dispatchList({ type: listActions.DONE, id });
+  };
+
   if (route.name === "Active List") {
     bottomButtons = null;
   }
@@ -125,26 +153,64 @@ const ListScreen = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View>
-        {list && !!list.items.length && (
-          <FlatList
-            data={list.items}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.container}>
-                <Text style={styles.text}>
-                  {item.item ? item.item : item.subName}
-                </Text>
-                {!!item.subName && (
-                  <FlatList
-                    data={item.subItems}
-                    keyExtractor={(_, idx) => idx.toString()}
-                    renderItem={({ item }) => <Text>{item.item}</Text>}
-                  />
-                )}
-              </View>
-            )}
-          />
+      <View style={{ flex: 1, justifyContent: "space-between" }}>
+        <View>
+          {list && !!list.items.length && (
+            <FlatList
+              data={list.items.filter((i) => !i.done)}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.container}>
+                  <Text style={styles.text}>
+                    {item.item ? item.item : item.subName}
+                  </Text>
+                  {!!item.subName && (
+                    <FlatList
+                      data={item.subItems}
+                      keyExtractor={(_, idx) => idx.toString()}
+                      renderItem={({ item }) => <Text>{item.item}</Text>}
+                    />
+                  )}
+                  {item.done(
+                    <View>
+                      <Button
+                        title="SEE"
+                        onPress={() => {
+                          console.log(list);
+                        }}
+                      />
+                      <Button
+                        title="DONE!"
+                        onPress={() => doneHandler(item._id)}
+                      />
+                    </View>
+                  )}
+                </View>
+              )}
+            />
+          )}
+        </View>
+        {route.name === "Active List" && (
+          <View>
+            <FlatList
+              data={list.items.filter((item) => item.done)}
+              keyExtractor={(_, idx) => idx.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.container}>
+                  <Text style={styles.text}>
+                    {item.item ? item.item : item.subName}
+                  </Text>
+                  {!!item.subName && (
+                    <FlatList
+                      data={item.subItems}
+                      keyExtractor={(_, idx) => idx.toString()}
+                      renderItem={({ item }) => <Text>{item.item}</Text>}
+                    />
+                  )}
+                </View>
+              )}
+            />
+          </View>
         )}
       </View>
       {bottomButtons}
