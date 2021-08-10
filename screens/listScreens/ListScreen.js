@@ -171,7 +171,7 @@ const ListScreen = ({ navigation, route }) => {
                       renderItem={({ item }) => <Text>{item.item}</Text>}
                     />
                   )}
-                  {item.done(
+                  {Object.keys(item).includes("done") && (
                     <View>
                       <Button
                         title="SEE"
