@@ -26,7 +26,7 @@ export const activateList = (payload, navigation) => {
         type: AUTH,
         user,
       });
-      navigation.navigate("Active Lists");
+      navigation.navigate("Started Lists");
     } catch (error) {
       console.log("[ERROR: listsActions:16]: await activatelist", error);
     }
@@ -85,25 +85,10 @@ export const editlist = (list, listType, navigation) => {
 
       if (returnedList) {
         dispatch({ type: EDITLIST, returnedList });
-        let onpress;
-        if (listType === "lists") {
-          onpress = () => {
-            navigation.navigate("All Lists");
-          };
-        }
-        if (listType === "activeLists") {
-          onpress = () => {
-            navigation.navigate("Active Lists");
-          };
-        }
         Alert.alert(
           "List Updated...",
           `${returnedList.name} was updated successfully!`,
-          [
-            {
-              onPress: () => onpress(),
-            },
-          ]
+          [{ onPress: () => navigation.popToTop() }]
         );
       }
     } catch (error) {
@@ -119,9 +104,13 @@ export const getLists = (arr, arrType) => {
   };
 };
 
-export const logOut = () => {
+export const logOut = (navigation) => {
   return async (dispatch) => {
     dispatch({ type: LOGOUT });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "All Lists" }],
+    });
   };
 };
 

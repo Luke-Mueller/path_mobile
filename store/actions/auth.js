@@ -1,11 +1,22 @@
 import { Alert } from "react-native";
 
 import { AUTH, LOGOUT } from "../actionCreators";
-import { login, restorelist, signup } from "../../utils/api";
+import { deleteuser, login, restorelist, signup } from "../../utils/api";
 
-export const logOut = () => {
+export const deleteUser = (activeArr, archivedArr, listArr, userId) => {
+  return async (dispatch) => {
+    const done = await deleteuser(activeArr, archivedArr, listArr, userId);
+    if (done) dispatch({ type: LOGOUT });
+  };
+};
+
+export const logOut = (navigation) => {
   return async (dispatch) => {
     dispatch({ type: LOGOUT });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Lists" }],
+    });
   };
 };
 
@@ -32,11 +43,11 @@ export const restoreList = (listId, userId, navigation) => {
     try {
       const { user } = await restorelist(payload);
       if (user) {
-        dispatch({ type: AUTH, user })
+        dispatch({ type: AUTH, user });
       }
-      navigation.navigate("All Lists")
+      navigation.navigate("All Lists");
     } catch (error) {
-      return
+      return;
     }
   };
 };

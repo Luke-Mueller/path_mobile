@@ -42,6 +42,14 @@ export const deleteList = (listId, userId, arr) => {
   });
 };
 
+export const deleteuser = (activeArr, archivedArr, listArr, userId) => {
+  console.log('api')
+  return request({
+    url: `${API_BASE_URL}/user/delete/${activeArr}/${archivedArr}/${listArr}/${userId}`,
+    method: "DELETE",
+  });
+};
+
 export const editList = (payload) => {
   return request({
     url: `${API_BASE_URL}/lists/editList`,

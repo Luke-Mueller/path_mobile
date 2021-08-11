@@ -121,7 +121,7 @@ const ListScreen = ({ navigation, route }) => {
   }, [list, navigation, route.name]);
 
   const activateList = () => {
-    const payload = { list: list, userId: userId };
+    const payload = { list, userId };
     dispatch(listsActions.activateList(payload, navigation));
     navigation.popToTop();
   };

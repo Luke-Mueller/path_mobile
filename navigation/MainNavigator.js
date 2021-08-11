@@ -32,8 +32,8 @@ const MainNavigator = () => {
               <DrawerItem
                 label="Logout"
                 onPress={() => {
-                  dispatch(listsActions.logOut());
-                  dispatch(authActions.logOut());
+                  dispatch(listsActions.logOut(props.navigation));
+                  dispatch(authActions.logOut(props.navigation));
                 }}
               />
             </SafeAreaView>
