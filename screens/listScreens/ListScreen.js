@@ -28,7 +28,7 @@ const listReducer = (list, action) => {
         (i) => i._id.toString() === action.id.toString()
       )[0];
       doneItem.done = true;
-      newList.progress += 1 / list.items.length;
+      newList.progress += 1 / newList.items.length;
       return {
         ...list,
         ...newList,
@@ -92,6 +92,9 @@ const ListScreen = ({ navigation, route }) => {
       const deleteHandler = () => {
         dispatch(listsActions.deletelist(list._id, userId, arr, navigation));
       };
+      const editListHandler = () => {
+        dispatch(listsActions.editlist(list, "activeLists", navigation));
+      };
       headerRight = () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
@@ -100,6 +103,14 @@ const ListScreen = ({ navigation, route }) => {
             IconComponent={MaterialIcons}
             onPress={() => deleteHandler()}
           />
+          {route.name === "Active List" && (
+            <Item
+              title="edit list"
+              IconComponent={MaterialIcons}
+              iconName="done"
+              onPress={() => editListHandler()}
+            />
+          )}
         </HeaderButtons>
       );
     }
@@ -109,15 +120,15 @@ const ListScreen = ({ navigation, route }) => {
     });
   }, [list, navigation, route.name]);
 
-  const activateList = async () => {
+  const activateList = () => {
     const payload = { list: list, userId: userId };
     dispatch(listsActions.activateList(payload, navigation));
     navigation.popToTop();
   };
 
-  const archiveList = async () => {
+  const archiveList = () => {
     const payload = { listId: list._id, userId };
-    const { done } = await dispatch(
+    const { done } = dispatch(
       listsActions.archivelist(payload, navigation)
     );
     if (done) {
