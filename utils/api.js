@@ -42,11 +42,11 @@ export const deleteList = (listId, userId, arr) => {
   });
 };
 
-export const editList = (list) => {
+export const editList = (payload) => {
   return request({
     url: `${API_BASE_URL}/lists/editList`,
     method: "PUT",
-    body: JSON.stringify(list),
+    body: JSON.stringify(payload),
   });
 };
 
