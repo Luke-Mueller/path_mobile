@@ -77,22 +77,31 @@ export const deletelist = (listId, userId, arr, navigation) => {
   };
 };
 
-export const editlist = (list, navigation) => {
+export const editlist = (list, listType, navigation) => {
   return async (dispatch) => {
     try {
-      const { returnedList } = await editList(list);
+      const payload = { list, listType };
+      const { returnedList } = await editList(payload);
+
       if (returnedList) {
         dispatch({ type: EDITLIST, returnedList });
+        let onpress;
+        if (listType === "lists") {
+          onpress = () => {
+            navigation.navigate("All Lists");
+          };
+        }
+        if (listType === "activeLists") {
+          onpress = () => {
+            navigation.navigate("Active Lists");
+          };
+        }
         Alert.alert(
           "List Updated...",
           `${returnedList.name} was updated successfully!`,
           [
             {
-              onPress: () =>
-                navigation.navigate("List", {
-                  arr: "myLists",
-                  listId: returnedList._id,
-                }),
+              onPress: () => onpress(),
             },
           ]
         );
