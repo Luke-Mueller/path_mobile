@@ -139,7 +139,7 @@ const EditListScreen = ({ navigation, route }) => {
   }, [list, userId]);
 
   const editListHandler = useCallback(async () => {
-    dispatch(listsActions.editlist(list, navigation));
+    dispatch(listsActions.editlist(list, 'lists', navigation));
   }, [list]);
 
   useEffect(() => {
