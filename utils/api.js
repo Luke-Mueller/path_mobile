@@ -35,6 +35,14 @@ export const archiveList = (payload) => {
   });
 };
 
+export const declinelist = (payload) => {
+  return request({
+    url: `${API_BASE_URL}/user/declineList`,
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+};
+
 export const deleteList = (listId, userId, arr) => {
   return request({
     url: `${API_BASE_URL}/lists/deleteList/${listId}/${userId}/${arr}`,

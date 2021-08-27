@@ -168,7 +168,14 @@ const ListScreen = ({ navigation, route }) => {
             title="delete list"
             iconName="delete-outline"
             IconComponent={MaterialIcons}
-            onPress={() => console.log("rejecting list")}
+            onPress={() =>
+              dispatch(
+                authActions.declineList(
+                  { listId: list._id, userId },
+                  navigation
+                )
+              )
+            }
           />
         </HeaderButtons>
       );

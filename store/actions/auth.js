@@ -1,7 +1,21 @@
 import { Alert } from "react-native";
 
 import { AUTH, LOGOUT } from "../actionCreators";
-import { deleteuser, login, restorelist, signup } from "../../utils/api";
+import { declinelist, deleteuser, login, restorelist, signup } from "../../utils/api";
+
+export const declineList = (payload, navigation) => {
+  return async (dispatch) => {
+    const { user } = await declinelist(payload);
+    if (user) {
+      dispatch({ type: AUTH, user })
+      Alert.alert("List declined...", `You did not choose to accept the list, so it has been removed from your invites!`, [
+        {
+          onPress: () => navigation.navigate("All Lists"),
+        },
+      ]);
+    }
+  }
+}
 
 export const deleteUser = (activeArr, archivedArr, listArr, userId) => {
   return async (dispatch) => {
