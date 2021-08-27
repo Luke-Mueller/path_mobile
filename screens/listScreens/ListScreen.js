@@ -107,7 +107,11 @@ const ListScreen = ({ navigation, route }) => {
       <View style={styles.bottomContainer}>
         <TouchableOpacity
           style={styles.buttonContainer}
-          onPress={() => console.log("accept list...")}
+          onPress={() =>
+            dispatch(
+              authActions.acceptList({ listId: list._id, userId }, navigation)
+            )
+          }
         >
           <MaterialIcons name="add" size={24} color="black" />
           <Text style={{ marginHorizontal: 25 }}>Accept List</Text>

@@ -1,7 +1,21 @@
 import { Alert } from "react-native";
 
 import { AUTH, LOGOUT } from "../actionCreators";
-import { declinelist, deleteuser, login, restorelist, signup } from "../../utils/api";
+import { acceptlist, declinelist, deleteuser, login, restorelist, signup } from "../../utils/api";
+
+export const acceptList = (payload, navigation) => {
+  return async (dispatch) => {
+    const { user } = await acceptlist(payload);
+    if (user) {
+      dispatch({ type: AUTH, user })
+      Alert.alert("List accepted...", `You accepted the list, so it has been added to your lists!`, [
+        {
+          onPress: () => navigation.navigate("All Lists"),
+        },
+      ]);
+    }
+  }
+}
 
 export const declineList = (payload, navigation) => {
   return async (dispatch) => {

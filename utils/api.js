@@ -19,6 +19,14 @@ const request = async (args) => {
   }
 };
 
+export const acceptlist = (payload) => {
+  return request({
+    url: `${API_BASE_URL}/user/acceptList`,
+    method: "PUT",
+    body: JSON.stringify(payload)
+  })
+}
+
 export const activatelist = (payload) => {
   return request({
     url: `${API_BASE_URL}/activeLists/postList`,
