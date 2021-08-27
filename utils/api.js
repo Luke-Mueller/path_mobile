@@ -43,7 +43,6 @@ export const deleteList = (listId, userId, arr) => {
 };
 
 export const deleteuser = (activeArr, archivedArr, listArr, userId) => {
-  console.log('api')
   return request({
     url: `${API_BASE_URL}/user/delete/${activeArr}/${archivedArr}/${listArr}/${userId}`,
     method: "DELETE",
@@ -88,6 +87,14 @@ export const postlist = (payload) => {
 export const restorelist = (payload) => {
   return request({
     url: `${API_BASE_URL}/user/restoreList`,
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+};
+
+export const sendList = (payload) => {
+  return request({
+    url: `${API_BASE_URL}/user/sendList`,
     method: "PUT",
     body: JSON.stringify(payload),
   });

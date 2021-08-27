@@ -10,6 +10,7 @@ import {
 const initialState = {
   activeLists: [],
   archivedLists: [],
+  inviteLists: [],
   myLists: [],
 };
 

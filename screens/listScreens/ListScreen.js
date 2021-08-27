@@ -1,9 +1,11 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import {
+  Alert,
   Button,
   FlatList,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -13,8 +15,11 @@ import { Feather, MaterialIcons } from "@expo/vector-icons";
 
 import HeaderButton from "../../components/HeaderButton";
 import Color from "../../constants/color";
+import Modal from "../../components/Modal";
 import * as listsActions from "../../store/actions/lists";
 import * as authActions from "../../store/actions/auth";
+
+import { sendList } from "../../utils/api";
 
 const listActions = {
   DONE: "DONE",
@@ -50,6 +55,9 @@ const ListScreen = ({ navigation, route }) => {
 
   const userId = useSelector((state) => state.auth.user._id);
 
+  const [sendModal, setSendModal] = useState(false);
+  const [username, setUsername] = useState();
+
   let bottomButtons = (
     <View style={styles.bottomContainer}>
       <TouchableOpacity
@@ -61,6 +69,13 @@ const ListScreen = ({ navigation, route }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonContainer}
+        onPress={() => setSendModal(true)}
+      >
+        <Feather name="send" size={24} color="black" />
+        <Text style={{ marginHorizontal: 25 }}>Send List</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.buttonContainer}
         onPress={() => activateList()}
       >
         <Feather name="play" size={24} color="black" />
@@ -68,6 +83,38 @@ const ListScreen = ({ navigation, route }) => {
       </TouchableOpacity>
     </View>
   );
+
+  if (route.name === "Active List") {
+    bottomButtons = null;
+  } else if (route.name === "Archived List") {
+    const restoreList = () => {
+      dispatch(authActions.restoreList(list._id, userId, navigation));
+      navigation.popToTop();
+    };
+    bottomButtons = (
+      <View style={styles.bottomContainer}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => restoreList()}
+        >
+          <Feather name="archive" size={24} color="black" />
+          <Text style={{ marginHorizontal: 25 }}>Restore List</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  } else if (route.name === "Invite List") {
+    bottomButtons = (
+      <View style={styles.bottomContainer}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => console.log("accept list...")}
+        >
+          <MaterialIcons name="add" size={24} color="black" />
+          <Text style={{ marginHorizontal: 25 }}>Accept List</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   let headerRight = () => (
     <HeaderButtons HeaderButtonComponent={HeaderButton}>
@@ -114,6 +161,18 @@ const ListScreen = ({ navigation, route }) => {
         </HeaderButtons>
       );
     }
+    if (route.name === "Invite List") {
+      headerRight = () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="delete list"
+            iconName="delete-outline"
+            IconComponent={MaterialIcons}
+            onPress={() => console.log("rejecting list")}
+          />
+        </HeaderButtons>
+      );
+    }
     navigation.setOptions({
       headerTitle: list && list.name ? list.name : "",
       headerRight: headerRight,
@@ -128,12 +187,32 @@ const ListScreen = ({ navigation, route }) => {
 
   const archiveList = () => {
     const payload = { listId: list._id, userId };
-    const { done } = dispatch(
-      listsActions.archivelist(payload, navigation)
-    );
+    const { done } = dispatch(listsActions.archivelist(payload, navigation));
     if (done) {
       navigation.navigate("Archive");
       navigation.popToTop();
+    }
+  };
+
+  const sendListHandler = async () => {
+    const payload = { listId: list._id, username };
+    try {
+      const { done } = await sendList(payload);
+      if (done) {
+        Alert.alert(
+          "List Sent...",
+          `${list.name} was sent to ${username} successfully!`,
+          [
+            {
+              onPress: () => {
+                setSendModal(false), setUsername();
+              },
+            },
+          ]
+        );
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -141,30 +220,35 @@ const ListScreen = ({ navigation, route }) => {
     dispatchList({ type: listActions.DONE, id });
   };
 
-  if (route.name === "Active List") {
-    bottomButtons = null;
-  }
-
-  if (route.name === "Archived List") {
-    const restoreList = () => {
-      dispatch(authActions.restoreList(list._id, userId, navigation));
-      navigation.popToTop();
-    };
-    bottomButtons = (
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => restoreList()}
-        >
-          <Feather name="archive" size={24} color="black" />
-          <Text style={{ marginHorizontal: 25 }}>Restore List</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
   return (
     <View style={{ flex: 1 }}>
+      {sendModal && (
+        <Modal>
+          <View style={{ flex: 1, justifyContent: "center" }}>
+            <TextInput
+              autoCapitalize="none"
+              onChangeText={(input) => setUsername(input)}
+              placeholder="Enter recipient's username"
+              placeholderTextColor="#888"
+              style={{ ...styles.input, color: "white" }}
+              textAlignVertical="center"
+              value={username}
+            />
+            <Button
+              title="Cancel"
+              color="white"
+              onPress={() => {
+                setSendModal(false), setUsername();
+              }}
+            />
+            <Button
+              title="Ok"
+              color="white"
+              onPress={() => sendListHandler()}
+            />
+          </View>
+        </Modal>
+      )}
       <View style={{ flex: 1, justifyContent: "space-between" }}>
         <View>
           {list && !!list.items.length && (
@@ -249,6 +333,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 2.5,
     paddingHorizontal: 10,
+  },
+  input: {
+    alignSelf: "center",
+    borderWidth: 1,
+    borderRadius: 50,
+    borderColor: "#ddd",
+    color: Color.black,
+    margin: 5,
+    minHeight: 50,
+    paddingHorizontal: 20,
+    width: 250,
   },
   text: {
     flex: 1,
