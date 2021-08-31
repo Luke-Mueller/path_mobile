@@ -19,16 +19,13 @@ const MainNavigator = () => {
   const dispatch = useDispatch();
   return (
     <MainDrawerNavigator.Navigator
+      openByDefault={false}
       initialRouteName="Lists"
       drawerContent={(props) => {
         return (
           <View style={{ flex: 1 }}>
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, paddingTop: 33 }}>
               <DrawerItemList {...props} />
-              <DrawerItem
-                label="Dark / Light Mode"
-                onPress={() => console.log("D/L Mode")}
-              />
               <DrawerItem
                 label="Logout"
                 onPress={() => {
