@@ -53,6 +53,7 @@ export const deletelist = (listId, userId, arr, navigation) => {
       let onpress;
       if (user) {
         dispatch({ type: DELETELIST, listId, arr });
+        dispatch({ type: AUTH, user });
         if (arr === "myLists") {
           onpress = () => navigation.navigate("All Lists");
         }
