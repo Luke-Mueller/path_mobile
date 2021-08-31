@@ -80,6 +80,7 @@ const ListsScreen = ({ navigation, route }) => {
     
     const options = {
       headerTitle: headerTitle,
+      
       headerRight: headerRight,
     }
 
