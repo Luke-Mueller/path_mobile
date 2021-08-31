@@ -43,7 +43,7 @@ const AccountScreen = (props) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "start", alignItems: "center" }}>
+    <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" }}>
       <Button title="Delete Account" onPress={() => deleteAccountHandler()} />
     </View>
   );
