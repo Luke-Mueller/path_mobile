@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { Feather } from "@expo/vector-icons";
@@ -7,13 +7,14 @@ import { Feather } from "@expo/vector-icons";
 import HeaderButton from "../../components/HeaderButton";
 import ListEmptyComponent from "../../components/ListEmptyComponent";
 import ListsItem from "../../components/ListsItem";
+import Modal from "../../components/Modal";
 
 import * as listsActions from "../../store/actions/lists";
 
 const constants = {
   MY_LISTS: "myLists",
   INVITE_LISTS: "inviteLists",
-}
+};
 
 const ListsScreen = ({ navigation, route }) => {
   const [listType, setListType] = useState(
@@ -22,15 +23,20 @@ const ListsScreen = ({ navigation, route }) => {
   const lists = useSelector((state) => state.lists[listType]);
   const listsIds = useSelector((state) => state.auth.user[listType]);
   const user = useSelector((state) => state.auth.user);
+  const [loaded, setLoaded] = useState(false);
 
   const dispatch = useDispatch();
 
   const getListsHandler = useCallback(() => {
-    dispatch(listsActions.getLists(listsIds, listType));
+    return dispatch(listsActions.getLists(listsIds, listType))
   }, [dispatch, lists, listsIds, listType, user]);
 
   useEffect(() => {
-    getListsHandler();
+    let isSubscribed = true;
+    getListsHandler().then(() => {
+      if (isSubscribed) setLoaded(true);
+    });
+    return () => isSubscribed = false;
   }, [getListsHandler]);
 
   useEffect(() => {
@@ -76,29 +82,39 @@ const ListsScreen = ({ navigation, route }) => {
     }
 
     let headerTitle = "All Lists";
-    if (listType === constants.INVITE_LISTS) headerTitle = "List Invites"
-    
+    if (listType === constants.INVITE_LISTS) headerTitle = "List Invites";
+
     const options = {
       headerTitle: headerTitle,
-      
+
       headerRight: headerRight,
-    }
+    };
 
     if (listType === constants.MY_LISTS) {
       options.headerLeft = () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="drawer"
-          IconComponent={Feather}
-          iconName="menu"
-          onPress={() => navigation.toggleDrawer()}
-        />
-      </HeaderButtons>
-      )
+          <Item
+            title="drawer"
+            IconComponent={Feather}
+            iconName="menu"
+            onPress={() => navigation.toggleDrawer()}
+          />
+        </HeaderButtons>
+      );
     }
 
     navigation.setOptions(options);
   });
+
+  if (!loaded) {
+    return (
+      <Modal color="#dff9fb">
+        <View
+        // style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        ></View>
+      </Modal>
+    );
+  }
 
   return (
     <View style={styles.screen}>

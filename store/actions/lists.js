@@ -100,8 +100,12 @@ export const editlist = (list, listType, navigation) => {
 
 export const getLists = (arr, arrType) => {
   return async (dispatch) => {
-    const response = await getlists(arr, arrType);
-    dispatch({ type: GETLISTS, arrType, lists: response.lists });
+    try {
+      const response = await getlists(arr, arrType);
+      dispatch({ type: GETLISTS, arrType, lists: response.lists });
+    } catch (error) {
+      return
+    }
   };
 };
 

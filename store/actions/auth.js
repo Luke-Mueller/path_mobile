@@ -67,7 +67,7 @@ export const logOut = (navigation) => {
   };
 };
 
-export const logIn = (username) => {
+export const logIn = (username, setPressed) => {
   return async (dispatch) => {
     try {
       const { user } = await login(username);
@@ -78,8 +78,7 @@ export const logIn = (username) => {
         });
       }
     } catch (error) {
-      // ERROR HANDLED IN UTILS/API
-      return;
+      setPressed(false);
     }
   };
 };
@@ -109,12 +108,18 @@ export const signUp = (user) => {
     if (returnedUser) {
       Alert.alert(
         "User Created",
-        `An account for ${returnedUser.user.username} was successfully created!`
+        `An account for ${returnedUser.user.username} was successfully created!`,
+        [
+          {
+            onPress: () => {
+              dispatch({
+                type: AUTH,
+                user: returnedUser.user,
+              });
+            },
+          },
+        ]
       );
-      dispatch({
-        type: AUTH,
-        user: returnedUser.user,
-      });
     }
   };
 };

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
   Button,
   FlatList,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -139,7 +140,7 @@ const EditListScreen = ({ navigation, route }) => {
   }, [list, userId]);
 
   const editListHandler = useCallback(async () => {
-    dispatch(listsActions.editlist(list, 'lists', navigation));
+    dispatch(listsActions.editlist(list, "lists", navigation));
   }, [list]);
 
   useEffect(() => {
@@ -182,7 +183,7 @@ const EditListScreen = ({ navigation, route }) => {
             />
             <Button
               title="Cancel"
-              color="white"
+              color="black"
               onPress={() => {
                 dispatchItem({ type: itemActions.SETITEM, item: null });
                 setItemIndex(null);
@@ -190,7 +191,7 @@ const EditListScreen = ({ navigation, route }) => {
             />
             <Button
               title="Ok"
-              color="white"
+              color="black"
               onPress={async () => {
                 const newItem = { ...item };
                 delete newItem.new;
@@ -341,13 +342,13 @@ const EditListScreen = ({ navigation, route }) => {
         data={list.items}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item, index }) => (
-          <View style={styles.container}>
-            <TouchableOpacity
-              onPress={() => {
-                dispatchItem({ type: itemActions.SETITEM, item: { ...item } });
-                setItemIndex(index);
-              }}
-            >
+          <Pressable
+            onPress={() => {
+              dispatchItem({ type: itemActions.SETITEM, item: { ...item } });
+              setItemIndex(index);
+            }}
+          >
+            <View style={styles.container}>
               <View style={styles.button}>
                 <Text>{item.item ? item.item : item.subName}</Text>
                 <MaterialIcons
@@ -363,8 +364,8 @@ const EditListScreen = ({ navigation, route }) => {
                   }
                 />
               </View>
-            </TouchableOpacity>
-          </View>
+            </View>
+          </Pressable>
         )}
       />
     </View>

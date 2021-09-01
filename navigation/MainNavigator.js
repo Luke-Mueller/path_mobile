@@ -19,6 +19,7 @@ const MainNavigator = () => {
   const dispatch = useDispatch();
   return (
     <MainDrawerNavigator.Navigator
+      defaultStatus="closed"
       openByDefault={false}
       initialRouteName="Lists"
       drawerContent={(props) => {
