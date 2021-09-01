@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Button,
   Keyboard,
   StyleSheet,
+  Text,
   TextInput,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+
+import Modal from "../components/Modal";
 
 import * as authActions from "../store/actions/auth";
 import Color from "../constants/color";
@@ -16,7 +20,7 @@ import Color from "../constants/color";
 const AuthScreen = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const state = useSelector((state) => state);
+  const [pressed, setPressed] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -27,7 +31,8 @@ const AuthScreen = () => {
         "A username and password are required to login."
       );
     }
-    dispatch(authActions.logIn(username));
+    setPressed(true);
+    dispatch(authActions.logIn(username, setPressed));
   };
 
   const signUp = () => {
@@ -41,8 +46,22 @@ const AuthScreen = () => {
       username,
       password,
     };
-    dispatch(authActions.signUp(user));
+    setPressed(true);
+    dispatch(authActions.signUp(user, setPressed));
   };
+
+  if (pressed) {
+    return (
+      <Modal color="#dff9fb">
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color="#34495e" />
+          <Text style={{ paddingTop: 25 }}>Just a sec</Text>
+        </View>
+      </Modal>
+    );
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
