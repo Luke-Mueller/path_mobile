@@ -6,19 +6,20 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { HeaderButtons } from "react-navigation-header-buttons";
 import {
   ActivityIndicator,
   Button,
   Headline,
+  Modal,
+  Portal,
   Text,
   TextInput,
 } from "react-native-paper";
+import { HeaderButtons } from "react-navigation-header-buttons";
 import { useDispatch } from "react-redux";
 import { Foundation } from "@expo/vector-icons";
 
 import HeaderButton from "../../components/HeaderButton";
-import Modal from "../../components/Modal";
 
 import * as authActions from "../../store/actions/auth";
 
@@ -28,13 +29,12 @@ const AuthScreen = ({ navigation, route }) => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [pressed, setPressed] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    let btnText = "signup";
-
-    if (route.params?.signup) {
-      btnText = "login";
-    }
+    let btnText;
+    if (route.params?.signup) btnText = "login";
+    else btnText = "signup";
     navigation.setOptions({
       title: null,
       headerLeft: null,
@@ -44,11 +44,7 @@ const AuthScreen = ({ navigation, route }) => {
         shadowOpacity: 0,
       },
       headerTitle: () => (
-        <Foundation
-          name="social-path"
-          size={45}
-          color="#00a8ff"
-        />
+        <Foundation name="social-path" size={45} color="#00a8ff" />
       ),
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
@@ -62,8 +58,6 @@ const AuthScreen = ({ navigation, route }) => {
       ),
     });
   });
-
-  const dispatch = useDispatch();
 
   const changeAuthHandler = () => {
     const signup = route.params?.signup;
@@ -95,27 +89,15 @@ const AuthScreen = ({ navigation, route }) => {
     dispatch(authActions.signUp(user, setPressed));
   };
 
-  if (pressed) {
-    return (
-      <Modal color="#dff9fb">
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <ActivityIndicator size="large" color="#34495e" />
-          <Text style={{ paddingTop: 25 }}>Just a sec</Text>
-        </View>
-      </Modal>
-    );
-  }
-
-  let text = "Log in";
-  let btnText = "login";
-  let func = logIn;
-
+  let text, btnText, func;
   if (route.params?.signup) {
     text = "Sign up";
     btnText = "signup";
     func = signUp;
+  } else {
+    text = "Log in";
+    btnText = "login";
+    func = logIn;
   }
 
   let btn = (
@@ -130,8 +112,18 @@ const AuthScreen = ({ navigation, route }) => {
       </Button>
     </View>
   );
+
   return (
     <View style={styles.container}>
+      <Portal>
+        <Modal
+          visible={pressed}
+          contentContainerStyle={styles.contentContainer}
+        >
+          <ActivityIndicator color="#34495e" />
+          <Text style={{ marginLeft: 20 }}>Logging in...</Text>
+        </Modal>
+      </Portal>
       <View>
         <Headline style={{ alignSelf: "flex-start", fontSize: 30, margin: 5 }}>
           {text}
@@ -181,6 +173,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     backgroundColor: "white",
     padding: 25,
+  },
+  contentContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    alignSelf: "center",
+    paddingVertical: 50,
+    paddingHorizontal: 80,
   },
   textInput: {
     width: width - 25,

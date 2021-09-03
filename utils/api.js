@@ -7,15 +7,17 @@ const request = async (args) => {
     const response = await fetch(args.url, args);
     const data = await response.json();
     if (!response.ok) {
-      return Alert.alert(data.title, data.message);
+      return 
+      // Alert.alert(data.title, data.message);
     }
     return data;
   } catch (err) {
-    console.log("Request err: ", err);
-    Alert.alert(
-      "Request not completed...",
-      "The server is not connected.  Try again later."
-    );
+    return
+  //   console.log("Request err: ", err);
+  //   Alert.alert(
+  //     "Request not completed...",
+  //     "The server is not connected.  Try again later."
+  //   );
   }
 };
 

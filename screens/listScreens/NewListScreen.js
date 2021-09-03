@@ -4,11 +4,10 @@ import {
   FlatList,
   Keyboard,
   StyleSheet,
-  Text,
-  TextInput,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { Text, TextInput } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -51,7 +50,7 @@ const listReducer = (state, action) => {
           subItems: newSubItems,
         },
       };
-    case listActions.REMOVEITEM:      
+    case listActions.REMOVEITEM:
       let removeItems;
       if (action.itemType === "item") {
         removeItems = state.newList.items;
@@ -181,7 +180,10 @@ const NewListScreen = ({ navigation }) => {
   };
 
   const addSubItem = () => {
-    dispatchNL({ type: listActions.ADDSUBITEM, subItem: newItemInputSub.toString() });
+    dispatchNL({
+      type: listActions.ADDSUBITEM,
+      subItem: newItemInputSub.toString(),
+    });
     setNewItemInputSub("");
   };
 
@@ -192,11 +194,12 @@ const NewListScreen = ({ navigation }) => {
           <Modal>
             <View style={{ flex: 1, justifyContent: "center" }}>
               <TextInput
+                label="List Item"
                 multiline={true}
                 onChangeText={setNewItemInput}
                 placeholder="Enter list item"
                 placeholderTextColor="#888"
-                style={{...styles.input, color: 'white' }}
+                style={{ ...styles.input, color: "white" }}
                 textAlignVertical="top"
                 value={newItemInput}
               />
@@ -249,15 +252,17 @@ const NewListScreen = ({ navigation }) => {
                 keyExtractor={(_, index) => index.toString()}
                 renderItem={({ item, index }) => (
                   <View style={styles.item}>
-                    <Text style={{ color: "white" }}>
-                      {item}
-                    </Text>
+                    <Text style={{ color: "white" }}>{item}</Text>
                     <Feather
                       name="trash"
                       size={24}
                       color="white"
                       onPress={() =>
-                        dispatchNL({ type: "REMOVEITEM", itemType: "sublist", idx: index })
+                        dispatchNL({
+                          type: "REMOVEITEM",
+                          itemType: "sublist",
+                          idx: index,
+                        })
                       }
                     />
                   </View>
@@ -319,13 +324,17 @@ const NewListScreen = ({ navigation }) => {
               <View style={styles.item}>
                 <Text>{item.item ? item.item : item.subName}</Text>
                 <Feather
-                      name="trash"
-                      size={24}
-                      color="black"
-                      onPress={() =>
-                        dispatchNL({ type: "REMOVEITEM", itemType: "item", idx: index })
-                      }
-                    />
+                  name="trash"
+                  size={24}
+                  color="black"
+                  onPress={() =>
+                    dispatchNL({
+                      type: "REMOVEITEM",
+                      itemType: "item",
+                      idx: index,
+                    })
+                  }
+                />
               </View>
             )}
           />
@@ -353,7 +362,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     margin: 5,
     borderWidth: 1,
-    borderRadius: 50,
+    // borderRadius: 50,
     borderColor: "#ddd",
     color: "white",
   },
