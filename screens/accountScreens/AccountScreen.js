@@ -4,9 +4,9 @@ import { Button, Text, View } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather } from "@expo/vector-icons";
 
-import HeaderButton from "../components/HeaderButton";
+import HeaderButton from "../../components/HeaderButton";
 
-import * as authActions from "../store/actions/auth";
+import * as authActions from "../../store/actions/auth";
 
 export const screenOptions = ({ navigation }) => {
   return {
@@ -43,7 +43,7 @@ const AccountScreen = (props) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" }}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <Button title="Delete Account" onPress={() => deleteAccountHandler()} />
     </View>
   );

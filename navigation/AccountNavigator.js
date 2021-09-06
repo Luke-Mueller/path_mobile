@@ -1,13 +1,15 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import AccountScreen, { screenOptions as AccountScreenOptions } from "../screens/AccountScreen";
+import AccountScreen, {
+  screenOptions as AccountScreenOptions,
+} from "../screens/accountScreens/AccountScreen";
 
 const Stack = createStackNavigator();
 
 const AccountNavigator = (props) => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Account">
       <Stack.Screen
         name="Account"
         component={AccountScreen}
