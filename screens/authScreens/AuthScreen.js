@@ -10,16 +10,17 @@ import {
   ActivityIndicator,
   Button,
   Headline,
-  Modal,
-  Portal,
+  // Modal,
+  // Portal,
   Text,
-  TextInput,
+  TextInput
 } from "react-native-paper";
 import { HeaderButtons } from "react-navigation-header-buttons";
 import { useDispatch } from "react-redux";
 import { Foundation } from "@expo/vector-icons";
 
 import HeaderButton from "../../components/HeaderButton";
+import Modal from "../../components/Modal";
 
 import * as authActions from "../../store/actions/auth";
 
@@ -63,6 +64,7 @@ const AuthScreen = ({ navigation, route }) => {
     const signup = route.params?.signup;
     navigation.navigate("Auth", { signup: !signup });
   };
+  
   const logIn = () => {
     if (!username) {
       return Alert.alert(
@@ -113,17 +115,19 @@ const AuthScreen = ({ navigation, route }) => {
     </View>
   );
 
-  return (
-    <View style={styles.container}>
-      <Portal>
-        <Modal
-          visible={pressed}
-          contentContainerStyle={styles.contentContainer}
-        >
+  if (pressed) {
+    return (
+      <Modal>
+        <View style={styles.contentContainer}>
           <ActivityIndicator color="#34495e" />
           <Text style={{ marginLeft: 20 }}>Logging in...</Text>
-        </Modal>
-      </Portal>
+        </View>
+      </Modal>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
       <View>
         <Headline style={{ alignSelf: "flex-start", fontSize: 30, margin: 5 }}>
           {text}

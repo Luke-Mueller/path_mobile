@@ -16,7 +16,7 @@ const ArchiveNavigator = (props) => {
         component={ArchiveListsScreen}
         options={ArchiveListsScreenOptions}
       />
-      <Stack.Screen name="Archived List" component={ListScreen} arc={true} />
+      {/* <Stack.Screen name="Archived List" component={ListScreen} arc={true} /> */}
     </Stack.Navigator>
   );
 };

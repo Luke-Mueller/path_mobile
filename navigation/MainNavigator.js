@@ -8,7 +8,7 @@ import {
 import { useDispatch } from "react-redux";
 
 import AccountNavigator from "./AccountNavigator";
-import ListsNavigator from "./ListsNavigator";
+import ScreensNavigator from "./ScreensNavigator";
 
 import * as authActions from "../store/actions/auth";
 import * as listsActions from "../store/actions/lists";
@@ -39,7 +39,7 @@ const MainNavigator = () => {
         );
       }}
     >
-      <MainDrawerNavigator.Screen name="Lists" component={ListsNavigator} />
+      <MainDrawerNavigator.Screen name="Lists" component={ScreensNavigator} />
       <MainDrawerNavigator.Screen name="Account" component={AccountNavigator} />
     </MainDrawerNavigator.Navigator>
   );

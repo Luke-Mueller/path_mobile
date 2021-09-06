@@ -201,7 +201,6 @@ const ListScreen = ({ navigation, route }) => {
     const { done } = dispatch(listsActions.archivelist(payload, navigation));
     if (done) {
       navigation.navigate("Archive");
-      navigation.popToTop();
     }
   };
 

@@ -28,7 +28,7 @@ const ListsScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const getListsHandler = useCallback(() => {
-    return dispatch(listsActions.getLists(listsIds, listType))
+    return dispatch(listsActions.getLists(listsIds, listType));
   }, [dispatch, lists, listsIds, listType, user]);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const ListsScreen = ({ navigation, route }) => {
     getListsHandler().then(() => {
       if (isSubscribed) setLoaded(true);
     });
-    return () => isSubscribed = false;
+    return () => (isSubscribed = false);
   }, [getListsHandler]);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const ListsScreen = ({ navigation, route }) => {
     );
 
     if (listType === constants.INVITE_LISTS) {
-      headerRight = () => {
+      headerRight = () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
             title="reject list"
@@ -60,8 +60,8 @@ const ListsScreen = ({ navigation, route }) => {
             IconComponent={Feather}
             onPress={() => console.log("reject list")}
           />
-        </HeaderButtons>;
-      };
+        </HeaderButtons>
+      );
     } else if (user.inviteLists.length) {
       headerRight = () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
@@ -86,7 +86,6 @@ const ListsScreen = ({ navigation, route }) => {
 
     const options = {
       headerTitle: headerTitle,
-
       headerRight: headerRight,
     };
 
@@ -104,7 +103,7 @@ const ListsScreen = ({ navigation, route }) => {
     }
 
     navigation.setOptions(options);
-  });
+  }, [listType, user]);
 
   if (!loaded) {
     return (
