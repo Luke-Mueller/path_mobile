@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
-  Button,
+  // Button,
   FlatList,
   Keyboard,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { Text, TextInput } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -204,18 +205,17 @@ const NewListScreen = ({ navigation }) => {
                 value={newItemInput}
               />
               <Button
-                title="Cancel"
                 onPress={() => {
                   setShowAddItemModal(false);
                   setNewItemInput("");
                 }}
                 color="white"
-              />
-              <Button
-                title="Ok"
-                onPress={() => addItem("item")}
-                color="white"
-              />
+              >
+                Cancel
+              </Button>
+              <Button onPress={() => addItem("item")} color="white">
+                Ok
+              </Button>
             </View>
           </Modal>
         )}
