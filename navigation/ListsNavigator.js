@@ -7,6 +7,7 @@ import ListsScreen, {
   screenOptions as ListsScreenOptions,
 } from "../screens/listScreens/ListsScreen";
 import { Feather } from "@expo/vector-icons";
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import HeaderButton from "../components/HeaderButton";
 
@@ -24,10 +25,11 @@ export const screenOptions = ({ navigation, route }) => {
         />
       </HeaderButtons>
     ),
+    title: getFocusedRouteNameFromRoute(route)
   };
 };
 
-const ListsNavigator = ({ navigation, route }) => {
+const ListsNavigator = () => {
   return (
     <Tab.Navigator initialRouteName="All Lists">
       <Tab.Screen name="All Lists" component={ListsScreen} />
