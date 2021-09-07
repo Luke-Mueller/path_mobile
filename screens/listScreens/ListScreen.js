@@ -47,7 +47,7 @@ const ListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const userList = useSelector(
     (state) =>
-      state.lists[route.params.arr].filter(
+      state.lists[route.params.arr || "myLists"].filter(
         (list) => list._id.toString() === route.params.listId.toString()
       )[0]
   );
