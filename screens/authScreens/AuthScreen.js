@@ -128,7 +128,7 @@ const AuthScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <View>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
         <Headline style={{ alignSelf: "flex-start", fontSize: 30, margin: 5 }}>
           {text}
         </Headline>
@@ -174,7 +174,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-around",
     backgroundColor: "white",
     padding: 25,
   },
@@ -188,7 +187,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 80,
   },
   textInput: {
-    width: width - 25,
+    width: width / 1.5,
     margin: 5,
     backgroundColor: "rgba(0,0,0,0)",
   },
