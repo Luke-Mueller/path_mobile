@@ -1,14 +1,13 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
-  Button,
   FlatList,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -182,16 +181,12 @@ const EditListScreen = ({ navigation, route }) => {
               value={item.item}
             />
             <Button
-              title="Cancel"
-              color="black"
               onPress={() => {
                 dispatchItem({ type: itemActions.SETITEM, item: null });
                 setItemIndex(null);
               }}
-            />
+            >cancel</Button>
             <Button
-              title="Ok"
-              color="black"
               onPress={async () => {
                 const newItem = { ...item };
                 delete newItem.new;
@@ -203,7 +198,7 @@ const EditListScreen = ({ navigation, route }) => {
                 await dispatchItem({ type: itemActions.SETITEM, item: null });
                 setItemIndex(null);
               }}
-            />
+            >ok</Button>
           </View>
         </Modal>
       )}
@@ -261,17 +256,14 @@ const EditListScreen = ({ navigation, route }) => {
             <View style={{ flexDirection: "row", alignSelf: "center" }}>
               {item && item.itemType === "sublist" && item.new && (
                 <Button
-                  title="Cancel"
-                  color="white"
                   onPress={() => {
                     dispatchItem({ type: itemActions.SETITEM, item: null });
                     setItemIndex(null);
                     setNewSubItem(null);
                   }}
-                />
+                >cancel</Button>
               )}
               <Button
-                title="Ok"
                 onPress={() => {
                   const newItem = { ...item, new: undefined };
                   dispatchList({
@@ -284,7 +276,7 @@ const EditListScreen = ({ navigation, route }) => {
                   setNewSubItem(null);
                 }}
                 color="white"
-              />
+              >ok</Button>
             </View>
           </View>
         </Modal>

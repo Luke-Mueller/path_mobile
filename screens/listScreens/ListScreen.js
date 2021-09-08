@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
   Alert,
-  Button,
   FlatList,
   StyleSheet,
   Text,
@@ -9,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -245,17 +245,13 @@ const ListScreen = ({ navigation, route }) => {
               value={username}
             />
             <Button
-              title="Cancel"
-              color="white"
               onPress={() => {
                 setSendModal(false), setUsername();
               }}
-            />
-            <Button
-              title="Ok"
-              color="white"
-              onPress={() => sendListHandler()}
-            />
+            >
+              cancel
+            </Button>
+            <Button onPress={() => sendListHandler()}>ok</Button>
           </View>
         </Modal>
       )}
@@ -279,10 +275,9 @@ const ListScreen = ({ navigation, route }) => {
                   )}
                   {Object.keys(item).includes("done") && (
                     <View>
-                      <Button
-                        title="DONE!"
-                        onPress={() => doneHandler(item._id)}
-                      />
+                      <Button onPress={() => doneHandler(item._id)}>
+                        done
+                      </Button>
                     </View>
                   )}
                 </View>

@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
-  // Button,
   FlatList,
   Keyboard,
   StyleSheet,
@@ -209,13 +208,10 @@ const NewListScreen = ({ navigation }) => {
                   setShowAddItemModal(false);
                   setNewItemInput("");
                 }}
-                color="white"
               >
                 Cancel
               </Button>
-              <Button onPress={() => addItem("item")} color="white">
-                Ok
-              </Button>
+              <Button onPress={() => addItem("item")}>Ok</Button>
             </View>
           </Modal>
         )}
@@ -268,22 +264,16 @@ const NewListScreen = ({ navigation }) => {
                   </View>
                 )}
               />
-              <View style={{ flexDirection: "row", alignSelf: "center" }}>
-                <Button
-                  title="Cancel"
-                  onPress={() => {
-                    setShowAddListModal(false);
-                    setNewItemInputSub("");
-                    dispatchNL({ type: listActions.RESETSUB });
-                  }}
-                  color="white"
-                />
-                <Button
-                  title="Ok"
-                  onPress={() => addItem("sublist")}
-                  color="white"
-                />
-              </View>
+              <Button
+                onPress={() => {
+                  setShowAddListModal(false);
+                  setNewItemInputSub("");
+                  dispatchNL({ type: listActions.RESETSUB });
+                }}
+              >
+                cancel
+              </Button>
+              <Button onPress={() => addItem("sublist")}>ok</Button>
             </View>
           </Modal>
         )}
