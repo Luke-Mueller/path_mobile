@@ -4,7 +4,7 @@ import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 
 import AppNavigator from "./navigation/AppNavigator";
 
-import store from './store/store';
+import store from './store';
 
 const theme = {
   ...DefaultTheme,

@@ -11,7 +11,7 @@ import NewListScreen from "../screens/listScreens/NewListScreen";
 
 import HeaderButton from "../components/HeaderButton";
 
-import store from "../store/store";
+import store from "../store";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/core";
 
 const Stack = createStackNavigator();
