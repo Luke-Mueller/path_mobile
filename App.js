@@ -1,19 +1,11 @@
 import React from "react";
-import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import Thunk from "redux-thunk";
 
 import AppNavigator from "./navigation/AppNavigator";
-import AuthReducer from "./store/reducers/auth";
-import ListsReducer from "./store/reducers/lists";
 
-const rootReducer = combineReducers({
-  auth: AuthReducer,
-  lists: ListsReducer,
-});
+import store from './store/store';
 
-const store = createStore(rootReducer, applyMiddleware(Thunk));
 const theme = {
   ...DefaultTheme,
   roundness: 4,
@@ -21,7 +13,7 @@ const theme = {
   // mode: "adaptive",
   colors: {
     ...DefaultTheme.colors,
-    primary: '#00a8ff',
+    primary: "#00a8ff",
   },
 };
 
