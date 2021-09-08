@@ -3,6 +3,7 @@ import {
   Alert,
   Dimensions,
   KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   View,
 } from "react-native";
@@ -10,8 +11,6 @@ import {
   ActivityIndicator,
   Button,
   Headline,
-  // Modal,
-  // Portal,
   Text,
   TextInput
 } from "react-native-paper";
@@ -150,11 +149,11 @@ const AuthScreen = ({ navigation, route }) => {
         </View>
       </View>
       <KeyboardAvoidingView
-        behavior="position"
-        style={{
+        behavior={Platform.OS === "ios" ? "position" : "height"}
+        style={Platform.OS === "ios" ? {
           flex: 1,
           justifyContent: "center",
-        }}
+        } : null}
       >
         {btn}
       </KeyboardAvoidingView>
