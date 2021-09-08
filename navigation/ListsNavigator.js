@@ -1,33 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import ActiveListsScreen from "../screens/listScreens/ActiveListsScreen";
 import ArchiveListsScreen from "../screens/archiveScreens/ArchiveListsScreen";
-import ListsScreen, {
-  screenOptions as ListsScreenOptions,
-} from "../screens/listScreens/ListsScreen";
-import { Feather } from "@expo/vector-icons";
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
-
-import HeaderButton from "../components/HeaderButton";
+import ListsScreen from "../screens/listScreens/ListsScreen";
 
 const Tab = createBottomTabNavigator();
-
-export const screenOptions = ({ navigation, route }) => {
-  return {
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="drawer"
-          IconComponent={Feather}
-          iconName="menu"
-          onPress={() => navigation.toggleDrawer()}
-        />
-      </HeaderButtons>
-    ),
-    title: getFocusedRouteNameFromRoute(route)
-  };
-};
 
 const ListsNavigator = () => {
   return (

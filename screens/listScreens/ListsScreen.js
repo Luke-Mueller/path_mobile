@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
-import { Feather } from "@expo/vector-icons";
 
-import HeaderButton from "../../components/HeaderButton";
 import ListEmptyComponent from "../../components/ListEmptyComponent";
 import ListsItem from "../../components/ListsItem";
 import Modal from "../../components/Modal";
@@ -38,72 +35,6 @@ const ListsScreen = ({ navigation, route }) => {
     });
     return () => (isSubscribed = false);
   }, [getListsHandler]);
-
-  useEffect(() => {
-    let headerRight = () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="new list"
-          iconName="plus"
-          IconComponent={Feather}
-          onPress={() => navigation.navigate("New List")}
-        />
-      </HeaderButtons>
-    );
-
-    if (listType === constants.INVITE_LISTS) {
-      headerRight = () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title="reject list"
-            iconName="trash"
-            IconComponent={Feather}
-            onPress={() => console.log("reject list")}
-          />
-        </HeaderButtons>
-      );
-    } else if (user.inviteLists.length) {
-      headerRight = () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title="invite list"
-            iconName="coffee"
-            IconComponent={Feather}
-            onPress={() => navigation.navigate("Invite Lists")}
-          />
-          <Item
-            title="new list"
-            iconName="plus"
-            IconComponent={Feather}
-            onPress={() => navigation.navigate("New List")}
-          />
-        </HeaderButtons>
-      );
-    }
-
-    let headerTitle = "All Lists";
-    if (listType === constants.INVITE_LISTS) headerTitle = "List Invites";
-
-    const options = {
-      headerTitle: headerTitle,
-      headerRight: headerRight,
-    };
-
-    if (listType === constants.MY_LISTS) {
-      options.headerLeft = () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title="drawer"
-            IconComponent={Feather}
-            iconName="menu"
-            onPress={() => navigation.toggleDrawer()}
-          />
-        </HeaderButtons>
-      );
-    }
-
-    navigation.setOptions(options);
-  }, [listType, user]);
 
   if (!loaded) {
     return (

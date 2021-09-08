@@ -128,7 +128,7 @@ const ListScreen = ({ navigation, route }) => {
         IconComponent={Feather}
         onPress={() =>
           navigation.navigate("Edit List", {
-            arr: route.params.arr,
+            arr: route.params.arr || "myLists",
             listId: route.params.listId,
           })
         }
