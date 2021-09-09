@@ -1,14 +1,14 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
   Alert,
+  Dimensions,
   FlatList,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -20,6 +20,7 @@ import * as listsActions from "../../store/actions/lists";
 import * as authActions from "../../store/actions/auth";
 
 import { sendList } from "../../utils/api";
+const { width } = Dimensions.get("window");
 
 const listActions = {
   DONE: "DONE",
@@ -238,10 +239,8 @@ const ListScreen = ({ navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               onChangeText={(input) => setUsername(input)}
-              placeholder="Enter recipient's username"
-              placeholderTextColor="#888"
-              style={{ ...styles.input, color: "white" }}
-              textAlignVertical="center"
+              label="Recipient's username"
+              style={{ ...styles.textInput, color: "white" }}
               value={username}
             />
             <Button
@@ -339,16 +338,10 @@ const styles = StyleSheet.create({
     marginVertical: 2.5,
     paddingHorizontal: 10,
   },
-  input: {
-    alignSelf: "center",
-    borderWidth: 1,
-    borderRadius: 50,
-    borderColor: "#ddd",
-    color: Color.black,
+  textInput: {
+    width: width / 1.5,
     margin: 5,
-    minHeight: 50,
-    paddingHorizontal: 20,
-    width: 250,
+    backgroundColor: "rgba(0,0,0,0)",
   },
   text: {
     flex: 1,

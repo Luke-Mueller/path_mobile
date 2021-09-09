@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
+  Dimensions,
   FlatList,
   Keyboard,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Button } from "react-native-paper";
-import { Text, TextInput } from "react-native-paper";
+import { Button, Text, TextInput } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -18,6 +18,8 @@ import Modal from "../../components/Modal";
 
 import Color from "../../constants/color";
 import * as listsActions from "../../store/actions/lists";
+
+const { width } = Dimensions.get("window");
 
 const listActions = {
   ADDITEM: "ADDITEM",
@@ -197,9 +199,7 @@ const NewListScreen = ({ navigation }) => {
                 label="List Item"
                 multiline={true}
                 onChangeText={setNewItemInput}
-                placeholder="Enter list item"
-                placeholderTextColor="#888"
-                style={{ ...styles.input, color: "white" }}
+                style={{ ...styles.textInput, color: "white" }}
                 textAlignVertical="top"
                 value={newItemInput}
               />
@@ -219,22 +219,18 @@ const NewListScreen = ({ navigation }) => {
           <Modal>
             <View>
               <TextInput
+                label="Sub list name"
                 onChangeText={(input) =>
                   dispatchNL({ type: listActions.SETSUBNAME, subName: input })
                 }
-                placeholder="Enter sub-list name"
-                placeholderTextColor="#888"
-                style={styles.input}
-                textAlignVertical="top"
+                style={styles.textInput}
                 value={list.subList.subName}
               />
               <TextInput
                 multiline={true}
                 onChangeText={setNewItemInputSub}
-                placeholder="Enter sub-list item"
-                placeholderTextColor="#888"
-                style={styles.input}
-                textAlignVertical="top"
+                label="Sub list item"
+                style={styles.textInput}
                 value={newItemInputSub}
               />
               <Feather
@@ -278,12 +274,11 @@ const NewListScreen = ({ navigation }) => {
           </Modal>
         )}
         <TextInput
+          label="List name"
           onChangeText={(input) => {
             dispatchNL({ type: listActions.SETNAME, name: input });
           }}
-          placeholder="Enter list name"
-          placeholderTextColor="#888"
-          style={{ ...styles.input, color: "black" }}
+          style={{ ...styles.textInput, color: "black" }}
           value={list.newList.name}
         />
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -346,15 +341,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // justifyContent: "center",
   },
-  input: {
-    width: 250,
-    minHeight: 50,
-    paddingHorizontal: 20,
+  textInput: {
+    width: width / 1.5,
     margin: 5,
-    borderWidth: 1,
-    // borderRadius: 50,
-    borderColor: "#ddd",
-    color: "white",
+    backgroundColor: "rgba(0,0,0,0)",
   },
   item: {
     flexDirection: "row",

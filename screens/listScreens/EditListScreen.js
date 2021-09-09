@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
+  Dimensions,
   FlatList,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -18,6 +18,8 @@ import ListItemModel from "../../models/ListItem";
 import Modal from "../../components/Modal";
 
 import * as listsActions from "../../store/actions/lists";
+
+const { width } = Dimensions.get("window");
 
 const listActions = {
   ADDITEM: "ADDITEM",
@@ -170,14 +172,12 @@ const EditListScreen = ({ navigation, route }) => {
         <Modal>
           <View style={{ flex: 1, justifyContent: "center" }}>
             <TextInput
+              label="List item"
               multiline={true}
               onChangeText={(input) =>
                 dispatchItem({ type: itemActions.ITEM, item: input })
               }
-              placeholder="Enter list item"
-              placeholderTextColor="#888"
-              style={{ ...styles.input, color: "white" }}
-              textAlignVertical="top"
+              style={{ ...styles.textInput, color: "white" }}
               value={item.item}
             />
             <Button
@@ -206,22 +206,18 @@ const EditListScreen = ({ navigation, route }) => {
         <Modal>
           <View>
             <TextInput
+              label="Sub list name"
               onChangeText={(input) =>
                 dispatchItem({ type: itemActions.SUBNAME, name: input })
               }
-              placeholder="Enter sub-list name"
-              placeholderTextColor="#888"
-              style={{ ...styles.input, color: "white" }}
-              textAlignVertical="top"
+              style={{ ...styles.textInput, color: "white" }}
               value={item.subName}
             />
             <TextInput
               multiline={true}
               onChangeText={(input) => setNewSubItem(input)}
-              placeholder="Enter sub-list item"
-              placeholderTextColor="#888"
-              style={{ ...styles.input, ...{ color: "white" } }}
-              textAlignVertical="top"
+              label="Sub list item"
+              style={{ ...styles.textInput, ...{ color: "white" } }}
               value={newSubItem}
             />
             <Feather
@@ -294,8 +290,8 @@ const EditListScreen = ({ navigation, route }) => {
         onChangeText={(input) =>
           dispatchList({ type: listActions.LISTNAME, name: input })
         }
-        placeholder="Enter list name"
-        style={styles.input}
+        label="List name"
+        style={styles.textInput}
         value={list.name}
       />
       <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -398,16 +394,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     maxHeight: 75,
   },
-  input: {
-    alignSelf: "center",
-    borderWidth: 1,
-    borderRadius: 50,
-    borderColor: "#ddd",
-    color: Color.black,
+  textInput: {
+    width: width / 1.5,
     margin: 5,
-    minHeight: 50,
-    paddingHorizontal: 20,
-    width: 250,
+    backgroundColor: "rgba(0,0,0,0)",
   },
   item: {
     width: "100%",
