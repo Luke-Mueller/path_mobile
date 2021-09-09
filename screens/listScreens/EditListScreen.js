@@ -185,7 +185,9 @@ const EditListScreen = ({ navigation, route }) => {
                 dispatchItem({ type: itemActions.SETITEM, item: null });
                 setItemIndex(null);
               }}
-            >cancel</Button>
+            >
+              cancel
+            </Button>
             <Button
               onPress={async () => {
                 const newItem = { ...item };
@@ -198,7 +200,9 @@ const EditListScreen = ({ navigation, route }) => {
                 await dispatchItem({ type: itemActions.SETITEM, item: null });
                 setItemIndex(null);
               }}
-            >ok</Button>
+            >
+              ok
+            </Button>
           </View>
         </Modal>
       )}
@@ -257,7 +261,9 @@ const EditListScreen = ({ navigation, route }) => {
                     setItemIndex(null);
                     setNewSubItem(null);
                   }}
-                >cancel</Button>
+                >
+                  cancel
+                </Button>
               )}
               <Button
                 onPress={() => {
@@ -272,7 +278,9 @@ const EditListScreen = ({ navigation, route }) => {
                   setNewSubItem(null);
                 }}
                 color="white"
-              >ok</Button>
+              >
+                ok
+              </Button>
             </View>
           </View>
         </Modal>

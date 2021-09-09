@@ -339,7 +339,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
   },
   textInput: {
     width: width / 1.5,
@@ -357,7 +356,6 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     justifyContent: "center",
-    // width: "100%",
   },
 });
 

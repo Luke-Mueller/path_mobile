@@ -16,10 +16,12 @@ import { Feather, MaterialIcons } from "@expo/vector-icons";
 import HeaderButton from "../../components/HeaderButton";
 import Color from "../../constants/color";
 import Modal from "../../components/Modal";
+
 import * as listsActions from "../../store/actions/lists";
 import * as authActions from "../../store/actions/auth";
 
 import { sendList } from "../../utils/api";
+
 const { width } = Dimensions.get("window");
 
 const listActions = {
