@@ -1,28 +1,63 @@
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Provider } from "react-redux";
-import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import {
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
+  NavigationContainer,
+} from "@react-navigation/native";
+import {
+  DarkTheme as PaperDarkTheme,
+  DefaultTheme as PaperDefaultTheme,
+  Provider as PaperProvider,
+} from "react-native-paper";
 
 import AppNavigator from "./navigation/AppNavigator";
 
-import store from './store';
+import { PreferencesContext } from "./utils/context";
 
-const theme = {
-  ...DefaultTheme,
-  roundness: 4,
-  // dark: true,
-  // mode: "adaptive",
+import store from "./store";
+
+const CombinedDefaultTheme = {
+  ...PaperDefaultTheme,
+  ...NavigationDefaultTheme,
   colors: {
-    ...DefaultTheme.colors,
-    primary: "#00a8ff",
+    ...PaperDefaultTheme.colors,
+    ...NavigationDefaultTheme.colors,
+  },
+};
+
+const CombinedDarkTheme = {
+  ...PaperDarkTheme,
+  ...NavigationDarkTheme,
+  colors: {
+    ...PaperDarkTheme.colors,
+    ...NavigationDarkTheme.colors,
   },
 };
 
 export default function App() {
+  const [isThemeDark, setIsThemeDark] = useState(false);
+
+  let theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
+
+  const toggleTheme = useCallback(() => {
+    return setIsThemeDark(!isThemeDark);
+  }, [isThemeDark]);
+
+  const preferences = useMemo(
+    () => ({ toggleTheme, isThemeDark }),
+    [toggleTheme, isThemeDark]
+  );
+
   return (
     <Provider store={store}>
-      <PaperProvider theme={theme}>
-        <AppNavigator />
-      </PaperProvider>
+      <PreferencesContext.Provider value={preferences}>
+        <PaperProvider theme={theme}>
+          <NavigationContainer theme={theme}>
+            <AppNavigator />
+          </NavigationContainer>
+        </PaperProvider>
+      </PreferencesContext.Provider>
     </Provider>
   );
 }

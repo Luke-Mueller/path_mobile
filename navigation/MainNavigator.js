@@ -1,11 +1,13 @@
-import React from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import React, { useContext } from "react";
+import { SafeAreaView, View } from "react-native";
+import { Divider, Switch, Text } from "react-native-paper";
 import {
   createDrawerNavigator,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
 import { useDispatch } from "react-redux";
+import { PreferencesContext } from "../utils/context";
 
 import AccountNavigator from "./AccountNavigator";
 import ScreensNavigator from "./ScreensNavigator";
@@ -17,6 +19,8 @@ const MainDrawerNavigator = createDrawerNavigator();
 
 const MainNavigator = () => {
   const dispatch = useDispatch();
+  const { toggleTheme, isThemeDark } = useContext(PreferencesContext);
+
   return (
     <MainDrawerNavigator.Navigator
       defaultStatus="closed"
@@ -27,6 +31,17 @@ const MainNavigator = () => {
           <View style={{ flex: 1 }}>
             <SafeAreaView style={{ flex: 1, paddingTop: 33 }}>
               <DrawerItemList {...props} />
+              <Divider />
+              <DrawerItem
+                icon={() => <Text>Dark mode</Text>}
+                label={() => (
+                  <Switch
+                    value={isThemeDark}
+                    onValueChange={toggleTheme}
+                    style={{ alignSelf: "flex-end" }}
+                  />
+                )}
+              />
               <DrawerItem
                 label="Logout"
                 onPress={() => {
