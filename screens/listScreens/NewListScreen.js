@@ -91,20 +91,20 @@ const listReducer = (state, action) => {
           subName: action.subName,
         },
       };
-    case listActions.SETNAME:
-      return {
-        ...state,
-        newList: {
-          ...state.newList,
-          name: action.name,
-        },
-      };
+    // case listActions.SETNAME:
+    //   return {
+    //     ...state,
+    //     newList: {
+    //       ...state.newList,
+    //       name: action.name,
+    //     },
+    //   };
     default:
       return state;
   }
 };
 
-const NewListScreen = ({ navigation }) => {
+const NewListScreen = ({ navigation, route }) => {
   // MODAL STATE
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [showAddListModal, setShowAddListModal] = useState(false);
@@ -118,7 +118,7 @@ const NewListScreen = ({ navigation }) => {
   const [list, dispatchNL] = useReducer(listReducer, {
     newList: {
       items: [],
-      name: "",
+      name: route.params.name,
       ownerIds: [userId],
     },
     subList: {
@@ -273,14 +273,14 @@ const NewListScreen = ({ navigation }) => {
             </View>
           </Modal>
         )}
-        <TextInput
+        {/* <TextInput
           label="List name"
           onChangeText={(input) => {
             dispatchNL({ type: listActions.SETNAME, name: input });
           }}
           style={{ ...styles.textInput, color: "black" }}
           value={list.newList.name}
-        />
+        /> */}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <MaterialIcons
             name="add-task"

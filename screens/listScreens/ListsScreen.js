@@ -40,7 +40,7 @@ const ListsScreen = ({ navigation, route }) => {
     return (
       <Modal color="#dff9fb">
         <View
-        // style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,.9)" }}
         ></View>
       </Modal>
     );

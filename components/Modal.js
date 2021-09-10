@@ -14,7 +14,7 @@ const CustomModal = (props) => {
         style={{
           flex: 1,
           justifyContent: "center",
-          backgroundColor: props.color || "rgba(0,0,0,0.8)",
+          backgroundColor: props.color || "rgba(0,0,0,1)",
         }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

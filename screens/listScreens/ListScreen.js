@@ -4,11 +4,10 @@ import {
   Dimensions,
   FlatList,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { ActivityIndicator, Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -58,6 +57,8 @@ const ListScreen = ({ navigation, route }) => {
 
   const userId = useSelector((state) => state.auth.user._id);
 
+  const [modalText, setModalText] = useState();
+  const [pressed, setPressed] = useState(false);
   const [sendModal, setSendModal] = useState(false);
   const [username, setUsername] = useState();
 
@@ -194,12 +195,16 @@ const ListScreen = ({ navigation, route }) => {
   }, [list, navigation, route.name]);
 
   const activateList = () => {
+    setModalText("Creating started list...");
+    setPressed(true);
     const payload = { list, userId };
     dispatch(listsActions.activateList(payload, navigation));
     navigation.popToTop();
   };
 
   const archiveList = () => {
+    setModalText("Archiving list...");
+    setPressed(true);
     const payload = { listId: list._id, userId };
     const { done } = dispatch(listsActions.archivelist(payload, navigation));
     if (done) {
@@ -232,6 +237,17 @@ const ListScreen = ({ navigation, route }) => {
   const doneHandler = (id) => {
     dispatchList({ type: listActions.DONE, id });
   };
+
+  // if (pressed) {
+  //   return (
+  //     <Modal>
+  //       <View style={styles.contentContainer}>
+  //         <ActivityIndicator color="#34495e" />
+  //         <Text style={{ marginLeft: 20 }}>{modalText}</Text>
+  //       </View>
+  //     </Modal>
+  //   );
+  // }
 
   return (
     <View style={{ flex: 1 }}>
@@ -339,6 +355,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 2.5,
     paddingHorizontal: 10,
+  },
+  contentContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    alignSelf: "center",
+    paddingVertical: 50,
+    paddingHorizontal: 80,
   },
   textInput: {
     width: width / 1.5,
