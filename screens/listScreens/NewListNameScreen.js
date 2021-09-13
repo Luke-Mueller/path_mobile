@@ -8,7 +8,7 @@ const NewListNameScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   return (
     <View
-      style={{ flex: 1, alignItems: "center" }}
+      style={{ flex: 1, alignItems: "center", padding: 50 }}
     >
       <Text>Please enter the name of your new list</Text>
       <TextInput
@@ -19,7 +19,7 @@ const NewListNameScreen = ({ navigation }) => {
       />
       <Button
         onPress={() => navigation.navigate("New List", { name })}
-				// style={{ alignSelf: 'flex-end'}}
+				style={{ alignSelf: 'flex-end'}}
       >
         next
       </Button>

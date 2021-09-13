@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react";
+// import { Foundation } from "@expo/vector-icons";
+//       <Foundation name="social-path" size={45} color="#00a8ff" />
+
+import React, { useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -12,13 +15,11 @@ import {
   Button,
   Headline,
   Text,
-  TextInput
+  TextInput,
 } from "react-native-paper";
-import { HeaderButtons } from "react-navigation-header-buttons";
-import { useDispatch } from "react-redux";
 import { Foundation } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
 
-import HeaderButton from "../../components/HeaderButton";
 import Modal from "../../components/Modal";
 
 import * as authActions from "../../store/actions/auth";
@@ -31,39 +32,11 @@ const AuthScreen = ({ navigation, route }) => {
   const [pressed, setPressed] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    let btnText;
-    if (route.params?.signup) btnText = "login";
-    else btnText = "signup";
-    navigation.setOptions({
-      title: null,
-      headerLeft: null,
-      headerStyle: {
-        height: 100,
-        elevation: 0,
-        shadowOpacity: 0,
-      },
-      headerTitle: () => (
-        <Foundation name="social-path" size={45} color="#00a8ff" />
-      ),
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Button
-            labelStyle={{ fontWeight: "bold" }}
-            onPress={changeAuthHandler}
-          >
-            {btnText}
-          </Button>
-        </HeaderButtons>
-      ),
-    });
-  });
-
   const changeAuthHandler = () => {
     const signup = route.params?.signup;
     navigation.navigate("Auth", { signup: !signup });
   };
-  
+
   const logIn = () => {
     if (!username) {
       return Alert.alert(
@@ -90,15 +63,19 @@ const AuthScreen = ({ navigation, route }) => {
     dispatch(authActions.signUp(user, setPressed));
   };
 
-  let text, btnText, func;
+  let text, btnText, func, prompt, promptBtnText;
   if (route.params?.signup) {
-    text = "Sign up";
     btnText = "signup";
     func = signUp;
+    prompt = "Already have an account?";
+    promptBtnText = "login";
+    text = "Sign up";
   } else {
-    text = "Log in";
     btnText = "login";
     func = logIn;
+    prompt = "Need to create an account?";
+    promptBtnText = "signup";
+    text = "Log in";
   }
 
   let btn = (
@@ -126,8 +103,10 @@ const AuthScreen = ({ navigation, route }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={{ flex: 1, justifyContent: 'center' }}>
+    <View style={{...styles.container}}>
+      <Foundation name="social-path" size={45} color="#00a8ff" />
+
+      <View style={{ flex: 1, justifyContent: "center" }}>
         <Headline style={{ alignSelf: "flex-start", fontSize: 30, margin: 5 }}>
           {text}
         </Headline>
@@ -146,14 +125,34 @@ const AuthScreen = ({ navigation, route }) => {
             style={styles.textInput}
             value={password}
           />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              alignSelf: "flex-start",
+              margin: 15
+            }}
+          >
+            <Text>{prompt}</Text>
+            <Button
+              labelStyle={{ fontWeight: "bold" }}
+              onPress={changeAuthHandler}
+            >
+              {promptBtnText}
+            </Button>
+          </View>
         </View>
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "position" : "height"}
-        style={Platform.OS === "ios" ? {
-          flex: 1,
-          justifyContent: "center",
-        } : null}
+        style={
+          Platform.OS === "ios"
+            ? {
+                flex: 1,
+                justifyContent: "flex-end",
+              }
+            : null
+        }
       >
         {btn}
       </KeyboardAvoidingView>
@@ -173,8 +172,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "white",
-    padding: 25,
+    padding: 50,
   },
   contentContainer: {
     flexDirection: "row",
