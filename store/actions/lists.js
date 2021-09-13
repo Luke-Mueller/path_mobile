@@ -21,7 +21,7 @@ import {
 export const activateList = (payload, navigation) => {
   return async (dispatch) => {
     try {
-      const { list, user } = await activatelist(payload);
+      const { user } = await activatelist(payload);
       dispatch({
         type: AUTH,
         user,
@@ -37,9 +37,9 @@ export const archivelist = (payload, navigation) => {
   return async (dispatch) => {
     try {
       const { list, user } = await archiveList(payload);
-      await dispatch({ type: ADDLIST, arr: "archivedLists", list }),
-        await dispatch({ type: AUTH, user });
-      return { done: true };
+      dispatch({ type: ADDLIST, arr: "archivedLists", list }),
+        dispatch({ type: AUTH, user });
+      navigation.navigate("Archive");
     } catch (error) {
       console.log(error);
     }
@@ -104,7 +104,7 @@ export const getLists = (arr, arrType) => {
       const response = await getlists(arr, arrType);
       dispatch({ type: GETLISTS, arrType, lists: response.lists });
     } catch (error) {
-      return
+      return;
     }
   };
 };

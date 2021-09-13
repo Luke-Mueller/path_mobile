@@ -83,15 +83,12 @@ export const logIn = (username, setPressed) => {
   };
 };
 
-export const restoreList = (listId, userId, navigation) => {
+export const restoreList = (payload, navigation) => {
   return async (dispatch) => {
-    const payload = { listId, userId };
     try {
       const { user } = await restorelist(payload);
-      if (user) {
-        dispatch({ type: AUTH, user });
-      }
-      navigation.navigate("All Lists");
+      await dispatch({ type: AUTH, user });
+      navigation.navigate("All Lists", {screen: "All Lists"});
     } catch (error) {
       return;
     }

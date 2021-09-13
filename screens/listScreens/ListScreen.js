@@ -92,8 +92,10 @@ const ListScreen = ({ navigation, route }) => {
     bottomButtons = null;
   } else if (route.name === "Archived List") {
     const restoreList = () => {
-      dispatch(authActions.restoreList(list._id, userId, navigation));
-      navigation.popToTop();
+      setModalText("Restoring list...");
+      setPressed(true);
+      const payload = {listId: list._id, userId}
+      dispatch(authActions.restoreList(payload, navigation));
     };
     bottomButtons = (
       <View style={styles.bottomContainer}>
@@ -199,17 +201,13 @@ const ListScreen = ({ navigation, route }) => {
     setPressed(true);
     const payload = { list, userId };
     dispatch(listsActions.activateList(payload, navigation));
-    navigation.popToTop();
   };
 
   const archiveList = () => {
     setModalText("Archiving list...");
     setPressed(true);
     const payload = { listId: list._id, userId };
-    const { done } = dispatch(listsActions.archivelist(payload, navigation));
-    if (done) {
-      navigation.navigate("Archive");
-    }
+    dispatch(listsActions.archivelist(payload, navigation));
   };
 
   const sendListHandler = async () => {
@@ -238,16 +236,16 @@ const ListScreen = ({ navigation, route }) => {
     dispatchList({ type: listActions.DONE, id });
   };
 
-  // if (pressed) {
-  //   return (
-  //     <Modal>
-  //       <View style={styles.contentContainer}>
-  //         <ActivityIndicator color="#34495e" />
-  //         <Text style={{ marginLeft: 20 }}>{modalText}</Text>
-  //       </View>
-  //     </Modal>
-  //   );
-  // }
+  if (pressed) {
+    return (
+      <Modal>
+        <View style={styles.contentContainer}>
+          <ActivityIndicator color="#34495e" />
+          <Text style={{ marginLeft: 20 }}>{modalText}</Text>
+        </View>
+      </Modal>
+    );
+  }
 
   return (
     <View style={{ flex: 1 }}>

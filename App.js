@@ -14,7 +14,6 @@ import {
 import AppNavigator from "./navigation/AppNavigator";
 
 import { PreferencesContext } from "./utils/context";
-
 import store from "./store";
 
 const CombinedDefaultTheme = {
