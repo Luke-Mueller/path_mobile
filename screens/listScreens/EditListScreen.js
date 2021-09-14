@@ -170,7 +170,9 @@ const EditListScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       {item && item.itemType === "item" && (
         <Modal>
-          <View style={{flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
             <TextInput
               label="List item"
               multiline={true}
@@ -212,7 +214,7 @@ const EditListScreen = ({ navigation, route }) => {
         <Modal>
           <View>
             <TextInput
-              label="Sub list name"
+              label="List name"
               onChangeText={(input) =>
                 dispatchItem({ type: itemActions.SUBNAME, name: input })
               }
@@ -222,31 +224,31 @@ const EditListScreen = ({ navigation, route }) => {
             <TextInput
               multiline={true}
               onChangeText={(input) => setNewSubItem(input)}
-              label="Sub list item"
+              label="New item"
               style={styles.textInput}
               value={newSubItem}
-            />
-            <Feather
-              name="plus"
-              size={24}
-              onPress={() => {
-                dispatchItem({
-                  type: itemActions.ADDSUBITEM,
-                  subItem: newSubItem,
-                }),
-                  setNewSubItem(null);
-              }}
+              right={
+                <TextInput.Icon
+                  name="plus"
+                  onPress={() => {
+                    dispatchItem({
+                      type: itemActions.ADDSUBITEM,
+                      subItem: newSubItem,
+                    }),
+                      setNewSubItem(null);
+                  }}
+                />
+              }
             />
             <FlatList
               data={item.subItems}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item, index }) => (
                 <View style={styles.item}>
-                  <Text style={{ color: "white" }}>{item}</Text>
+                  <Text>{item}</Text>
                   <Feather
                     name="trash"
                     size={24}
-                    color="white"
                     onPress={() =>
                       dispatchItem({ type: itemActions.REMOVESUBITEM, index })
                     }
@@ -292,7 +294,9 @@ const EditListScreen = ({ navigation, route }) => {
             list: { ...userList },
           })
         }
-      >clear changes</Button>
+      >
+        clear changes
+      </Button>
       <TextInput
         onChangeText={(input) =>
           dispatchList({ type: listActions.LISTNAME, name: input })
@@ -301,7 +305,13 @@ const EditListScreen = ({ navigation, route }) => {
         style={styles.textInput}
         value={list.name}
       />
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <MaterialIcons
           name="add-task"
           size={40}
@@ -402,7 +412,7 @@ const styles = StyleSheet.create({
     width: width / 1.5,
     margin: 5,
     backgroundColor: "transparent",
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   item: {
     width: "100%",

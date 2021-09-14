@@ -203,15 +203,17 @@ const NewListScreen = ({ navigation, route }) => {
                 textAlignVertical="top"
                 value={newItemInput}
               />
-              <Button
-                onPress={() => {
-                  setShowAddItemModal(false);
-                  setNewItemInput("");
-                }}
-              >
-                Cancel
-              </Button>
-              <Button onPress={() => addItem("item")}>Ok</Button>
+              <View style={{ flexDirection: "row", alignSelf: "center" }}>
+                <Button
+                  onPress={() => {
+                    setShowAddItemModal(false);
+                    setNewItemInput("");
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button onPress={() => addItem("item")}>Ok</Button>
+              </View>
             </View>
           </Modal>
         )}
@@ -232,23 +234,18 @@ const NewListScreen = ({ navigation, route }) => {
                 label="Sub list item"
                 style={styles.textInput}
                 value={newItemInputSub}
+                right={<TextInput.Icon name="plus" onPress={() => addSubItem()} />}
               />
-              <Feather
-                name="plus"
-                size={24}
-                color="white"
-                onPress={() => addSubItem()}
-              />
+
               <FlatList
                 data={list.subList.subItems}
                 keyExtractor={(_, index) => index.toString()}
                 renderItem={({ item, index }) => (
                   <View style={styles.item}>
-                    <Text style={{ color: "white" }}>{item}</Text>
+                    <Text>{item}</Text>
                     <Feather
                       name="trash"
                       size={24}
-                      color="white"
                       onPress={() =>
                         dispatchNL({
                           type: "REMOVEITEM",
@@ -260,27 +257,21 @@ const NewListScreen = ({ navigation, route }) => {
                   </View>
                 )}
               />
-              <Button
-                onPress={() => {
-                  setShowAddListModal(false);
-                  setNewItemInputSub("");
-                  dispatchNL({ type: listActions.RESETSUB });
-                }}
-              >
-                cancel
-              </Button>
-              <Button onPress={() => addItem("sublist")}>ok</Button>
+              <View style={{ flexDirection: "row", alignSelf: "center" }}>
+                <Button
+                  onPress={() => {
+                    setShowAddListModal(false);
+                    setNewItemInputSub("");
+                    dispatchNL({ type: listActions.RESETSUB });
+                  }}
+                >
+                  cancel
+                </Button>
+                <Button onPress={() => addItem("sublist")}>ok</Button>
+              </View>
             </View>
           </Modal>
         )}
-        {/* <TextInput
-          label="List name"
-          onChangeText={(input) => {
-            dispatchNL({ type: listActions.SETNAME, name: input });
-          }}
-          style={{ ...styles.textInput, color: "black" }}
-          value={list.newList.name}
-        /> */}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <MaterialIcons
             name="add-task"
@@ -311,7 +302,6 @@ const NewListScreen = ({ navigation, route }) => {
                 <Feather
                   name="trash"
                   size={24}
-                  color="black"
                   onPress={() =>
                     dispatchNL({
                       type: "REMOVEITEM",
@@ -344,6 +334,7 @@ const styles = StyleSheet.create({
     width: width / 1.5,
     margin: 5,
     backgroundColor: "rgba(0,0,0,0)",
+    alignSelf: "center",
   },
   item: {
     flexDirection: "row",
