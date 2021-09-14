@@ -26,21 +26,23 @@ const ListsScreen = ({ navigation, route }) => {
 
   const getListsHandler = useCallback(() => {
     return dispatch(listsActions.getLists(listsIds, listType));
-  }, [dispatch, lists, listsIds, listType, user]);
+  }, [dispatch, listsIds, listType]);
 
   useEffect(() => {
-    let isSubscribed = true;
-    getListsHandler().then(() => {
-      if (isSubscribed) setLoaded(true);
-    });
-    return () => (isSubscribed = false);
-  }, [getListsHandler]);
+    getListsHandler();
+    setLoaded(true)
+  }, [getListsHandler, setLoaded]);
 
   if (!loaded) {
     return (
       <Modal color="#dff9fb">
         <View
-        style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,.9)" }}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,.9)",
+          }}
         ></View>
       </Modal>
     );

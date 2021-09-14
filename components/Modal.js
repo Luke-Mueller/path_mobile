@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -7,14 +7,17 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
+import { PreferencesContext } from '../utils/context';
+
 const CustomModal = (props) => {
+  const { isThemeDark } = useContext(PreferencesContext);
   return (
     <Modal animationType="fade" transparent={true}>
       <KeyboardAvoidingView
         style={{
           flex: 1,
           justifyContent: "center",
-          backgroundColor: props.color || "rgba(0,0,0,1)",
+          backgroundColor: props.color || (isThemeDark ? "black" : "white"),
         }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

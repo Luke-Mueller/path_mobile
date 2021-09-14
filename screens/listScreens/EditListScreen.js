@@ -170,39 +170,41 @@ const EditListScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       {item && item.itemType === "item" && (
         <Modal>
-          <View style={{ flex: 1, justifyContent: "center" }}>
+          <View style={{flex: 1, justifyContent: "center", alignItems: "center" }}>
             <TextInput
               label="List item"
               multiline={true}
               onChangeText={(input) =>
                 dispatchItem({ type: itemActions.ITEM, item: input })
               }
-              style={{ ...styles.textInput, color: "white" }}
+              style={styles.textInput}
               value={item.item}
             />
-            <Button
-              onPress={() => {
-                dispatchItem({ type: itemActions.SETITEM, item: null });
-                setItemIndex(null);
-              }}
-            >
-              cancel
-            </Button>
-            <Button
-              onPress={async () => {
-                const newItem = { ...item };
-                delete newItem.new;
-                await dispatchList({
-                  type: item.new ? listActions.ADDITEM : listActions.EDITITEM,
-                  item: newItem,
-                  index: itemIndex,
-                });
-                await dispatchItem({ type: itemActions.SETITEM, item: null });
-                setItemIndex(null);
-              }}
-            >
-              ok
-            </Button>
+            <View style={{ flexDirection: "row", alignSelf: "center" }}>
+              <Button
+                onPress={() => {
+                  dispatchItem({ type: itemActions.SETITEM, item: null });
+                  setItemIndex(null);
+                }}
+              >
+                cancel
+              </Button>
+              <Button
+                onPress={async () => {
+                  const newItem = { ...item };
+                  delete newItem.new;
+                  await dispatchList({
+                    type: item.new ? listActions.ADDITEM : listActions.EDITITEM,
+                    item: newItem,
+                    index: itemIndex,
+                  });
+                  await dispatchItem({ type: itemActions.SETITEM, item: null });
+                  setItemIndex(null);
+                }}
+              >
+                ok
+              </Button>
+            </View>
           </View>
         </Modal>
       )}
@@ -214,20 +216,19 @@ const EditListScreen = ({ navigation, route }) => {
               onChangeText={(input) =>
                 dispatchItem({ type: itemActions.SUBNAME, name: input })
               }
-              style={{ ...styles.textInput, color: "white" }}
+              style={styles.textInput}
               value={item.subName}
             />
             <TextInput
               multiline={true}
               onChangeText={(input) => setNewSubItem(input)}
               label="Sub list item"
-              style={{ ...styles.textInput, ...{ color: "white" } }}
+              style={styles.textInput}
               value={newSubItem}
             />
             <Feather
               name="plus"
               size={24}
-              color="white"
               onPress={() => {
                 dispatchItem({
                   type: itemActions.ADDSUBITEM,
@@ -277,7 +278,6 @@ const EditListScreen = ({ navigation, route }) => {
                   setItemIndex(null);
                   setNewSubItem(null);
                 }}
-                color="white"
               >
                 ok
               </Button>
@@ -286,14 +286,13 @@ const EditListScreen = ({ navigation, route }) => {
         </Modal>
       )}
       <Button
-        title="Clear Changes"
         onPress={() =>
           dispatchList({
             type: listActions.CLEARCHANGES,
             list: { ...userList },
           })
         }
-      />
+      >clear changes</Button>
       <TextInput
         onChangeText={(input) =>
           dispatchList({ type: listActions.LISTNAME, name: input })
@@ -302,7 +301,7 @@ const EditListScreen = ({ navigation, route }) => {
         style={styles.textInput}
         value={list.name}
       />
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
         <MaterialIcons
           name="add-task"
           size={40}
@@ -383,29 +382,27 @@ const styles = StyleSheet.create({
     backgroundColor: Color.highlight,
     padding: 20,
   },
-  container_list: {
-    flex: 3,
-  },
   bottomContainer: {
     flex: 1,
     justifyContent: "flex-end",
   },
-
   buttonContainer: {
     backgroundColor: Color.highlight,
     borderBottomWidth: 1,
     borderTopWidth: 1,
-    borderColor: "white",
+    borderColor: "black",
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
+    alignSelf: "center",
     justifyContent: "center",
     maxHeight: 75,
   },
   textInput: {
     width: width / 1.5,
     margin: 5,
-    backgroundColor: "rgba(0,0,0,0)",
+    backgroundColor: "transparent",
+    alignSelf: 'center'
   },
   item: {
     width: "100%",
