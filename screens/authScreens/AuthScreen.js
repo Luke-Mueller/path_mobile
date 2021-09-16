@@ -1,12 +1,11 @@
-// import { Foundation } from "@expo/vector-icons";
-//       <Foundation name="social-path" size={45} color="#00a8ff" />
-
 import React, { useState } from "react";
 import {
   Alert,
   Dimensions,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleSheet,
   View,
 } from "react-native";
@@ -103,60 +102,64 @@ const AuthScreen = ({ navigation, route }) => {
   }
 
   return (
-    <View style={{...styles.container}}>
-      <Foundation name="social-path" size={45} color="#00a8ff" />
+    <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+      <View style={{ ...styles.container }}>
+        <Foundation name="social-path" size={45} color="#00a8ff" />
 
-      <View style={{ flex: 1, justifyContent: "center" }}>
-        <Headline style={{ alignSelf: "flex-start", fontSize: 30, margin: 5 }}>
-          {text}
-        </Headline>
-        <View style={{ marginVertical: 25 }}>
-          <TextInput
-            autoCapitalize="none"
-            label="Username"
-            onChangeText={setUsername}
-            style={styles.textInput}
-            value={username}
-          />
-          <TextInput
-            autoCapitalize="none"
-            label="Password"
-            onChangeText={setPassword}
-            style={styles.textInput}
-            value={password}
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              alignSelf: "flex-start",
-              margin: 15
-            }}
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <Headline
+            style={{ alignSelf: "flex-start", fontSize: 30, margin: 5 }}
           >
-            <Text>{prompt}</Text>
-            <Button
-              labelStyle={{ fontWeight: "bold" }}
-              onPress={changeAuthHandler}
+            {text}
+          </Headline>
+          <View style={{ marginVertical: 25 }}>
+            <TextInput
+              autoCapitalize="none"
+              label="Username"
+              onChangeText={setUsername}
+              style={styles.textInput}
+              value={username}
+            />
+            <TextInput
+              autoCapitalize="none"
+              label="Password"
+              onChangeText={setPassword}
+              style={styles.textInput}
+              value={password}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                alignSelf: "flex-start",
+                margin: 15,
+              }}
             >
-              {promptBtnText}
-            </Button>
+              <Text>{prompt}</Text>
+              <Button
+                labelStyle={{ fontWeight: "bold" }}
+                onPress={changeAuthHandler}
+              >
+                {promptBtnText}
+              </Button>
+            </View>
           </View>
         </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "position" : "height"}
+          style={
+            Platform.OS === "ios"
+              ? {
+                  flex: 1,
+                  justifyContent: "flex-end",
+                }
+              : null
+          }
+        >
+          {btn}
+        </KeyboardAvoidingView>
       </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "position" : "height"}
-        style={
-          Platform.OS === "ios"
-            ? {
-                flex: 1,
-                justifyContent: "flex-end",
-              }
-            : null
-        }
-      >
-        {btn}
-      </KeyboardAvoidingView>
-    </View>
+    </Pressable>
   );
 };
 

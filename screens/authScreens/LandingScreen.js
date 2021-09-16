@@ -27,19 +27,20 @@ const AuthScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <Foundation
-          name="social-path"
-          size={60}
-          color="white"
-          style={{ alignSelf: "flex-start" }}
-        />
         <View style={{ marginBottom: 50, marginTop: 25 }}>
+          <Foundation
+            name="social-path"
+            size={60}
+            color="white"
+            style={{ alignSelf: "flex-start" }}
+          />
           <Headline
             style={{
               color: "white",
               fontSize: 35,
               fontWeight: "600",
               lineHeight: 45,
+              marginTop: 50
             }}
           >
             Welcome to Path
