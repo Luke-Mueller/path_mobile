@@ -9,9 +9,21 @@ const Tab = createBottomTabNavigator();
 const ListsNavigator = () => {
   return (
     <Tab.Navigator initialRouteName="All Lists">
-      <Tab.Screen name="All Lists" component={ListsScreen} />
-      <Tab.Screen name="Started Lists" component={ActiveListsScreen} />
-      <Tab.Screen name="Archive" component={ArchiveListsScreen} />
+      <Tab.Screen
+        name="All Lists"
+        component={ListsScreen}
+        initialParams={{ listType: "myLists", path: "List" }}
+      />
+      <Tab.Screen
+        name="Started Lists"
+        component={ListsScreen}
+        initialParams={{ listType: "activeLists", path: "Active List" }}
+      />
+      <Tab.Screen
+        name="Archive"
+        component={ListsScreen}
+        initialParams={{ listType: "archivedLists", path: "Archived List" }}
+      />
     </Tab.Navigator>
   );
 };
