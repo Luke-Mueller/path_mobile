@@ -1,18 +1,13 @@
 import React, { useEffect, useReducer, useState } from "react";
-import {
-  Dimensions,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { ActivityIndicator, Button, Text } from "react-native-paper";
+import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 
-import HeaderButton from "../../components/HeaderButton";
 import Color from "../../constants/color";
+import FlatList from "../../components/FlatList";
+import HeaderButton from "../../components/HeaderButton";
 import Modal from "../../components/Modal";
 
 import * as listsActions from "../../store/actions/lists";
@@ -75,7 +70,6 @@ const ListScreen = ({ navigation, route }) => {
     bottomButtons = null;
   } else if (route.name === "Archived List") {
     const restoreList = () => {
-      // return
       setModalText("Restoring list...");
       setPressed(true);
       const payload = { listId: userList._id, userId };
@@ -190,13 +184,6 @@ const ListScreen = ({ navigation, route }) => {
     dispatch(listsActions.activateList(payload, navigation));
   };
 
-  const archiveList = () => {
-    setModalText("Archiving list...");
-    setPressed(true);
-    const payload = { listId: list._id, userId };
-    dispatch(listsActions.archivelist(payload, navigation));
-  };
-
   const doneHandler = (id) => {
     dispatchList({ type: listActions.DONE, id });
   };
@@ -219,51 +206,14 @@ const ListScreen = ({ navigation, route }) => {
           {list?.items?.length > 0 && (
             <FlatList
               data={list.items.filter((i) => !i.done)}
-              keyExtractor={(_, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.container}>
-                  <Text style={styles.text}>
-                    {item.item ? item.item : item.subName}
-                  </Text>
-                  {!!item.subName && (
-                    <FlatList
-                      data={item.subItems}
-                      keyExtractor={(_, idx) => idx.toString()}
-                      renderItem={({ item }) => <Text>{item.item}</Text>}
-                    />
-                  )}
-                  {Object.keys(item).includes("done") && (
-                    <View>
-                      <Button onPress={() => doneHandler(item._id)}>
-                        done
-                      </Button>
-                    </View>
-                  )}
-                </View>
-              )}
+              doneHandler={doneHandler}
+              listType={route.params.listType}
             />
           )}
         </View>
         {route.name === "Active List" && (
           <View>
-            <FlatList
-              data={list.items.filter((item) => item.done)}
-              keyExtractor={(_, idx) => idx.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.container}>
-                  <Text style={styles.text}>
-                    {item.item ? item.item : item.subName}
-                  </Text>
-                  {!!item.subName && (
-                    <FlatList
-                      data={item.subItems}
-                      keyExtractor={(_, idx) => idx.toString()}
-                      renderItem={({ item }) => <Text>{item.item}</Text>}
-                    />
-                  )}
-                </View>
-              )}
-            />
+            <FlatList data={list.items.filter((i) => i.done)} blank />
           </View>
         )}
       </View>
