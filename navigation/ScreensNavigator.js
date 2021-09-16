@@ -73,12 +73,22 @@ const getHeaderRight = ({ navigation, route }) => {
 
 const ScreensNavigator = (props) => {
   return (
-    <Stack.Navigator initialRouteName="All Lists" screenOptions={{ headerBackTitle: "Back" }}>
+    <Stack.Navigator
+      initialRouteName="All Lists"
+      screenOptions={{
+        headerBackTitle: "Back",
+        headerStyle: { backgroundColor: "transparent" },
+      }}
+    >
       <Stack.Screen name="Active List" component={ListScreen} />
       <Stack.Screen name="Archived List" component={ListScreen} />
       <Stack.Screen name="Edit List" component={EditListScreen} />
       <Stack.Screen name="Invite List" component={ListScreen} />
-      <Stack.Screen name="Invite Lists" component={ListsScreen} />
+      <Stack.Screen
+        name="Invite Lists"
+        component={ListsScreen}
+        initialParams={{ listType: "inviteLists", path: "Invite List" }}
+      />
       <Stack.Screen name="List" component={ListScreen} />
       <Stack.Screen
         name="All Lists"
@@ -90,7 +100,14 @@ const ScreensNavigator = (props) => {
         })}
       />
       <Stack.Screen name="New List" component={NewListScreen} />
-      <Stack.Screen name="List Name" component={NewListNameScreen} options={{ headerTitle: null, headerStyle: {backgroundColor: "transparent"} }} />
+      <Stack.Screen
+        name="List Name"
+        component={NewListNameScreen}
+        options={{
+          headerTitle: null,
+          headerStyle: { backgroundColor: "transparent" },
+        }}
+      />
     </Stack.Navigator>
   );
 };

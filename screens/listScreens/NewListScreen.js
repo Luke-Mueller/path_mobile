@@ -91,14 +91,6 @@ const listReducer = (state, action) => {
           subName: action.subName,
         },
       };
-    // case listActions.SETNAME:
-    //   return {
-    //     ...state,
-    //     newList: {
-    //       ...state.newList,
-    //       name: action.name,
-    //     },
-    //   };
     default:
       return state;
   }
@@ -141,9 +133,9 @@ const NewListScreen = ({ navigation, route }) => {
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
-            title="save list"
-            IconComponent={MaterialIcons}
-            iconName="done"
+            title="save"
+            // IconComponent={MaterialIcons}
+            // iconName="done"
             onPress={saveHandler}
           />
         </HeaderButtons>

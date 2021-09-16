@@ -136,10 +136,6 @@ const EditListScreen = ({ navigation, route }) => {
 
   const dispatch = useDispatch();
 
-  const deleteListHandler = useCallback(async () => {
-    dispatch(listsActions.deletelist(list._id, userId, "myLists", navigation));
-  }, [list, userId]);
-
   const editListHandler = useCallback(async () => {
     dispatch(listsActions.editlist(list, "lists", navigation));
   }, [list]);
@@ -150,13 +146,18 @@ const EditListScreen = ({ navigation, route }) => {
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
-            title="delete list"
-            IconComponent={Feather}
-            iconName="trash-2"
-            onPress={() => deleteListHandler()}
+            title="undo"
+            IconComponent={MaterialIcons}
+            iconName="undo"
+            onPress={() =>
+              dispatchList({
+                type: listActions.CLEARCHANGES,
+                list: { ...userList },
+              })
+            }
           />
           <Item
-            title="edit list"
+            title="save"
             IconComponent={MaterialIcons}
             iconName="done"
             onPress={() => editListHandler()}
@@ -287,16 +288,6 @@ const EditListScreen = ({ navigation, route }) => {
           </View>
         </Modal>
       )}
-      <Button
-        onPress={() =>
-          dispatchList({
-            type: listActions.CLEARCHANGES,
-            list: { ...userList },
-          })
-        }
-      >
-        clear changes
-      </Button>
       <TextInput
         onChangeText={(input) =>
           dispatchList({ type: listActions.LISTNAME, name: input })

@@ -1,13 +1,12 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
-  Alert,
   Dimensions,
   FlatList,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import { ActivityIndicator, Button, Text, TextInput } from "react-native-paper";
+import { ActivityIndicator, Button, Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -18,8 +17,6 @@ import Modal from "../../components/Modal";
 
 import * as listsActions from "../../store/actions/lists";
 import * as authActions from "../../store/actions/auth";
-
-import { sendList } from "../../utils/api";
 
 const { width } = Dimensions.get("window");
 
@@ -47,37 +44,23 @@ const listReducer = (list, action) => {
 
 const ListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const userList = useSelector(
-    (state) =>
-      state.lists[route.params.arr || "myLists"].filter(
-        (list) => list._id.toString() === route.params.listId.toString()
-      )[0]
-  );
+  const userList = useSelector((state) => {
+    return state.lists[
+      route.params.listType ? route.params.listType : "myLists"
+    ].filter(
+      (list) => list._id.toString() === route.params.listId.toString()
+    )[0];
+  });
+
   const [list, dispatchList] = useReducer(listReducer, { ...userList });
 
   const userId = useSelector((state) => state.auth.user._id);
 
-  const [modalText, setModalText] = useState();
+  const [modalText, setModalText] = useState("");
   const [pressed, setPressed] = useState(false);
-  const [sendModal, setSendModal] = useState(false);
-  const [username, setUsername] = useState();
 
   let bottomButtons = (
     <View style={styles.bottomContainer}>
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => archiveList()}
-      >
-        <Feather name="archive" size={24} color="black" />
-        <Text style={{ marginHorizontal: 25 }}>Archive List</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => setSendModal(true)}
-      >
-        <Feather name="send" size={24} color="black" />
-        <Text style={{ marginHorizontal: 25 }}>Send List</Text>
-      </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => activateList()}
@@ -92,9 +75,10 @@ const ListScreen = ({ navigation, route }) => {
     bottomButtons = null;
   } else if (route.name === "Archived List") {
     const restoreList = () => {
+      // return
       setModalText("Restoring list...");
       setPressed(true);
-      const payload = {listId: list._id, userId}
+      const payload = { listId: userList._id, userId };
       dispatch(authActions.restoreList(payload, navigation));
     };
     bottomButtons = (
@@ -103,7 +87,7 @@ const ListScreen = ({ navigation, route }) => {
           style={styles.buttonContainer}
           onPress={() => restoreList()}
         >
-          <Feather name="archive" size={24} color="black" />
+          <MaterialIcons name="unarchive" size={24} color="black" />
           <Text style={{ marginHorizontal: 25 }}>Restore List</Text>
         </TouchableOpacity>
       </View>
@@ -115,7 +99,10 @@ const ListScreen = ({ navigation, route }) => {
           style={styles.buttonContainer}
           onPress={() =>
             dispatch(
-              authActions.acceptList({ listId: list._id, userId }, navigation)
+              authActions.acceptList(
+                { listId: userList._id || route.params.listId, userId },
+                navigation
+              )
             )
           }
         >
@@ -210,28 +197,6 @@ const ListScreen = ({ navigation, route }) => {
     dispatch(listsActions.archivelist(payload, navigation));
   };
 
-  const sendListHandler = async () => {
-    const payload = { listId: list._id, username };
-    try {
-      const { done } = await sendList(payload);
-      if (done) {
-        Alert.alert(
-          "List Sent...",
-          `${list.name} was sent to ${username} successfully!`,
-          [
-            {
-              onPress: () => {
-                setSendModal(false), setUsername();
-              },
-            },
-          ]
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const doneHandler = (id) => {
     dispatchList({ type: listActions.DONE, id });
   };
@@ -249,30 +214,9 @@ const ListScreen = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {sendModal && (
-        <Modal>
-          <View style={{ flex: 1, justifyContent: "center" }}>
-            <TextInput
-              autoCapitalize="none"
-              onChangeText={(input) => setUsername(input)}
-              label="Recipient's username"
-              style={{ ...styles.textInput, color: "white" }}
-              value={username}
-            />
-            <Button
-              onPress={() => {
-                setSendModal(false), setUsername();
-              }}
-            >
-              cancel
-            </Button>
-            <Button onPress={() => sendListHandler()}>ok</Button>
-          </View>
-        </Modal>
-      )}
       <View style={{ flex: 1, justifyContent: "space-between" }}>
         <View>
-          {list && !!list.items.length && (
+          {list?.items?.length > 0 && (
             <FlatList
               data={list.items.filter((i) => !i.done)}
               keyExtractor={(_, index) => index.toString()}

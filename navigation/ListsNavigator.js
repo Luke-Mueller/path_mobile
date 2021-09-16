@@ -1,7 +1,5 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import ActiveListsScreen from "../screens/listScreens/ActiveListsScreen";
-import ArchiveListsScreen from "../screens/listScreens/ArchiveListsScreen";
 import ListsScreen from "../screens/listScreens/ListsScreen";
 
 const Tab = createBottomTabNavigator();
