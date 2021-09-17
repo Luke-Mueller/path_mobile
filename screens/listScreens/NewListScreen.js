@@ -134,8 +134,6 @@ const NewListScreen = ({ navigation, route }) => {
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
             title="save"
-            // IconComponent={MaterialIcons}
-            // iconName="done"
             onPress={saveHandler}
           />
         </HeaderButtons>
@@ -161,7 +159,6 @@ const NewListScreen = ({ navigation, route }) => {
         list.subList.subName,
         list.subList.subItems
       );
-      // DO NOT REMOVE THE AWAIT KEYWORD
       await dispatchNL({
         type: listActions.ADDITEM,
         itemType: type,

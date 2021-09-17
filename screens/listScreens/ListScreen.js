@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
-import { ActivityIndicator, Text } from "react-native-paper";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Button, Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -56,13 +56,9 @@ const ListScreen = ({ navigation, route }) => {
 
   let bottomButtons = (
     <View style={styles.bottomContainer}>
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => activateList()}
-      >
-        <Feather name="play" size={24} color="black" />
-        <Text style={{ marginHorizontal: 25 }}>Start List</Text>
-      </TouchableOpacity>
+      <Button icon="play" onPress={() => activateList()}>
+        start list
+      </Button>
     </View>
   );
 
@@ -77,32 +73,17 @@ const ListScreen = ({ navigation, route }) => {
     };
     bottomButtons = (
       <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => restoreList()}
-        >
-          <MaterialIcons name="unarchive" size={24} color="black" />
-          <Text style={{ marginHorizontal: 25 }}>Restore List</Text>
-        </TouchableOpacity>
+        <Button icon="restore" onPress={() => restoreList()}>
+          restore list
+        </Button>
       </View>
     );
   } else if (route.name === "Invite List") {
     bottomButtons = (
       <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() =>
-            dispatch(
-              authActions.acceptList(
-                { listId: userList._id || route.params.listId, userId },
-                navigation
-              )
-            )
-          }
-        >
-          <MaterialIcons name="add" size={24} color="black" />
-          <Text style={{ marginHorizontal: 25 }}>Accept List</Text>
-        </TouchableOpacity>
+        <Button icon="add" onPress={() => activateList()}>
+          accept list
+        </Button>
       </View>
     );
   }
@@ -208,12 +189,17 @@ const ListScreen = ({ navigation, route }) => {
               data={list.items.filter((i) => !i.done)}
               doneHandler={doneHandler}
               listType={route.params.listType}
+              navigation={navigation}
             />
           )}
         </View>
         {route.name === "Active List" && (
           <View>
-            <FlatList data={list.items.filter((i) => i.done)} blank />
+            <FlatList
+              data={list.items.filter((i) => i.done)}
+              navigation={navigation}
+              blank
+            />
           </View>
         )}
       </View>

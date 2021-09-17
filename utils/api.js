@@ -1,14 +1,21 @@
 import { Alert } from "react-native";
 import { API_BASE_URL } from "../constants/http";
 
-const request = async (args) => {
+const request = async (args, open) => {
   if (!args.headers) args.headers = { "Content-Type": "application/json" };
   try {
     const response = await fetch(args.url, args);
     const data = await response.json();
     if (!response.ok) {
       // return 
-      Alert.alert(data.title, data.message);
+      if (open) {
+        Alert.alert(data.title, data.message,
+          [
+            {
+              onPress: () => open(false),
+            },
+          ])
+      } else Alert.alert(data.title, data.message)
     }
     return data;
   } catch (err) {
@@ -87,11 +94,11 @@ export const getlists = (arr, arrType) => {
   });
 };
 
-export const login = (userName) => {
+export const login = (userName, setPressed) => {
   return request({
     url: `${API_BASE_URL}/user/login/${userName}`,
     method: "GET",
-  });
+  }, setPressed);
 };
 
 export const postlist = (payload) => {

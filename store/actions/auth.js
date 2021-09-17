@@ -70,7 +70,7 @@ export const logOut = (navigation) => {
 export const logIn = (username, setPressed) => {
   return async (dispatch) => {
     try {
-      const { user } = await login(username);
+      const { user } = await login(username, setPressed);
       if (user) {
         dispatch({
           type: AUTH,

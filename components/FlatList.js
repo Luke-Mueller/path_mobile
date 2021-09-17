@@ -69,6 +69,8 @@ const FlatList = (props) => {
             />
           );
         }
+
+        // Deals with lists
         if (!item.itemType) {
           return (
             <List.Item
@@ -84,9 +86,13 @@ const FlatList = (props) => {
             />
           );
         }
+
+        // Deals with items
         if (item.itemType === "item") {
           return <List.Item title={item.item} />;
         }
+
+        // Deals with sublists
         if (item.itemType === "sublist") {
           return (
             <List.Accordion

@@ -21,7 +21,6 @@ const ListsScreen = ({ navigation, route }) => {
   const { listType, path } = route.params;
 
   const lists = useSelector((state) => state.lists[listType]);
-
   const listsIds = useSelector((state) => state.auth.user[listType]);
 
   const [listId, setListId] = useState();
