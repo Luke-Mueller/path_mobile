@@ -1,16 +1,10 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
-import {
-  Dimensions,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { DefaultTheme } from "@react-navigation/native";
+import { Dimensions, FlatList, StyleSheet, View } from "react-native";
+import { Button, FAB, List, Portal, TextInput } from "react-native-paper";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import Color from "../../constants/color";
 import HeaderButton from "../../components/HeaderButton";
@@ -122,7 +116,6 @@ const itemReducer = (item, action) => {
 };
 
 const EditListScreen = ({ navigation, route }) => {
-  const userId = useSelector((state) => state.auth.user._id);
   const userList = useSelector(
     (state) =>
       state.lists[route.params.arr].filter(
@@ -131,10 +124,36 @@ const EditListScreen = ({ navigation, route }) => {
   );
   const [item, dispatchItem] = useReducer(itemReducer, null);
   const [list, dispatchList] = useReducer(listReducer, { ...userList });
+  const [expanded, setExpanded] = useState(false);
   const [newSubItem, setNewSubItem] = useState(null);
   const [itemIndex, setItemIndex] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
+
+  const toggleExpand = () => {
+    setExpanded(!expanded);
+  };
+
+  const addTask = () => {
+    const newItem = new ListItemModel("item", "", "", []);
+    newItem.new = true;
+    dispatchItem({
+      type: itemActions.SETITEM,
+      item: newItem,
+    });
+    setItemIndex(list.items.length);
+  };
+
+  const addList = () => {
+    const newItem = new ListItemModel("sublist", "", "", []);
+    newItem.new = true;
+    dispatchItem({
+      type: itemActions.SETITEM,
+      item: newItem,
+    });
+    setItemIndex(list.items.length);
+  };
 
   const editListHandler = useCallback(async () => {
     dispatch(listsActions.editlist(list, "lists", navigation));
@@ -245,16 +264,17 @@ const EditListScreen = ({ navigation, route }) => {
               data={item.subItems}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item, index }) => (
-                <View style={styles.item}>
-                  <Text>{item}</Text>
-                  <Feather
-                    name="trash"
-                    size={24}
-                    onPress={() =>
-                      dispatchItem({ type: itemActions.REMOVESUBITEM, index })
-                    }
-                  />
-                </View>
+                <List.Item
+                  right={() => (
+                    <Button
+                      icon="trash-can-outline"
+                      onPress={() =>
+                        dispatchItem({ type: itemActions.REMOVESUBITEM, index })
+                      }
+                    />
+                  )}
+                  title={item}
+                />
               )}
             />
             <View style={{ flexDirection: "row", alignSelf: "center" }}>
@@ -288,6 +308,29 @@ const EditListScreen = ({ navigation, route }) => {
           </View>
         </Modal>
       )}
+      <Portal>
+        <FAB.Group
+          style={{ flex: 1 }}
+          open={open}
+          icon={open ? "minus" : "plus"}
+          actions={[
+            {
+              icon: "plus",
+              label: "Add item",
+              small: false,
+              onPress: addTask,
+            },
+            {
+              icon: "playlist-plus",
+              label: "Add sub list",
+              small: false,
+              onPress: addList,
+            },
+          ]}
+          onStateChange={({ open }) => setOpen(open)}
+          onPress={() => setOpen(!open)}
+        />
+      </Portal>
       <TextInput
         onChangeText={(input) =>
           dispatchList({ type: listActions.LISTNAME, name: input })
@@ -302,55 +345,72 @@ const EditListScreen = ({ navigation, route }) => {
           alignItems: "center",
           justifyContent: "center",
         }}
-      >
-        <MaterialIcons
-          name="add-task"
-          size={40}
-          style={{ marginHorizontal: 50, marginVertical: 25 }}
-          color={Color.black}
-          onPress={() => {
-            const newItem = new ListItemModel("item", "", "", []);
-            newItem.new = true;
-            dispatchItem({
-              type: itemActions.SETITEM,
-              item: newItem,
-            });
-            setItemIndex(list.items.length);
-          }}
-        />
-        <MaterialIcons
-          name="playlist-add"
-          size={40}
-          style={{ marginHorizontal: 50, marginVertical: 25 }}
-          color={Color.black}
-          onPress={() => {
-            const newItem = new ListItemModel("sublist", "", "", []);
-            newItem.new = true;
-            dispatchItem({
-              type: itemActions.SETITEM,
-              item: newItem,
-            });
-            setItemIndex(list.items.length);
-          }}
-        />
-      </View>
+      ></View>
       <FlatList
         data={list.items}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <Pressable
-            onPress={() => {
-              dispatchItem({ type: itemActions.SETITEM, item: { ...item } });
-              setItemIndex(index);
-            }}
-          >
-            <View style={styles.container}>
-              <View style={styles.button}>
-                <Text>{item.item ? item.item : item.subName}</Text>
-                <MaterialIcons
-                  name="delete-outline"
-                  size={24}
-                  color="black"
+        renderItem={({ item, index }) => {
+          if (item.itemType === "item") {
+            return (
+              <List.Item
+                onPress={() => {
+                  dispatchItem({
+                    type: itemActions.SETITEM,
+                    item: { ...item },
+                  });
+                  setItemIndex(index);
+                }}
+                right={() => (
+                  <Button
+                    icon="trash-can-outline"
+                    onPress={() =>
+                      dispatchList({
+                        type: listActions.REMOVEITEM,
+                        index,
+                        itemType: "item",
+                      })
+                    }
+                  />
+                )}
+                title={item.item ? item.item : item.subName}
+              />
+            );
+          }
+          if (item.itemType === "sublist") {
+            return (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <List.Accordion
+                  expanded={true}
+                  onPress={() => {
+                    dispatchItem({
+                      type: itemActions.SETITEM,
+                      item: { ...item },
+                    });
+                    setItemIndex(index);
+                  }}
+                  right={() => null}
+                  titleStyle={{
+                    color: DefaultTheme.colors.text,
+                    opacity: 0.87,
+                  }}
+                  title={item.subName}
+                  style={{ minWidth: "78%" }}
+                >
+                  {item.subItems.map((subItem, index) => (
+                    <List.Item
+                      title={subItem.item ? subItem.item : subItem}
+                      key={index}
+                      style={{ paddingLeft: 50 }}
+                    />
+                  ))}
+                </List.Accordion>
+                <Button
+                  icon="trash-can-outline"
                   onPress={() =>
                     dispatchList({
                       type: listActions.REMOVEITEM,
@@ -358,11 +418,18 @@ const EditListScreen = ({ navigation, route }) => {
                       itemType: "item",
                     })
                   }
+                  style={{
+                    minWidth: "21.25%",
+                    height: 60,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingBottom: 10,
+                  }}
                 />
               </View>
-            </View>
-          </Pressable>
-        )}
+            );
+          }
+        }}
       />
     </View>
   );

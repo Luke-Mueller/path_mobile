@@ -7,16 +7,14 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, FAB, List, Portal, TextInput } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
 
 import HeaderButton from "../../components/HeaderButton";
 import ListItem from "../../models/ListItem";
 import Modal from "../../components/Modal";
 
-import Color from "../../constants/color";
 import * as listsActions from "../../store/actions/lists";
 
 const { width } = Dimensions.get("window");
@@ -97,9 +95,15 @@ const listReducer = (state, action) => {
 };
 
 const NewListScreen = ({ navigation, route }) => {
+  // FAB STATE
+  const [open, setOpen] = useState(false);
+
   // MODAL STATE
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [showAddListModal, setShowAddListModal] = useState(false);
+
+  const showAddItem = () => setShowAddItemModal(true);
+  const showAddList = () => setShowAddListModal(true);
 
   // ITEM INPUTS STATE
   const [newItemInput, setNewItemInput] = useState("");
@@ -132,10 +136,7 @@ const NewListScreen = ({ navigation, route }) => {
       headerTitle: title,
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title="save"
-            onPress={saveHandler}
-          />
+          <Item title="save" onPress={saveHandler} />
         </HeaderButtons>
       ),
     });
@@ -223,27 +224,30 @@ const NewListScreen = ({ navigation, route }) => {
                 label="Sub list item"
                 style={styles.textInput}
                 value={newItemInputSub}
-                right={<TextInput.Icon name="plus" onPress={() => addSubItem()} />}
+                right={
+                  <TextInput.Icon name="plus" onPress={() => addSubItem()} />
+                }
               />
 
               <FlatList
                 data={list.subList.subItems}
                 keyExtractor={(_, index) => index.toString()}
                 renderItem={({ item, index }) => (
-                  <View style={styles.item}>
-                    <Text>{item}</Text>
-                    <Feather
-                      name="trash"
-                      size={24}
-                      onPress={() =>
-                        dispatchNL({
-                          type: "REMOVEITEM",
-                          itemType: "sublist",
-                          idx: index,
-                        })
-                      }
-                    />
-                  </View>
+                  <List.Item
+                    right={() => (
+                      <Button
+                        icon="trash-can-outline"
+                        onPress={() =>
+                          dispatchNL({
+                            type: "REMOVEITEM",
+                            itemType: "sublist",
+                            idx: index,
+                          })
+                        }
+                      />
+                    )}
+                    title={item}
+                  />
                 )}
               />
               <View style={{ flexDirection: "row", alignSelf: "center" }}>
@@ -262,35 +266,37 @@ const NewListScreen = ({ navigation, route }) => {
           </Modal>
         )}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialIcons
-            name="add-task"
-            size={40}
-            style={{ marginHorizontal: 50, marginVertical: 25 }}
-            color={Color.black}
-            onPress={() => {
-              setShowAddItemModal(true);
-            }}
-          />
-          <MaterialIcons
-            name="playlist-add"
-            size={40}
-            style={{ marginHorizontal: 50, marginVertical: 25 }}
-            color={Color.black}
-            onPress={() => {
-              setShowAddListModal(true);
-            }}
-          />
+          <Portal>
+            <FAB.Group
+              open={open}
+              icon={open ? "minus" : "plus"}
+              actions={[
+                {
+                  icon: "pencil-plus-outline",
+                  label: "Add item",
+                  onPress: showAddItem,
+                },
+                {
+                  icon: "playlist-plus",
+                  label: "Add sub list",
+                  onPress: showAddList,
+                },
+              ]}
+              onStateChange={({ open }) => setOpen(open)}
+              onPress={() => setOpen(!open)}
+            />
+          </Portal>
         </View>
-        <View style={styles.listContainer}>
-          <FlatList
-            data={list.newList.items}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item, index }) => (
-              <View style={styles.item}>
-                <Text>{item.item ? item.item : item.subName}</Text>
-                <Feather
-                  name="trash"
-                  size={24}
+        <FlatList
+          data={list.newList.items}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <List.Item
+              style={styles.item}
+              right={(props) => (
+                <Button
+                  {...props}
+                  icon="trash-can-outline"
                   onPress={() =>
                     dispatchNL({
                       type: "REMOVEITEM",
@@ -299,10 +305,11 @@ const NewListScreen = ({ navigation, route }) => {
                     })
                   }
                 />
-              </View>
-            )}
-          />
-        </View>
+              )}
+              title={item.item ? item.item : item.subName}
+            />
+          )}
+        />
       </View>
     </TouchableWithoutFeedback>
   );

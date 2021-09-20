@@ -181,7 +181,7 @@ const ListScreen = ({ navigation, route }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, padding: 50 }}>
       <View style={{ flex: 1, justifyContent: "space-between" }}>
         <View>
           {list?.items?.length > 0 && (

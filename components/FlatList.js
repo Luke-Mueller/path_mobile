@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { DefaultTheme } from "@react-navigation/native";
 import { FlatList as NativeFlatList } from "react-native";
 import { Divider, List } from "react-native-paper";
 
@@ -46,11 +47,13 @@ const FlatList = (props) => {
                 right={() => null}
                 onPress={() => doneHandler(item._id)}
                 title={item.subName}
+                titleStyle={{ color: DefaultTheme.colors.text, opacity: 0.87 }}
               >
                 {item.subItems.map((subItem, index) => (
                   <List.Item
-                    title={subItem.item ? subItem.item : subItem}
                     key={index}
+                    title={subItem.item ? subItem.item : subItem}
+                    style={{ paddingLeft: 50 }}
                   />
                 ))}
               </List.Accordion>
@@ -99,11 +102,13 @@ const FlatList = (props) => {
               expanded={expanded}
               onPress={toggleExpand}
               title={item.subName}
+              titleStyle={{ color: DefaultTheme.colors.text, opacity: 0.87 }}
             >
               {item.subItems.map((subItem, index) => (
                 <List.Item
-                  title={subItem.item ? subItem.item : subItem}
                   key={index}
+                  title={subItem.item ? subItem.item : subItem}
+                  style={{ paddingLeft: 50 }}
                 />
               ))}
             </List.Accordion>
