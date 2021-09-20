@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { DefaultTheme } from "@react-navigation/native";
 import { Dimensions, FlatList, StyleSheet, View } from "react-native";
-import { Button, FAB, List, Portal, TextInput } from "react-native-paper";
+import { Button, Divider, FAB, List, Portal, Text, TextInput } from "react-native-paper";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -308,6 +308,14 @@ const EditListScreen = ({ navigation, route }) => {
           </View>
         </Modal>
       )}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          marginVertical: 25
+        }}
+      >
       <Portal>
         <FAB.Group
           style={{ flex: 1 }}
@@ -339,16 +347,12 @@ const EditListScreen = ({ navigation, route }) => {
         style={styles.textInput}
         value={list.name}
       />
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      ></View>
+      </View>
       <FlatList
         data={list.items}
+        ItemSeparatorComponent={() => <Divider />}
         keyExtractor={(_, index) => index.toString()}
+        ListHeaderComponent={<Text>List Items: </Text>}
         renderItem={({ item, index }) => {
           if (item.itemType === "item") {
             return (
