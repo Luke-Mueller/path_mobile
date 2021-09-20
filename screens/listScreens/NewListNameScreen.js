@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 
-const { width } = Dimensions.get("window");
+const { height, width } = Dimensions.get("window");
 
 const NewListNameScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -11,8 +11,7 @@ const NewListNameScreen = ({ navigation }) => {
       style={{
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
-        padding: 50,
+        padding: 50
       }}
     >
       <Text>Please enter the name of your new list</Text>

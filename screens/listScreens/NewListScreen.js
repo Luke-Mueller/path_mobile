@@ -7,7 +7,14 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Button, FAB, List, Portal, TextInput } from "react-native-paper";
+import {
+  Button,
+  Divider,
+  FAB,
+  List,
+  Portal,
+  TextInput,
+} from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -106,6 +113,7 @@ const NewListScreen = ({ navigation, route }) => {
   const showAddList = () => setShowAddListModal(true);
 
   // ITEM INPUTS STATE
+  const [newDetailsInput, setNewDetailsInput] = useState("");
   const [newItemInput, setNewItemInput] = useState("");
   const [newItemInputSub, setNewItemInputSub] = useState("");
 
@@ -145,17 +153,25 @@ const NewListScreen = ({ navigation, route }) => {
   const addItem = async (type) => {
     let newItem;
     if (type === "item") {
-      newItem = new ListItem(type, newItemInput.toString(), null, null);
+      newItem = new ListItem(
+        type,
+        newItemInput.toString(),
+        newDetailsInput.toString(),
+        null,
+        null
+      );
       dispatchNL({
         type: listActions.ADDITEM,
         itemType: type,
         item: newItem,
       });
+      setNewDetailsInput("");
       setNewItemInput("");
       setShowAddItemModal(false);
     } else if (type === "sublist") {
       newItem = new ListItem(
         type,
+        null,
         null,
         list.subList.subName,
         list.subList.subItems
@@ -186,17 +202,26 @@ const NewListScreen = ({ navigation, route }) => {
           <Modal>
             <View style={{ flex: 1, justifyContent: "center" }}>
               <TextInput
-                label="List Item"
+                label="Item"
                 multiline={true}
                 onChangeText={setNewItemInput}
                 style={{ ...styles.textInput, color: "white" }}
                 textAlignVertical="top"
                 value={newItemInput}
               />
+              <TextInput
+                label="Details"
+                multiline={true}
+                onChangeText={setNewDetailsInput}
+                style={{ ...styles.textInput, color: "white" }}
+                textAlignVertical="top"
+                value={newDetailsInput}
+              />
               <View style={{ flexDirection: "row", alignSelf: "center" }}>
                 <Button
                   onPress={() => {
                     setShowAddItemModal(false);
+                    setNewDetailsInput("");
                     setNewItemInput("");
                   }}
                 >
@@ -265,51 +290,55 @@ const NewListScreen = ({ navigation, route }) => {
             </View>
           </Modal>
         )}
+        <Portal>
+          <FAB.Group
+            open={open}
+            icon={open ? "minus" : "plus"}
+            actions={[
+              {
+                icon: "pencil-plus-outline",
+                label: "Add item",
+                small: false,
+                onPress: showAddItem,
+              },
+              {
+                icon: "playlist-plus",
+                label: "Add sub list",
+                small: false,
+                onPress: showAddList,
+              },
+            ]}
+            onStateChange={({ open }) => setOpen(open)}
+            onPress={() => setOpen(!open)}
+          />
+        </Portal>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Portal>
-            <FAB.Group
-              open={open}
-              icon={open ? "minus" : "plus"}
-              actions={[
-                {
-                  icon: "pencil-plus-outline",
-                  label: "Add item",
-                  onPress: showAddItem,
-                },
-                {
-                  icon: "playlist-plus",
-                  label: "Add sub list",
-                  onPress: showAddList,
-                },
-              ]}
-              onStateChange={({ open }) => setOpen(open)}
-              onPress={() => setOpen(!open)}
-            />
-          </Portal>
+          <FlatList
+            data={list.newList.items}
+            ItemSeparatorComponent={Divider}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <List.Item
+                description={item.details}
+                style={styles.item}
+                right={(props) => (
+                  <Button
+                    {...props}
+                    icon="trash-can-outline"
+                    onPress={() =>
+                      dispatchNL({
+                        type: "REMOVEITEM",
+                        itemType: "item",
+                        idx: index,
+                      })
+                    }
+                  />
+                )}
+                title={item.item ? item.item : item.subName}
+              />
+            )}
+          />
         </View>
-        <FlatList
-          data={list.newList.items}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <List.Item
-              style={styles.item}
-              right={(props) => (
-                <Button
-                  {...props}
-                  icon="trash-can-outline"
-                  onPress={() =>
-                    dispatchNL({
-                      type: "REMOVEITEM",
-                      itemType: "item",
-                      idx: index,
-                    })
-                  }
-                />
-              )}
-              title={item.item ? item.item : item.subName}
-            />
-          )}
-        />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -331,14 +360,6 @@ const styles = StyleSheet.create({
     margin: 5,
     backgroundColor: "rgba(0,0,0,0)",
     alignSelf: "center",
-  },
-  item: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    padding: 20,
-    marginVertical: 8,
-    alignItems: "center",
   },
   listContainer: {
     flex: 1,

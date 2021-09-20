@@ -73,6 +73,7 @@ const listReducer = (list, action) => {
 
 const itemActions = {
   ADDSUBITEM: "ADDSUBITEM",
+  DETAILS: "DETAILS",
   ITEM: "ITEM",
   SUBNAME: "SUBNAME",
   REMOVESUBITEM: "REMOVESUBITEM",
@@ -88,11 +89,17 @@ const itemReducer = (item, action) => {
         ...item,
         subItems: addSubItems,
       };
+      case itemActions.DETAILS:
+        return {
+          ...item,
+          details: action.details
+        }
     case itemActions.ITEM:
       return {
         ...item,
         item: action.item,
       };
+
     case itemActions.REMOVESUBITEM:
       const removeSubItems = item.subItems;
       removeSubItems.splice(action.index, 1);
@@ -201,6 +208,15 @@ const EditListScreen = ({ navigation, route }) => {
               }
               style={styles.textInput}
               value={item.item}
+            />
+            <TextInput
+              label="List details"
+              multiline={true}
+              onChangeText={(input) =>
+                dispatchItem({ type: itemActions.DETAILS, details: input })
+              }
+              style={styles.textInput}
+              value={item.details}
             />
             <View style={{ flexDirection: "row", alignSelf: "center" }}>
               <Button
@@ -357,6 +373,7 @@ const EditListScreen = ({ navigation, route }) => {
           if (item.itemType === "item") {
             return (
               <List.Item
+                description={item.details}
                 onPress={() => {
                   dispatchItem({
                     type: itemActions.SETITEM,

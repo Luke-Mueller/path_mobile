@@ -53,6 +53,8 @@ const ListScreen = ({ navigation, route }) => {
 
   const [modalText, setModalText] = useState("");
   const [pressed, setPressed] = useState(false);
+  // const [modalVisible, setModalVisible] = useState(false);
+  const [item, setItem] = useState();
 
   let bottomButtons = (
     <View style={styles.bottomContainer}>
@@ -181,28 +183,33 @@ const ListScreen = ({ navigation, route }) => {
   }
 
   return (
-    <View style={{ flex: 1, padding: 50 }}>
-      <View style={{ flex: 1, justifyContent: "space-between" }}>
-        <View>
-          {list?.items?.length > 0 && (
-            <FlatList
-              data={list.items.filter((i) => !i.done)}
-              doneHandler={doneHandler}
-              listType={route.params.listType}
-              navigation={navigation}
-            />
-          )}
-        </View>
-        {route.name === "Active List" && (
+    <View style={{ flex: 1, paddingBottom: 50 }}>
+      {item && (
+        <Modal>
           <View>
-            <FlatList
-              data={list.items.filter((i) => i.done)}
-              navigation={navigation}
-              blank
-            />
+            <Text style={{ marginLeft: 20 }}>{item.item}</Text>
+            <Text style={{ marginLeft: 20 }}>{item.details}</Text>
+            <Button onPress={() => setItem(null)}>ok</Button>
           </View>
-        )}
-      </View>
+        </Modal>
+      )}
+      {list?.items?.length > 0 && (
+        <FlatList
+          data={list.items.filter((i) => !i.done)}
+          doneHandler={doneHandler}
+          listType={route.params.listType}
+          navigation={navigation}
+          setItem={setItem}
+        />
+      )}
+      {route.name === "Active List" && (
+        <FlatList
+          data={list.items.filter((i) => i.done)}
+          listType={route.params.listType}
+          navigation={navigation}
+          blank
+        />
+      )}
       {bottomButtons}
     </View>
   );

@@ -120,6 +120,7 @@ export const logOut = (navigation) => {
 };
 
 export const postList = (list, navigation) => {
+  console.log('list: ', list)
   return async (dispatch) => {
     try {
       const response = await postlist(list);

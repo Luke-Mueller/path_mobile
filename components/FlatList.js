@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DefaultTheme } from "@react-navigation/native";
 import { FlatList as NativeFlatList } from "react-native";
-import { Divider, List } from "react-native-paper";
+import { Divider, List, Text } from "react-native-paper";
 
 import ListEmptyComponent from "./ListEmptyComponent";
 
@@ -14,6 +14,7 @@ const FlatList = (props) => {
     longPressHandler,
     navigation,
     path,
+    setItem,
   } = props;
 
   const [expanded, setExpanded] = useState(false);
@@ -24,16 +25,19 @@ const FlatList = (props) => {
 
   return (
     <NativeFlatList
+      {...props}
       data={data}
       ItemSeparatorComponent={() => <Divider />}
       keyExtractor={(_, index) => index.toString()}
       ListEmptyComponent={blank ? null : ListEmptyComponent}
-      renderItem={({ item }) => {
+      renderItem={({ item, index }) => {
         if (listType === "activeLists" && doneHandler) {
           if (item.itemType === "item") {
+            // console.log(item)
             return (
               <List.Item
                 left={() => <List.Icon icon="circle-outline" />}
+                description={item.details}
                 title={item.item}
                 onPress={() => doneHandler(item._id)}
               />
@@ -62,6 +66,7 @@ const FlatList = (props) => {
           return (
             <List.Item
               title={item.subName ? item.subName : item.item}
+              description={item.details}
               left={(props) => (
                 <List.Icon
                   {...props}
@@ -86,13 +91,22 @@ const FlatList = (props) => {
               }
               title={item.name}
               right={(props) => <List.Icon {...props} icon="arrow-right" />}
+              // left={(props) => (
+              //   <List.Icon {...props} icon="format-list-checkbox" />
+              // )}
             />
           );
         }
 
         // Deals with items
         if (item.itemType === "item") {
-          return <List.Item title={item.item} />;
+          return (
+            <List.Item
+              description={item.details}
+              title={item.item}
+              onPress={() => setItem(item)}
+            />
+          );
         }
 
         // Deals with sublists
