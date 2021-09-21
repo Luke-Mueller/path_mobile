@@ -217,19 +217,8 @@ const ListScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   bottomContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  buttonContainer: {
-    backgroundColor: Color.highlight,
-    borderBottomWidth: 1,
-    borderTopWidth: 1,
-    borderColor: "white",
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    maxHeight: 75,
+    paddingVertical: 40,
+    alignSelf: "center",
   },
   container: {
     backgroundColor: Color.highlight,

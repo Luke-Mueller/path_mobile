@@ -33,10 +33,9 @@ const FlatList = (props) => {
       renderItem={({ item, index }) => {
         if (listType === "activeLists" && doneHandler) {
           if (item.itemType === "item") {
-            // console.log(item)
             return (
               <List.Item
-                left={() => <List.Icon icon="circle-outline" />}
+                left={() => <List.Icon icon="chevron-right-circle-outline" />}
                 description={item.details}
                 title={item.item}
                 onPress={() => doneHandler(item._id)}
@@ -47,7 +46,7 @@ const FlatList = (props) => {
             return (
               <List.Accordion
                 expanded={true}
-                left={() => <List.Icon icon="circle-outline" />}
+                left={() => <List.Icon icon="chevron-right-circle-outline"  />}
                 right={() => null}
                 onPress={() => doneHandler(item._id)}
                 title={item.subName}
@@ -70,7 +69,7 @@ const FlatList = (props) => {
               left={(props) => (
                 <List.Icon
                   {...props}
-                  icon="circle-outline"
+                  icon="chevron-right-circle-outline" 
                   onPress={() => doneHandler(item._id)}
                 />
               )}
@@ -105,6 +104,9 @@ const FlatList = (props) => {
               description={item.details}
               title={item.item}
               onPress={() => setItem(item)}
+              left={(props) => (
+                <List.Icon {...props} icon="chevron-right-circle-outline" />
+              )}
             />
           );
         }
