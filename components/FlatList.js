@@ -31,7 +31,7 @@ const FlatList = (props) => {
       keyExtractor={(_, index) => index.toString()}
       ListEmptyComponent={blank ? null : ListEmptyComponent}
       renderItem={({ item, index }) => {
-        // Deals with lists
+        // Lists
         if (!item.itemType) {
           return (
             <List.Item
@@ -47,10 +47,18 @@ const FlatList = (props) => {
             />
           );
         }
+
+        // Active list
         if (listType === "activeLists") {
           if (item.itemType === "item") {
             return (
-              <List.Item
+              <List.Accordion
+                expanded={false}
+                description={item.details}
+                descriptionNumberOfLines={1}
+                descriptionEllipsizeMode="tail"
+                title={item.item}
+                onPress={() => (doneHandler ? doneHandler(item._id) : null)}
                 left={() =>
                   doneHandler ? (
                     <List.Icon icon="checkbox-blank-outline" />
@@ -58,25 +66,25 @@ const FlatList = (props) => {
                     <List.Icon icon="checkbox-marked-outline" />
                   )
                 }
-                description={item.details}
-                descriptionNumberOfLines={1}
-                descriptionEllipsizeMode="tail"
-                title={item.item}
-                onPress={() => (doneHandler ? doneHandler(item._id) : null)}
+                right={() => null}
               />
             );
           }
+
           if (item.itemType === "sublist") {
             return (
               <List.Accordion
                 expanded={true}
-                left={(props) => (
-                  <List.Icon {...props} icon="checkbox-blank-outline" />
-                )}
                 right={() => null}
-                onPress={() => doneHandler(item._id)}
+                left={(props) =>
+                  item.done ? (
+                    <List.Icon {...props} icon="checkbox-marked-outline" />
+                  ) : (
+                    <List.Icon {...props} icon="checkbox-blank-outline" />
+                  )
+                }
+                onPress={() => (doneHandler ? doneHandler(item._id) : null)}
                 title={item.subName}
-                titleStyle={{ color: DefaultTheme.colors.text, opacity: 0.87 }}
               >
                 {item.subItems.map((subItem, index) => (
                   <List.Item
@@ -129,16 +137,10 @@ const FlatList = (props) => {
             <List.Accordion
               expanded={expanded}
               left={(props) => (
-                <List.Icon
-                  {...props}
-                  icon="chevron-right-circle-outline"
-                  color={DefaultTheme.colors.text}
-                  style={{ opacity: 0.6 }}
-                />
+                <List.Icon {...props} icon="chevron-right-circle-outline" />
               )}
               onPress={toggleExpand}
               title={item.subName}
-              titleStyle={{ color: DefaultTheme.colors.text, opacity: 0.87 }}
             >
               {item.subItems.map((subItem, index) => (
                 <List.Item

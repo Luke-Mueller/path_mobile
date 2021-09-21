@@ -12,6 +12,7 @@ import {
 import {
   ActivityIndicator,
   Button,
+  DefaultTheme,
   Headline,
   Text,
   TextInput,
@@ -78,23 +79,18 @@ const AuthScreen = ({ navigation, route }) => {
   }
 
   let btn = (
-    <View>
-      <Button
-        color="#00a8ff"
-        style={styles.button}
-        mode="contained"
-        onPress={() => func()}
-      >
-        <Text style={{ color: "white", fontWeight: "bold" }}>{btnText}</Text>
+    // <View>
+      <Button style={styles.button} mode="contained" onPress={() => func()}>
+        {btnText}
       </Button>
-    </View>
+    // </View>
   );
 
   if (pressed) {
     return (
       <Modal>
         <View style={styles.contentContainer}>
-          <ActivityIndicator color="#34495e" />
+          <ActivityIndicator color={DefaultTheme.colors.accent} />
           <Text style={{ marginLeft: 20 }}>Logging in...</Text>
         </View>
       </Modal>
@@ -104,7 +100,11 @@ const AuthScreen = ({ navigation, route }) => {
   return (
     <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
       <View style={{ ...styles.container }}>
-        <Foundation name="social-path" size={45} color="#00a8ff" />
+        <Foundation
+          name="social-path"
+          size={45}
+          color={DefaultTheme.colors.accent}
+        />
 
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Headline
@@ -170,8 +170,6 @@ const styles = StyleSheet.create({
     width: width / 2,
     height: width / 7.5,
     margin: 5,
-    borderColor: "#00a8ff",
-    borderWidth: 2,
   },
   container: {
     flex: 1,
@@ -181,7 +179,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
     alignSelf: "center",
     paddingVertical: 50,
     paddingHorizontal: 80,

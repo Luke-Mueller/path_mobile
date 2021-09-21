@@ -31,8 +31,14 @@ const CombinedDarkTheme = {
   colors: {
     ...PaperDarkTheme.colors,
     ...NavigationDarkTheme.colors,
+    background: "#121212",
+    primary: "#3BBA9C",
+    accent: "#3BBA9C",
+    surface: "#2E3047"
   },
 };
+
+console.log(CombinedDarkTheme)
 
 export default function App() {
   const [isThemeDark, setIsThemeDark] = useState(false);
