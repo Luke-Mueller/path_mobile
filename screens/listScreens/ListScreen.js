@@ -187,8 +187,8 @@ const ListScreen = ({ navigation, route }) => {
       {item && (
         <Modal>
           <View>
-            <Text style={{ marginLeft: 20 }}>{item.item}</Text>
-            <Text style={{ marginLeft: 20 }}>{item.details}</Text>
+            <Text style={{ marginLeft: 20 }}>{item.item ? item.item : item}</Text>
+            <Text style={{ marginLeft: 20 }}>{item.details ? item.details : null}</Text>
             <Button onPress={() => setItem(null)}>ok</Button>
           </View>
         </Modal>

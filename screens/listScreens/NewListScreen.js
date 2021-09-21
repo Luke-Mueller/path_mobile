@@ -320,7 +320,8 @@ const NewListScreen = ({ navigation, route }) => {
             renderItem={({ item, index }) => (
               <List.Item
                 description={item.details}
-                style={styles.item}
+                descriptionNumberOfLines={1}
+                descriptionEllipsizeMode="tail"
                 right={(props) => (
                   <Button
                     {...props}

@@ -165,6 +165,7 @@ const AuthScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   button: {
+    alignSelf: "center",
     justifyContent: "center",
     width: width / 2,
     height: width / 7.5,
@@ -174,7 +175,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: "center",
     padding: 50,
   },
   contentContainer: {
