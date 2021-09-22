@@ -12,6 +12,7 @@ import {
 import {
   ActivityIndicator,
   Button,
+  Card,
   DefaultTheme,
   Headline,
   Text,
@@ -80,39 +81,48 @@ const AuthScreen = ({ navigation, route }) => {
 
   let btn = (
     // <View>
-      <Button style={styles.button} mode="contained" onPress={() => func()}>
-        {btnText}
-      </Button>
+    <Button style={styles.button} mode="contained" onPress={() => func()}>
+      {btnText}
+    </Button>
     // </View>
   );
 
   if (pressed) {
     return (
       <Modal>
-        <View style={styles.contentContainer}>
-          <ActivityIndicator color={DefaultTheme.colors.accent} />
-          <Text style={{ marginLeft: 20 }}>Logging in...</Text>
-        </View>
+        <Card style={{ width: width * 0.8, height: width * 0.8 * 0.62, alignSelf: "center" }}>
+          <Card.Content style={styles.contentContainer}>
+            <ActivityIndicator color={DefaultTheme.colors.accent} />
+            <Text style={{ marginLeft: 20 }}>Logging in...</Text>
+          </Card.Content>
+        </Card>
       </Modal>
     );
   }
 
   return (
-    <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
-      <View style={{ ...styles.container }}>
-        <Foundation
-          name="social-path"
-          size={45}
-          color="#3BBA9C"
-        />
-
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Headline
-            style={{ alignSelf: "flex-start", fontSize: 30, margin: 5 }}
+    <Pressable
+      style={{ flex: 1, paddingTop: 20, paddingLeft: 20 }}
+      onPress={Keyboard.dismiss}
+    >
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, paddingHorizontal: 20 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingTop: 50,
+            }}
           >
-            {text}
-          </Headline>
-          <View style={{ marginVertical: 25 }}>
+            <Foundation
+              name="social-path"
+              size={45}
+              color="#3BBA9C"
+              style={{ marginRight: 25 }}
+            />
+            <Headline style={{ fontSize: 30 }}>{text}</Headline>
+          </View>
+          <View style={{ marginVertical: 5 }}>
             <TextInput
               autoCapitalize="none"
               label="Username"
@@ -127,22 +137,6 @@ const AuthScreen = ({ navigation, route }) => {
               style={styles.textInput}
               value={password}
             />
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                alignSelf: "flex-start",
-                margin: 15,
-              }}
-            >
-              <Text>{prompt}</Text>
-              <Button
-                labelStyle={{ fontWeight: "bold" }}
-                onPress={changeAuthHandler}
-              >
-                {promptBtnText}
-              </Button>
-            </View>
           </View>
         </View>
         <KeyboardAvoidingView
@@ -157,6 +151,22 @@ const AuthScreen = ({ navigation, route }) => {
           }
         >
           {btn}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              alignSelf: "center",
+              // margin: 15,
+            }}
+          >
+            <Text>{prompt}</Text>
+            <Button
+              labelStyle={{ fontWeight: "bold" }}
+              onPress={changeAuthHandler}
+            >
+              {promptBtnText}
+            </Button>
+          </View>
         </KeyboardAvoidingView>
       </View>
     </Pressable>
@@ -171,21 +181,19 @@ const styles = StyleSheet.create({
     height: width / 7.5,
     margin: 5,
   },
-  container: {
-    flex: 1,
-    padding: 50,
-  },
   contentContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    paddingVertical: 50,
-    paddingHorizontal: 80,
+    // paddingVertical: 50,
+    // paddingHorizontal: 80,
+    width: width * 0.8,
+    height: width * 0.8 * 0.62,
   },
   textInput: {
     width: width / 1.5,
-    margin: 5,
+    // margin: 5,
     backgroundColor: "rgba(0,0,0,0)",
   },
 });
