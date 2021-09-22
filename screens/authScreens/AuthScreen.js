@@ -103,7 +103,7 @@ const AuthScreen = ({ navigation, route }) => {
         <Foundation
           name="social-path"
           size={45}
-          color={DefaultTheme.colors.accent}
+          color="#3BBA9C"
         />
 
         <View style={{ flex: 1, justifyContent: "center" }}>

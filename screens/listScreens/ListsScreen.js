@@ -83,7 +83,6 @@ const ListsScreen = ({ navigation, route }) => {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "rgba(0,0,0,.9)",
           }}
         ></View>
       </Modal>
@@ -94,7 +93,7 @@ const ListsScreen = ({ navigation, route }) => {
     return (
       <Modal>
         <View style={styles.contentContainer}>
-          <ActivityIndicator color="#34495e" />
+          <ActivityIndicator color="#3BBA9C" />
           <Text style={{ marginLeft: 20 }}>{modalText}</Text>
         </View>
       </Modal>
@@ -199,7 +198,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
     alignSelf: "center",
     paddingVertical: 50,
     paddingHorizontal: 80,
@@ -207,7 +205,6 @@ const styles = StyleSheet.create({
   textInput: {
     width: width / 1.5,
     margin: 5,
-    backgroundColor: "rgba(0,0,0,0)",
   },
 });
 

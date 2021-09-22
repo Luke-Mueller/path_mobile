@@ -43,13 +43,24 @@ const AccountScreen = (props) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between", padding: 40 }}>
-      <View style={{ flexDirection: "row", justifyContent: 'space-between', alignItems: "center", width: "100%"}}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 40,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
         <Text>Dark mode</Text>
-        <Switch
-          value={isThemeDark}
-          onValueChange={toggleTheme}
-        />
+        <Switch value={isThemeDark} onValueChange={toggleTheme} />
       </View>
       <Button title="Delete Account" onPress={() => deleteAccountHandler()}>
         Delete Account

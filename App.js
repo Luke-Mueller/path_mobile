@@ -16,31 +16,29 @@ import AppNavigator from "./navigation/AppNavigator";
 import { PreferencesContext } from "./utils/context";
 import store from "./store";
 
-const CombinedDefaultTheme = {
+export const CombinedDefaultTheme = {
   ...PaperDefaultTheme,
   ...NavigationDefaultTheme,
   colors: {
     ...PaperDefaultTheme.colors,
     ...NavigationDefaultTheme.colors,
+    accent: "#3BBA9C",
   },
 };
 
-const CombinedDarkTheme = {
+export const CombinedDarkTheme = {
   ...PaperDarkTheme,
   ...NavigationDarkTheme,
   colors: {
     ...PaperDarkTheme.colors,
     ...NavigationDarkTheme.colors,
-    background: "#121212",
     primary: "#3BBA9C",
     accent: "#3BBA9C",
-    surface: "#2E3047"
+    surface: "#121212"
   },
 };
 
-console.log(CombinedDarkTheme)
-
-export default function App() {
+const App = () => {
   const [isThemeDark, setIsThemeDark] = useState(false);
 
   let theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
@@ -66,3 +64,5 @@ export default function App() {
     </Provider>
   );
 }
+
+export default App;

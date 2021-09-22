@@ -52,7 +52,7 @@ const AuthScreen = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <View>
             <Button
-              color="#00a8ff"
+              color="#3BBA9C"
               style={{ ...styles.button, backgroundColor: "white" }}
               mode="outlined"
               title="Signup"
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#00a8ff",
+    backgroundColor: "#3BBA9C",
     padding: 40,
   },
 });

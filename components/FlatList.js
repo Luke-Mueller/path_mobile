@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { DefaultTheme } from "@react-navigation/native";
-import { FlatList as NativeFlatList } from "react-native";
-import { Divider, List, Text } from "react-native-paper";
+import { Dimensions, FlatList as NativeFlatList } from "react-native";
+import { Card, List } from "react-native-paper";
 
 import ListEmptyComponent from "./ListEmptyComponent";
+
+const { width } = Dimensions.get("screen");
 
 const FlatList = (props) => {
   const {
@@ -27,14 +28,13 @@ const FlatList = (props) => {
     <NativeFlatList
       {...props}
       data={data}
-      ItemSeparatorComponent={() => <Divider />}
       keyExtractor={(_, index) => index.toString()}
       ListEmptyComponent={blank ? null : ListEmptyComponent}
       renderItem={({ item, index }) => {
         // Lists
         if (!item.itemType) {
           return (
-            <List.Item
+            <Card
               onLongPress={() => longPressHandler(item._id)}
               onPress={() =>
                 navigation.navigate(path, {
@@ -42,9 +42,20 @@ const FlatList = (props) => {
                   listType,
                 })
               }
-              title={item.name}
-              right={(props) => <List.Icon {...props} icon="arrow-right" />}
-            />
+              style={{ width: width * 0.9, alignSelf: "center", marginVertical: 2 }}
+            >
+              <Card.Content
+                style={{
+                  paddingVertical: 0,
+                  paddingHorizontal: 0,
+                }}
+              >
+                <List.Item
+                  title={item.name}
+                  right={(props) => <List.Icon {...props} icon="arrow-right" />}
+                />
+              </Card.Content>
+            </Card>
           );
         }
 
@@ -96,21 +107,6 @@ const FlatList = (props) => {
               </List.Accordion>
             );
           }
-          return (
-            <List.Item
-              title={item.subName ? item.subName : item.item}
-              description={item.details}
-              descriptionNumberOfLines={1}
-              descriptionEllipsizeMode="tail"
-              left={(props) => (
-                <List.Icon
-                  {...props}
-                  icon="chevron-right-circle-outline"
-                  onPress={() => doneHandler(item._id)}
-                />
-              )}
-            />
-          );
         }
 
         // Deals with items
