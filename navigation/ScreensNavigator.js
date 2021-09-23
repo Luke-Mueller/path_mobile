@@ -77,7 +77,7 @@ const ScreensNavigator = (props) => {
       initialRouteName="All Lists"
       screenOptions={{
         headerBackTitle: "Back",
-        headerStyle: { backgroundColor: "transparent" },
+        // headerStyle: { backgroundColor: "transparent" },
       }}
     >
       <Stack.Screen name="Active List" component={ListScreen} />
