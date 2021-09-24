@@ -39,6 +39,7 @@ const invitesHeader = (navigation) => (
     <Item
       title="new list"
       iconName="plus"
+      color="green"
       IconComponent={Feather}
       onPress={() => navigation.navigate("New List")}
     />
@@ -77,7 +78,9 @@ const ScreensNavigator = (props) => {
       initialRouteName="All Lists"
       screenOptions={{
         headerBackTitle: "Back",
-        // headerStyle: { backgroundColor: "transparent" },
+        headerBackTitleStyle: {letterSpacing: 1.5},
+        headerStyle: { backgroundColor: "transparent" },
+        headerTitleStyle: { letterSpacing: 1.5 }
       }}
     >
       <Stack.Screen name="Active List" component={ListScreen} />

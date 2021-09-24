@@ -8,25 +8,30 @@ import {
   } from "react-native-paper";
 
   export const CombinedDefaultTheme = {
-    ...PaperDefaultTheme,
     ...NavigationDefaultTheme,
+    ...PaperDefaultTheme,
     colors: {
-      ...PaperDefaultTheme.colors,
       ...NavigationDefaultTheme.colors,
-      accent: "#3BBA9C",
+      ...PaperDefaultTheme.colors,
     },
-    roundness: 8
+    roundness: 0
   };
   
   export const CombinedDarkTheme = {
-    ...PaperDarkTheme,
     ...NavigationDarkTheme,
+    ...PaperDarkTheme,
     colors: {
-      ...PaperDarkTheme.colors,
       ...NavigationDarkTheme.colors,
-      primary: "#3BBA9C",
-      accent: "#3BBA9C",
-      surface: "#121212"
+      ...PaperDarkTheme.colors,
+      accent: "#FF4C29",
+      backdrop: "#082032",
+      background: "#082032",
+      card: "#2C394B",
+      primary: "#FF4C29",
+      surface: "#334756",
+      text: "#ccc"
     },
-    roundness: 8
+    roundness: 0
   };
+
+  console.log(CombinedDarkTheme)

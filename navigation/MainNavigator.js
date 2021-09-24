@@ -22,6 +22,10 @@ const MainNavigator = () => {
   return (
     <MainDrawerNavigator.Navigator
       defaultStatus="closed"
+      drawerContentOptions={{
+        labelStyle: { letterSpacing: 1.25, fontWeight: "bold" },
+      }}
+      drawerLabelStyle={{ letterSpacing: 1.25 }}
       openByDefault={false}
       initialRouteName="Lists"
       drawerContent={(props) => {
@@ -32,6 +36,7 @@ const MainNavigator = () => {
               <Divider />
               <DrawerItem
                 label="Logout"
+                labelStyle={{ letterSpacing: 1.25, fontWeight: "bold" }}
                 onPress={() => {
                   dispatch(listsActions.logOut(props.navigation));
                   dispatch(authActions.logOut(props.navigation));

@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useReducer, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import {
   Dimensions,
   FlatList,
@@ -23,6 +29,8 @@ import ListItem from "../../models/ListItem";
 import Modal from "../../components/Modal";
 
 import * as listsActions from "../../store/actions/lists";
+import { PreferencesContext } from "../../utils/context";
+import { CombinedDarkTheme, CombinedDefaultTheme } from "../../utils/themes";
 
 const { width } = Dimensions.get("window");
 
@@ -131,6 +139,8 @@ const NewListScreen = ({ navigation, route }) => {
     },
   });
 
+  const { isThemeDark } = useContext(PreferencesContext);
+
   const dispatch = useDispatch();
 
   const saveHandler = useCallback(() => {
@@ -144,7 +154,16 @@ const NewListScreen = ({ navigation, route }) => {
       headerTitle: title,
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item title="save" onPress={saveHandler} />
+          <Item
+            title="save"
+            onPress={saveHandler}
+            buttonStyle={{
+              letterSpacing: 1.25,
+              color: isThemeDark
+                ? CombinedDarkTheme.colors.primary
+                : CombinedDefaultTheme.colors.primary,
+            }}
+          />
         </HeaderButtons>
       ),
     });

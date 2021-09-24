@@ -7,7 +7,8 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import { PreferencesContext } from '../utils/context';
+import { PreferencesContext } from "../utils/context";
+import { CombinedDarkTheme, CombinedDefaultTheme } from "../utils/themes";
 
 const CustomModal = (props) => {
   const { isThemeDark } = useContext(PreferencesContext);
@@ -17,7 +18,11 @@ const CustomModal = (props) => {
         style={{
           flex: 1,
           justifyContent: "center",
-          backgroundColor: props.color || (isThemeDark ? "black" : "white"),
+          backgroundColor:
+            props.color ||
+            (isThemeDark
+              ? CombinedDarkTheme.colors.backdrop
+              : CombinedDefaultTheme.colors.backdrop),
         }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

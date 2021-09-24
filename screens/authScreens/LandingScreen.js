@@ -7,7 +7,6 @@ import {
   View,
 } from "react-native";
 import { Button, Headline, Subheading } from "react-native-paper";
-import { Foundation } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -28,12 +27,6 @@ const AuthScreen = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={{ marginBottom: 50, marginTop: 25 }}>
-          <Foundation
-            name="social-path"
-            size={60}
-            color="white"
-            style={{ alignSelf: "flex-start" }}
-          />
           <Headline
             style={{
               color: "white",

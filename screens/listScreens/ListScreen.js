@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { ActivityIndicator, Button, Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,8 @@ import Modal from "../../components/Modal";
 
 import * as listsActions from "../../store/actions/lists";
 import * as authActions from "../../store/actions/auth";
+import { CombinedDarkTheme, CombinedDefaultTheme } from "../../utils/themes";
+import { PreferencesContext } from "../../utils/context";
 
 const { width } = Dimensions.get("window");
 
@@ -56,9 +58,11 @@ const ListScreen = ({ navigation, route }) => {
   // const [modalVisible, setModalVisible] = useState(false);
   const [item, setItem] = useState();
 
+  const { isDarkTheme } = useContext(PreferencesContext);
+
   let bottomButtons = (
     <View style={styles.bottomContainer}>
-      <Button icon="play" onPress={() => activateList()}>
+      <Button mode="outlined" icon="play" onPress={() => activateList()}>
         start list
       </Button>
     </View>
@@ -90,10 +94,13 @@ const ListScreen = ({ navigation, route }) => {
     );
   }
 
+  const btnColor = isDarkTheme ? CombinedDarkTheme.colors.accent : CombinedDefaultTheme.colors.onSurface
+
   let headerRight = () => (
     <HeaderButtons HeaderButtonComponent={HeaderButton}>
       <Item
         title="edit list"
+        buttonStyle={{ color: btnColor }}
         iconName="edit-2"
         IconComponent={Feather}
         onPress={() =>
@@ -120,6 +127,7 @@ const ListScreen = ({ navigation, route }) => {
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
             title="delete list"
+            color={CombinedDarkTheme.colors.accent}
             iconName="delete-outline"
             IconComponent={MaterialIcons}
             onPress={() => deleteHandler()}
@@ -127,6 +135,7 @@ const ListScreen = ({ navigation, route }) => {
           {route.name === "Active List" && (
             <Item
               title="edit list"
+              color={CombinedDarkTheme.colors.accent}
               IconComponent={MaterialIcons}
               iconName="done"
               onPress={() => editListHandler()}
@@ -187,8 +196,12 @@ const ListScreen = ({ navigation, route }) => {
       {item && (
         <Modal>
           <View>
-            <Text style={{ marginLeft: 20 }}>{item.item ? item.item : item}</Text>
-            <Text style={{ marginLeft: 20 }}>{item.details ? item.details : null}</Text>
+            <Text style={{ marginLeft: 20 }}>
+              {item.item ? item.item : item}
+            </Text>
+            <Text style={{ marginLeft: 20 }}>
+              {item.details ? item.details : null}
+            </Text>
             <Button onPress={() => setItem(null)}>ok</Button>
           </View>
         </Modal>

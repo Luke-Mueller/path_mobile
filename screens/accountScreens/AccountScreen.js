@@ -59,10 +59,17 @@ const AccountScreen = (props) => {
           width: "100%",
         }}
       >
-        <Text>Dark mode</Text>
+        <Text style={{ letterSpacing: 1.25, fontWeight: "bold" }}>
+          Dark mode
+        </Text>
         <Switch value={isThemeDark} onValueChange={toggleTheme} />
       </View>
-      <Button title="Delete Account" onPress={() => deleteAccountHandler()}>
+      <Button
+        mode="outlined"
+        title="Delete Account"
+        labelStyle={{ letterSpacing: 1.25 }}
+        onPress={() => deleteAccountHandler()}
+      >
         Delete Account
       </Button>
     </View>

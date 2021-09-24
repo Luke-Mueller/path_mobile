@@ -13,7 +13,6 @@ import {
   ActivityIndicator,
   Button,
   Card,
-  DefaultTheme,
   Headline,
   Text,
   TextInput,
@@ -24,6 +23,7 @@ import { useDispatch } from "react-redux";
 import Modal from "../../components/Modal";
 
 import * as authActions from "../../store/actions/auth";
+import { CombinedDarkTheme } from "../../utils/themes";
 
 const { width } = Dimensions.get("window");
 
@@ -92,7 +92,7 @@ const AuthScreen = ({ navigation, route }) => {
       <Modal>
         <Card style={{ width: width * 0.8, height: width * 0.8 * 0.62, alignSelf: "center" }}>
           <Card.Content style={styles.contentContainer}>
-            <ActivityIndicator color={DefaultTheme.colors.accent} />
+            <ActivityIndicator color={CombinedDarkTheme.colors.accent} />
             <Text style={{ marginLeft: 20 }}>Logging in...</Text>
           </Card.Content>
         </Card>
