@@ -10,7 +10,7 @@ import { Card, List } from "react-native-paper";
 import { PreferencesContext } from "../utils/context";
 import { CombinedDarkTheme, CombinedDefaultTheme } from "../utils/themes";
 
-import ListEmptyComponent from "./ListEmptyComponent";
+// import ListEmptyComponent from "./ListEmptyComponent";
 
 const { width } = Dimensions.get("screen");
 
@@ -150,7 +150,7 @@ const FlatList = (props) => {
                     descriptionNumberOfLines={1}
                     descriptionStyle={{ letterSpacing: 1.25 }}
                     title={item.item}
-                    titleStyle={{ letterSpacing: 1.25 }}
+                    titleStyle={{ letterSpacing: 1.25, marginBottom: 2 }}
                     onPress={() => setItem(item)}
                     left={(props) => (
                       <List.Icon
@@ -182,15 +182,15 @@ const FlatList = (props) => {
                   title={item.subName}
                 >
                   {item.subItems.map((subItem, index) => (
-                    <View style={{ paddingLeft: 0 }}>
-                      <List.Item
-                        key={index}
-                        onPress={() => setItem(subItem)}
-                        title={subItem.item ? subItem.item : subItem}
-                        titleStyle={{ letterSpacing: 1.25 }}
-                        descriptionStyle={{ borderRadius: 10 }}
-                        style={{ paddingLeft: 0 }}
-                      />
+                    <View key={index} style={{ paddingLeft: 0 }}>
+                    <List.Item
+                      
+                      onPress={() => setItem(subItem)}
+                      title={subItem.item ? subItem.item : subItem}
+                      titleStyle={{ letterSpacing: 1.25 }}
+                      descriptionStyle={{ borderRadius: 10 }}
+                      style={{ paddingLeft: 0 }}
+                    />
                     </View>
                   ))}
                 </List.Accordion>
