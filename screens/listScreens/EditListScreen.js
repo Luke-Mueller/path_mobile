@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { DefaultTheme } from "@react-navigation/native";
 import { Dimensions, FlatList, StyleSheet, View } from "react-native";
-import { Button, Divider, FAB, List, Portal, Text, TextInput } from "react-native-paper";
+import {
+  Button,
+  Card,
+  Divider,
+  FAB,
+  List,
+  Portal,
+  TextInput,
+} from "react-native-paper";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -89,11 +97,11 @@ const itemReducer = (item, action) => {
         ...item,
         subItems: addSubItems,
       };
-      case itemActions.DETAILS:
-        return {
-          ...item,
-          details: action.details
-        }
+    case itemActions.DETAILS:
+      return {
+        ...item,
+        details: action.details,
+      };
     case itemActions.ITEM:
       return {
         ...item,
@@ -143,7 +151,7 @@ const EditListScreen = ({ navigation, route }) => {
   };
 
   const addTask = () => {
-    const newItem = new ListItemModel("item", "", "", []);
+    const newItem = new ListItemModel("item", "", "", "", []);
     newItem.new = true;
     dispatchItem({
       type: itemActions.SETITEM,
@@ -153,7 +161,7 @@ const EditListScreen = ({ navigation, route }) => {
   };
 
   const addList = () => {
-    const newItem = new ListItemModel("sublist", "", "", []);
+    const newItem = new ListItemModel("sublist", "", "", "", []);
     newItem.new = true;
     dispatchItem({
       type: itemActions.SETITEM,
@@ -280,17 +288,24 @@ const EditListScreen = ({ navigation, route }) => {
               data={item.subItems}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item, index }) => (
-                <List.Item
-                  right={() => (
-                    <Button
-                      icon="trash-can-outline"
-                      onPress={() =>
-                        dispatchItem({ type: itemActions.REMOVESUBITEM, index })
-                      }
+                <Card style={styles.card}>
+                  <Card.Content style={styles.cardContent}>
+                    <List.Item
+                      right={() => (
+                        <Button
+                          icon="trash-can-outline"
+                          onPress={() =>
+                            dispatchItem({
+                              type: itemActions.REMOVESUBITEM,
+                              index,
+                            })
+                          }
+                        />
+                      )}
+                      title={item}
                     />
-                  )}
-                  title={item}
-                />
+                  </Card.Content>
+                </Card>
               )}
             />
             <View style={{ flexDirection: "row", alignSelf: "center" }}>
@@ -329,72 +344,78 @@ const EditListScreen = ({ navigation, route }) => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
-          marginVertical: 25
+          marginVertical: 25,
         }}
       >
-      <Portal>
-        <FAB.Group
-          style={{ flex: 1 }}
-          open={open}
-          icon={open ? "minus" : "plus"}
-          actions={[
-            {
-              icon: "plus",
-              label: "Add item",
-              small: false,
-              onPress: addTask,
-            },
-            {
-              icon: "playlist-plus",
-              label: "Add sub list",
-              small: false,
-              onPress: addList,
-            },
-          ]}
-          onStateChange={({ open }) => setOpen(open)}
-          onPress={() => setOpen(!open)}
+        <Portal>
+          <FAB.Group
+            style={{ flex: 1 }}
+            open={open}
+            icon={open ? "minus" : "plus"}
+            actions={[
+              {
+                icon: "plus",
+                label: "Add item",
+                small: false,
+                onPress: addTask,
+              },
+              {
+                icon: "playlist-plus",
+                label: "Add sub list",
+                small: false,
+                onPress: addList,
+              },
+            ]}
+            onStateChange={({ open }) => setOpen(open)}
+            onPress={() => setOpen(!open)}
+          />
+        </Portal>
+        <TextInput
+          onChangeText={(input) =>
+            dispatchList({ type: listActions.LISTNAME, name: input })
+          }
+          label="List name"
+          style={styles.textInput}
+          value={list.name}
         />
-      </Portal>
-      <TextInput
-        onChangeText={(input) =>
-          dispatchList({ type: listActions.LISTNAME, name: input })
-        }
-        label="List name"
-        style={styles.textInput}
-        value={list.name}
-      />
       </View>
       <FlatList
         data={list.items}
         ItemSeparatorComponent={() => <Divider />}
         keyExtractor={(_, index) => index.toString()}
-        ListHeaderComponent={<Text>List Items: </Text>}
+        // ListHeaderComponent={<Text>List Items: </Text>}
         renderItem={({ item, index }) => {
           if (item.itemType === "item") {
             return (
-              <List.Item
-                description={item.details}
-                onPress={() => {
-                  dispatchItem({
-                    type: itemActions.SETITEM,
-                    item: { ...item },
-                  });
-                  setItemIndex(index);
-                }}
-                right={() => (
-                  <Button
-                    icon="trash-can-outline"
-                    onPress={() =>
-                      dispatchList({
-                        type: listActions.REMOVEITEM,
-                        index,
-                        itemType: "item",
-                      })
-                    }
+              <Card style={styles.card}>
+                <Card.Content style={styles.cardContent}>
+                  <List.Item
+                    description={item.details}
+                    onPress={() => {
+                      dispatchItem({
+                        type: itemActions.SETITEM,
+                        item: { ...item },
+                      });
+                      setItemIndex(index);
+                    }}
+                    right={() => (
+                      <Button
+                      style={{ justifyContent: 'center'}}
+
+                        icon="trash-can-outline"
+                        onPress={() =>
+                          dispatchList({
+                            type: listActions.REMOVEITEM,
+                            index,
+                            itemType: "item",
+                          })
+                        }
+                      />
+                    )}
+                    title={item.item ? item.item : item.subName}
                   />
-                )}
-                title={item.item ? item.item : item.subName}
-              />
+                </Card.Content>
+              </Card>
             );
           }
           if (item.itemType === "sublist") {
@@ -486,6 +507,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     maxHeight: 75,
+  },
+  card: {
+    width: width * 0.9,
+    alignSelf: "center",
+    marginVertical: 2,
+  },
+  cardContent: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
   textInput: {
     width: width / 1.5,
