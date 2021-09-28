@@ -58,7 +58,7 @@ const ListScreen = ({ navigation, route }) => {
   // const [modalVisible, setModalVisible] = useState(false);
   const [item, setItem] = useState();
 
-  const { isDarkTheme } = useContext(PreferencesContext);
+  const { isThemeDark } = useContext(PreferencesContext);
 
   let bottomButtons = (
     <View style={styles.bottomContainer}>
@@ -87,20 +87,23 @@ const ListScreen = ({ navigation, route }) => {
   } else if (route.name === "Invite List") {
     bottomButtons = (
       <View style={styles.bottomContainer}>
-        <Button icon="add" onPress={() => activateList()}>
+        <Button icon="plus" onPress={() => acceptListHandler()}>
           accept list
         </Button>
       </View>
     );
   }
 
-  const btnColor = isDarkTheme ? CombinedDarkTheme.colors.accent : CombinedDefaultTheme.colors.onSurface
+  const btnColor = isThemeDark
+    ? CombinedDarkTheme.colors.placeholder
+    : CombinedDefaultTheme.colors.placeholder;
 
   let headerRight = () => (
     <HeaderButtons HeaderButtonComponent={HeaderButton}>
       <Item
         title="edit list"
         buttonStyle={{ color: btnColor }}
+        // color={btnColor}
         iconName="edit-2"
         IconComponent={Feather}
         onPress={() =>
@@ -127,7 +130,8 @@ const ListScreen = ({ navigation, route }) => {
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
             title="delete list"
-            color={CombinedDarkTheme.colors.accent}
+            buttonStyle={{ color: btnColor }}
+            color={btnColor}
             iconName="delete-outline"
             IconComponent={MaterialIcons}
             onPress={() => deleteHandler()}
@@ -135,7 +139,8 @@ const ListScreen = ({ navigation, route }) => {
           {route.name === "Active List" && (
             <Item
               title="edit list"
-              color={CombinedDarkTheme.colors.accent}
+              color={btnColor}
+              buttonStyle={{ color: btnColor }}
               IconComponent={MaterialIcons}
               iconName="done"
               onPress={() => editListHandler()}
@@ -150,6 +155,7 @@ const ListScreen = ({ navigation, route }) => {
           <Item
             title="delete list"
             iconName="delete-outline"
+            buttonStyle={{ color: btnColor }}
             IconComponent={MaterialIcons}
             onPress={() =>
               dispatch(
@@ -174,6 +180,11 @@ const ListScreen = ({ navigation, route }) => {
     setPressed(true);
     const payload = { list, userId };
     dispatch(listsActions.activateList(payload, navigation));
+  };
+
+  const acceptListHandler = () => {
+    const payload = { listId: list._id, userId };
+    dispatch(authActions.acceptList(payload, navigation));
   };
 
   const doneHandler = (id) => {

@@ -17,7 +17,6 @@ import {
   Text,
   TextInput,
 } from "react-native-paper";
-import { Foundation } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 
 import Modal from "../../components/Modal";
@@ -69,13 +68,13 @@ const AuthScreen = ({ navigation, route }) => {
     btnText = "signup";
     func = signUp;
     prompt = "Already have an account?";
-    promptBtnText = "login";
+    promptBtnText = "log in";
     text = "Sign up";
   } else {
     btnText = "login";
     func = logIn;
     prompt = "Need to create an account?";
-    promptBtnText = "signup";
+    promptBtnText = "sign up";
     text = "Log in";
   }
 
@@ -90,7 +89,13 @@ const AuthScreen = ({ navigation, route }) => {
   if (pressed) {
     return (
       <Modal>
-        <Card style={{ width: width * 0.8, height: width * 0.8 * 0.62, alignSelf: "center" }}>
+        <Card
+          style={{
+            width: width * 0.8,
+            height: width * 0.8 * 0.62,
+            alignSelf: "center",
+          }}
+        >
           <Card.Content style={styles.contentContainer}>
             <ActivityIndicator color={CombinedDarkTheme.colors.accent} />
             <Text style={{ marginLeft: 20 }}>Logging in...</Text>
@@ -102,7 +107,7 @@ const AuthScreen = ({ navigation, route }) => {
 
   return (
     <Pressable
-      style={{ flex: 1, paddingTop: 20, paddingLeft: 20 }}
+      style={{ flex: 1, paddingTop: 110, paddingLeft: 20 }}
       onPress={Keyboard.dismiss}
     >
       <View style={{ flex: 1 }}>
@@ -114,12 +119,6 @@ const AuthScreen = ({ navigation, route }) => {
               paddingTop: 50,
             }}
           >
-            <Foundation
-              name="social-path"
-              size={45}
-              color="#3BBA9C"
-              style={{ marginRight: 25 }}
-            />
             <Headline style={{ fontSize: 30 }}>{text}</Headline>
           </View>
           <View style={{ marginVertical: 5 }}>
@@ -137,6 +136,22 @@ const AuthScreen = ({ navigation, route }) => {
               style={styles.textInput}
               value={password}
             />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                // alignSelf: "center",
+                // margin: 15,
+              }}
+            >
+              <Text>{prompt}</Text>
+              <Button
+                labelStyle={{ fontWeight: "bold" }}
+                onPress={changeAuthHandler}
+              >
+                {promptBtnText}
+              </Button>
+            </View>
           </View>
         </View>
         <KeyboardAvoidingView
@@ -145,28 +160,12 @@ const AuthScreen = ({ navigation, route }) => {
             Platform.OS === "ios"
               ? {
                   flex: 1,
-                  justifyContent: "flex-end",
+                  justifyContent: "center",
                 }
               : null
           }
         >
           {btn}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              alignSelf: "center",
-              // margin: 15,
-            }}
-          >
-            <Text>{prompt}</Text>
-            <Button
-              labelStyle={{ fontWeight: "bold" }}
-              onPress={changeAuthHandler}
-            >
-              {promptBtnText}
-            </Button>
-          </View>
         </KeyboardAvoidingView>
       </View>
     </Pressable>
