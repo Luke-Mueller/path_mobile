@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useReducer, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { DefaultTheme } from "@react-navigation/native";
 import { Dimensions, FlatList, StyleSheet, View } from "react-native";
 import {
@@ -20,6 +26,8 @@ import ListItemModel from "../../models/ListItem";
 import Modal from "../../components/Modal";
 
 import * as listsActions from "../../store/actions/lists";
+import { PreferencesContext } from "../../utils/context";
+import { CombinedDarkTheme, CombinedDefaultTheme } from "../../utils/themes";
 
 const { width } = Dimensions.get("window");
 
@@ -139,16 +147,13 @@ const EditListScreen = ({ navigation, route }) => {
   );
   const [item, dispatchItem] = useReducer(itemReducer, null);
   const [list, dispatchList] = useReducer(listReducer, { ...userList });
-  const [expanded, setExpanded] = useState(false);
   const [newSubItem, setNewSubItem] = useState(null);
   const [itemIndex, setItemIndex] = useState(null);
   const [open, setOpen] = useState(false);
 
-  const dispatch = useDispatch();
+  const { isThemeDark } = useContext(PreferencesContext);
 
-  const toggleExpand = () => {
-    setExpanded(!expanded);
-  };
+  const dispatch = useDispatch();
 
   const addTask = () => {
     const newItem = new ListItemModel("item", "", "", "", []);
@@ -183,6 +188,11 @@ const EditListScreen = ({ navigation, route }) => {
             title="undo"
             IconComponent={MaterialIcons}
             iconName="undo"
+            // color={
+            //   isThemeDark
+            //     ? CombinedDarkTheme.colors.placeholder
+            //     : CombinedDefaultTheme.colors.placeholder
+            // }
             onPress={() =>
               dispatchList({
                 type: listActions.CLEARCHANGES,
@@ -194,6 +204,11 @@ const EditListScreen = ({ navigation, route }) => {
             title="save"
             IconComponent={MaterialIcons}
             iconName="done"
+            // color={
+            //   isThemeDark
+            //     ? CombinedDarkTheme.colors.placeholder
+            //     : CombinedDefaultTheme.colors.placeholder
+            // }
             onPress={() => editListHandler()}
           />
         </HeaderButtons>
@@ -288,9 +303,17 @@ const EditListScreen = ({ navigation, route }) => {
               data={item.subItems}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item, index }) => (
-                <Card style={styles.card}>
+                <Card
+                  style={{
+                    ...styles.card,
+                    backgroundColor: isThemeDark
+                      ? CombinedDarkTheme.colors.card
+                      : CombinedDefaultTheme.colors.card,
+                  }}
+                >
                   <Card.Content style={styles.cardContent}>
                     <List.Item
+                      style={{ padding: 0 }}
                       right={() => (
                         <Button
                           icon="trash-can-outline"
@@ -300,8 +323,14 @@ const EditListScreen = ({ navigation, route }) => {
                               index,
                             })
                           }
+                          // color={
+                          //   isThemeDark
+                          //     ? CombinedDarkTheme.colors.placeholder
+                          //     : CombinedDefaultTheme.colors.placeholder
+                          // }
                         />
                       )}
+                      titleStyle={{ letterSpacing: 1.25 }}
                       title={item}
                     />
                   </Card.Content>
@@ -387,9 +416,17 @@ const EditListScreen = ({ navigation, route }) => {
         renderItem={({ item, index }) => {
           if (item.itemType === "item") {
             return (
-              <Card style={styles.card}>
+              <Card
+                style={{
+                  ...styles.card,
+                  backgroundColor: isThemeDark
+                    ? CombinedDarkTheme.colors.card
+                    : CombinedDefaultTheme.colors.card,
+                }}
+              >
                 <Card.Content style={styles.cardContent}>
                   <List.Item
+                    style={{ padding: 0 }}
                     description={item.details}
                     onPress={() => {
                       dispatchItem({
@@ -398,11 +435,21 @@ const EditListScreen = ({ navigation, route }) => {
                       });
                       setItemIndex(index);
                     }}
+                    left={(props) => (
+                      <List.Icon
+                        {...props}
+                        icon="chevron-right-circle-outline"
+                      />
+                    )}
                     right={() => (
                       <Button
-                      style={{ justifyContent: 'center'}}
-
+                        style={{ justifyContent: "center" }}
                         icon="trash-can-outline"
+                        // color={
+                        //   isThemeDark
+                        //     ? CombinedDarkTheme.colors.placeholder
+                        //     : CombinedDefaultTheme.colors.placeholder
+                        // }
                         onPress={() =>
                           dispatchList({
                             type: listActions.REMOVEITEM,
@@ -412,6 +459,7 @@ const EditListScreen = ({ navigation, route }) => {
                         }
                       />
                     )}
+                    titleStyle={{ letterSpacing: 1.25, marginBottom: 5 }}
                     title={item.item ? item.item : item.subName}
                   />
                 </Card.Content>
@@ -436,7 +484,14 @@ const EditListScreen = ({ navigation, route }) => {
                     setItemIndex(index);
                   }}
                   right={() => null}
+                  left={(props) => (
+                    <List.Icon
+                      {...props}
+                      icon="chevron-right-circle-outline"
+                    />
+                  )}
                   titleStyle={{
+                    letterSpacing: 1.25,
                     color: DefaultTheme.colors.text,
                     opacity: 0.87,
                   }}
@@ -447,6 +502,7 @@ const EditListScreen = ({ navigation, route }) => {
                     <List.Item
                       title={subItem.item ? subItem.item : subItem}
                       key={index}
+                      titleStyle={{ letterSpacing: 1.25 }}
                       style={{ paddingLeft: 50 }}
                     />
                   ))}
@@ -466,6 +522,9 @@ const EditListScreen = ({ navigation, route }) => {
                     justifyContent: "center",
                     alignItems: "center",
                     paddingBottom: 10,
+                    // color: isThemeDark
+                    //   ? CombinedDarkTheme.colors.placeholder
+                    //   : CombinedDefaultTheme.colors.placeholder,
                   }}
                 />
               </View>
@@ -512,6 +571,7 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     alignSelf: "center",
     marginVertical: 2,
+    borderWidth: 1,
   },
   cardContent: {
     paddingVertical: 0,

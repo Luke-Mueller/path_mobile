@@ -55,7 +55,6 @@ const ListScreen = ({ navigation, route }) => {
 
   const [modalText, setModalText] = useState("");
   const [pressed, setPressed] = useState(false);
-  // const [modalVisible, setModalVisible] = useState(false);
   const [item, setItem] = useState();
 
   const { isThemeDark } = useContext(PreferencesContext);
@@ -102,7 +101,7 @@ const ListScreen = ({ navigation, route }) => {
     <HeaderButtons HeaderButtonComponent={HeaderButton}>
       <Item
         title="edit list"
-        buttonStyle={{ color: btnColor }}
+        // buttonStyle={{ color: btnColor }}
         // color={btnColor}
         iconName="edit-2"
         IconComponent={Feather}
@@ -130,8 +129,8 @@ const ListScreen = ({ navigation, route }) => {
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
             title="delete list"
-            buttonStyle={{ color: btnColor }}
-            color={btnColor}
+            // buttonStyle={{ color: btnColor }}
+            // color={btnColor}
             iconName="delete-outline"
             IconComponent={MaterialIcons}
             onPress={() => deleteHandler()}
@@ -139,8 +138,8 @@ const ListScreen = ({ navigation, route }) => {
           {route.name === "Active List" && (
             <Item
               title="edit list"
-              color={btnColor}
-              buttonStyle={{ color: btnColor }}
+              // color={btnColor}
+              // buttonStyle={{ color: btnColor }}
               IconComponent={MaterialIcons}
               iconName="done"
               onPress={() => editListHandler()}
@@ -155,7 +154,7 @@ const ListScreen = ({ navigation, route }) => {
           <Item
             title="delete list"
             iconName="delete-outline"
-            buttonStyle={{ color: btnColor }}
+            // buttonStyle={{ color: btnColor }}
             IconComponent={MaterialIcons}
             onPress={() =>
               dispatch(

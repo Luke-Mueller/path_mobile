@@ -23,11 +23,11 @@ export const CombinedDarkTheme = {
   colors: {
     ...NavigationDarkTheme.colors,
     ...PaperDarkTheme.colors,
-    accent: "#FF4C29",
+    accent: "#F79F1F",
     backdrop: "#082032",
     background: "#082032",
     card: "#2C394B",
-    primary: "#FF4C29",
+    primary: "#F79F1F",
     surface: "#334756",
     text: "#ccc",
   },
