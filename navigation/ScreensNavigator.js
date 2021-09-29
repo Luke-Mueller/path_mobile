@@ -25,11 +25,11 @@ const HeaderLeft = (isThemeDark, navigation) => (
       title="drawer"
       IconComponent={Feather}
       iconName="menu"
-      buttonStyle={
-        isThemeDark
-          ? { color: CombinedDarkTheme.colors.placeholder }
-          : { color: CombinedDefaultTheme.colors.placeholder }
-      }
+      // buttonStyle={
+      //   isThemeDark
+      //     ? { color: CombinedDarkTheme.colors.placeholder }
+      //     : { color: CombinedDefaultTheme.colors.placeholder }
+      // }
       onPress={() => navigation.toggleDrawer()}
     />
   </HeaderButtons>
@@ -40,22 +40,22 @@ const invitesHeader = (isThemeDark, navigation) => (
     <Item
       title="invite list"
       iconName="coffee"
-      buttonStyle={
-        isThemeDark
-          ? { color: CombinedDarkTheme.colors.placeholder }
-          : { color: CombinedDefaultTheme.colors.placeholder }
-      }
+      // buttonStyle={
+      //   isThemeDark
+      //     ? { color: CombinedDarkTheme.colors.placeholder }
+      //     : { color: CombinedDefaultTheme.colors.placeholder }
+      // }
       IconComponent={Feather}
       onPress={() => navigation.navigate("Invite Lists")}
     />
     <Item
       title="new list"
       iconName="plus"
-      buttonStyle={
-        isThemeDark
-          ? { color: CombinedDarkTheme.colors.placeholder }
-          : { color: CombinedDefaultTheme.colors.placeholder }
-      }
+      // buttonStyle={
+      //   isThemeDark
+      //     ? { color: CombinedDarkTheme.colors.placeholder }
+      //     : { color: CombinedDefaultTheme.colors.placeholder }
+      // }
       IconComponent={Feather}
       onPress={() => navigation.navigate("New List")}
     />
@@ -67,11 +67,11 @@ const defaultHeader = (isThemeDark, navigation) => (
     <Item
       title="new list"
       iconName="plus"
-      buttonStyle={
-        isThemeDark
-          ? { color: CombinedDarkTheme.colors.placeholder }
-          : { color: CombinedDefaultTheme.colors.placeholder }
-      }
+      // buttonStyle={
+      //   isThemeDark
+      //     ? { color: CombinedDarkTheme.colors.placeholder }
+      //     : { color: CombinedDefaultTheme.colors.placeholder }
+      // }
       IconComponent={Feather}
       onPress={() => navigation.navigate("List Name")}
     />
@@ -96,9 +96,9 @@ const getHeaderRight = (isThemeDark, navigation, route) => {
 const ScreensNavigator = (props) => {
   const { isThemeDark } = useContext(PreferencesContext);
 
-  const headerBackTitleColor = isThemeDark
-    ? CombinedDarkTheme.colors.placeholder
-    : CombinedDefaultTheme.colors.placeholder;
+  // const headerBackTitleColor = isThemeDark
+  //   ? CombinedDarkTheme.colors.placeholder
+  //   : CombinedDefaultTheme.colors.placeholder;
 
   return (
     <Stack.Navigator
@@ -108,7 +108,7 @@ const ScreensNavigator = (props) => {
         headerStyle: { backgroundColor: "transparent" },
         headerTitleStyle: { letterSpacing: 1.5 },
         headerBackTitle: "Back",
-        headerTintColor: headerBackTitleColor,
+        // headerTintColor: headerBackTitleColor,
       }}
     >
       <Stack.Screen name="Active List" component={ListScreen} />
