@@ -36,9 +36,10 @@ const FlatList = (props) => {
 
   const accordionStyles = {
     backgroundColor: isThemeDark
-      ? CombinedDarkTheme.colors.surface
-      : CombinedDefaultTheme.colors.surface,
+      ? CombinedDarkTheme.colors.card
+      : CombinedDefaultTheme.colors.card,
     borderRadius: CombinedDefaultTheme.roundness,
+    padding: 0,
   };
 
   return (
@@ -50,7 +51,12 @@ const FlatList = (props) => {
         // Lists
         if (!item.itemType) {
           return (
-            <Card style={styles.card}>
+            <Card
+              style={{
+                ...styles.card,
+                ...accordionStyles
+              }}
+            >
               <Card.Content style={styles.cardContent}>
                 <List.Item
                   onLongPress={() => longPressHandler(item._id)}
@@ -60,9 +66,13 @@ const FlatList = (props) => {
                       listType,
                     })
                   }
-                  underlayColor="rgba(255, 76, 41, .3)"
+                  underlayColor={
+                    isThemeDark
+                      ? "rgba(247,159,31,0.3)"
+                      : CombinedDefaultTheme.colors.accent
+                  }
                   title={item.name}
-                  titleStyle={{ letterSpacing: 1.25 }}
+                  titleStyle={{ letterSpacing: 1.25, marginBottom: 5 }}
                   right={(props) => <List.Icon {...props} icon="arrow-right" />}
                 />
               </Card.Content>
@@ -74,7 +84,13 @@ const FlatList = (props) => {
         if (listType === "activeLists") {
           if (item.itemType === "item") {
             return (
-              <Card style={styles.card} key={index}>
+              <Card
+                style={{
+                  ...styles.card,
+                  ...accordionStyles
+                }}
+                key={index}
+              >
                 <Card.Content style={styles.cardContent}>
                   <List.Accordion
                     style={accordionStyles}
@@ -100,7 +116,12 @@ const FlatList = (props) => {
 
           if (item.itemType === "sublist") {
             return (
-              <Card style={styles.card}>
+              <Card
+                style={{
+                  ...styles.card,
+                  ...accordionStyles
+                }}
+              >
                 <Card.Content style={styles.cardContent}>
                   <List.Accordion
                     style={accordionStyles}
@@ -119,7 +140,7 @@ const FlatList = (props) => {
                     {item.subItems.map((subItem, index) => (
                       <List.Item
                         key={index}
-                        titleStyle={{ letterSpacing: 1.25 }}
+                        titleStyle={{ letterSpacing: 1.25, marginBottom: 5 }}
                         title={subItem.item ? subItem.item : subItem}
                         style={{ paddingLeft: 0 }}
                       />
@@ -134,7 +155,13 @@ const FlatList = (props) => {
         // Deals with items
         if (item.itemType === "item") {
           return (
-            <Card style={styles.card} key={index}>
+            <Card
+              style={{
+                ...styles.card,
+                ...accordionStyles
+              }}
+              key={index}
+            >
               <Card.Content style={styles.cardContent}>
                 <View
                   style={{
@@ -150,7 +177,7 @@ const FlatList = (props) => {
                     descriptionNumberOfLines={1}
                     descriptionStyle={{ letterSpacing: 1.25 }}
                     title={item.item}
-                    titleStyle={{ letterSpacing: 1.25, marginBottom: 2 }}
+                    titleStyle={{ letterSpacing: 1.25, marginBottom: 5 }}
                     onPress={() => setItem(item)}
                     left={(props) => (
                       <List.Icon
@@ -169,7 +196,12 @@ const FlatList = (props) => {
         // Deals with sublists
         if (item.itemType === "sublist") {
           return (
-            <Card style={styles.card}>
+            <Card
+              style={{
+                ...styles.card,
+                ...accordionStyles
+              }}
+            >
               <Card.Content style={styles.cardContent}>
                 <List.Accordion
                   style={accordionStyles}
@@ -178,19 +210,18 @@ const FlatList = (props) => {
                     <List.Icon {...props} icon="chevron-right-circle-outline" />
                   )}
                   onPress={toggleExpand}
-                  titleStyle={{ letterSpacing: 1.25 }}
+                  titleStyle={{ letterSpacing: 1.25, marginBottom: 5 }}
                   title={item.subName}
                 >
                   {item.subItems.map((subItem, index) => (
                     <View key={index} style={{ paddingLeft: 0 }}>
-                    <List.Item
-                      
-                      onPress={() => setItem(subItem)}
-                      title={subItem.item ? subItem.item : subItem}
-                      titleStyle={{ letterSpacing: 1.25 }}
-                      descriptionStyle={{ borderRadius: 10 }}
-                      style={{ paddingLeft: 0 }}
-                    />
+                      <List.Item
+                        onPress={() => setItem(subItem)}
+                        title={subItem.item ? subItem.item : subItem}
+                        titleStyle={{ letterSpacing: 1.25, marginBottom: 5 }}
+                        descriptionStyle={{ borderRadius: 10 }}
+                        style={{ paddingLeft: 0 }}
+                      />
                     </View>
                   ))}
                 </List.Accordion>
@@ -208,6 +239,8 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     alignSelf: "center",
     marginVertical: 2,
+    borderWidth: 1,
+    padding: 0
   },
   cardContent: {
     paddingVertical: 0,
