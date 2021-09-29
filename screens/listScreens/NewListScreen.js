@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import {
   Button,
+  Card,
   Divider,
   FAB,
   List,
@@ -253,48 +254,61 @@ const NewListScreen = ({ navigation, route }) => {
         )}
         {showAddListModal && (
           <Modal>
-            <View>
-              <TextInput
-                label="Sub list name"
-                onChangeText={(input) =>
-                  dispatchNL({ type: listActions.SETSUBNAME, subName: input })
-                }
-                style={styles.textInput}
-                value={list.subList.subName}
-              />
-              <TextInput
-                multiline={true}
-                onChangeText={setNewItemInputSub}
-                label="Sub list item"
-                style={styles.textInput}
-                value={newItemInputSub}
-                right={
-                  <TextInput.Icon name="plus" onPress={() => addSubItem()} />
-                }
-              />
-
+            <View style={{ flex: 1, justifyContent: "flex-start" }}>
+              <View style={{ marginTop: 50, marginBottom: 25 }}>
+                <TextInput
+                  label="Sub list name"
+                  onChangeText={(input) =>
+                    dispatchNL({ type: listActions.SETSUBNAME, subName: input })
+                  }
+                  style={styles.textInput}
+                  value={list.subList.subName}
+                />
+                <TextInput
+                  multiline={true}
+                  onChangeText={setNewItemInputSub}
+                  label="Sub list item"
+                  style={styles.textInput}
+                  value={newItemInputSub}
+                  right={
+                    <TextInput.Icon name="plus" onPress={() => addSubItem()} />
+                  }
+                />
+              </View>
               <FlatList
                 data={list.subList.subItems}
                 keyExtractor={(_, index) => index.toString()}
                 renderItem={({ item, index }) => (
-                  <List.Item
-                    right={() => (
-                      <Button
-                        icon="trash-can-outline"
-                        onPress={() =>
-                          dispatchNL({
-                            type: "REMOVEITEM",
-                            itemType: "sublist",
-                            idx: index,
-                          })
-                        }
+                  <Card style={styles.card}>
+                    <Card.Content style={styles.cardContent}>
+                      <List.Item
+                        right={() => (
+                          <Button
+                            style={{ justifyContent: "center" }}
+                            icon="trash-can-outline"
+                            onPress={() =>
+                              dispatchNL({
+                                type: "REMOVEITEM",
+                                itemType: "sublist",
+                                idx: index,
+                              })
+                            }
+                          />
+                        )}
+                        title={item}
                       />
-                    )}
-                    title={item}
-                  />
+                    </Card.Content>
+                  </Card>
                 )}
               />
-              <View style={{ flexDirection: "row", alignSelf: "center" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignSelf: "center",
+                  marginTop: 10,
+                  marginBottom: 50,
+                }}
+              >
                 <Button
                   onPress={() => {
                     setShowAddListModal(false);
@@ -337,25 +351,29 @@ const NewListScreen = ({ navigation, route }) => {
             ItemSeparatorComponent={Divider}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => (
-              <List.Item
-                description={item.details}
-                descriptionNumberOfLines={1}
-                descriptionEllipsizeMode="tail"
-                right={(props) => (
-                  <Button
-                    {...props}
-                    icon="trash-can-outline"
-                    onPress={() =>
-                      dispatchNL({
-                        type: "REMOVEITEM",
-                        itemType: "item",
-                        idx: index,
-                      })
-                    }
+              <Card style={styles.card}>
+                <Card.Content style={styles.cardContent}>
+                  <List.Item
+                    description={item.details}
+                    descriptionNumberOfLines={1}
+                    descriptionEllipsizeMode="tail"
+                    right={() => (
+                      <Button
+                        style={{ justifyContent: "center" }}
+                        icon="trash-can-outline"
+                        onPress={() =>
+                          dispatchNL({
+                            type: "REMOVEITEM",
+                            itemType: "item",
+                            idx: index,
+                          })
+                        }
+                      />
+                    )}
+                    title={item.item ? item.item : item.subName}
                   />
-                )}
-                title={item.item ? item.item : item.subName}
-              />
+                </Card.Content>
+              </Card>
             )}
           />
         </View>
@@ -370,6 +388,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     width: 250,
     margin: 10,
+  },
+  card: {
+    width: width * 0.9,
+    alignSelf: "center",
+    marginVertical: 2,
+    backgroundColor: "#2C394B",
+    borderWidth: 1,
+  },
+  cardContent: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
   container: {
     flex: 1,
