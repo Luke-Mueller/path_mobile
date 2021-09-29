@@ -225,6 +225,7 @@ const EditListScreen = ({ navigation, route }) => {
           >
             <TextInput
               label="List item"
+              letterSpacing={1.25}
               multiline={true}
               onChangeText={(input) =>
                 dispatchItem({ type: itemActions.ITEM, item: input })
@@ -234,6 +235,7 @@ const EditListScreen = ({ navigation, route }) => {
             />
             <TextInput
               label="List details"
+              letterSpacing={1.25}
               multiline={true}
               onChangeText={(input) =>
                 dispatchItem({ type: itemActions.DETAILS, details: input })
@@ -274,6 +276,7 @@ const EditListScreen = ({ navigation, route }) => {
           <View>
             <TextInput
               label="List name"
+              letterSpacing={1.25}
               onChangeText={(input) =>
                 dispatchItem({ type: itemActions.SUBNAME, name: input })
               }
@@ -284,6 +287,7 @@ const EditListScreen = ({ navigation, route }) => {
               multiline={true}
               onChangeText={(input) => setNewSubItem(input)}
               label="New item"
+              letterSpacing={1.25}
               style={styles.textInput}
               value={newSubItem}
               right={
@@ -404,6 +408,7 @@ const EditListScreen = ({ navigation, route }) => {
             dispatchList({ type: listActions.LISTNAME, name: input })
           }
           label="List name"
+          letterSpacing={1.25}
           style={styles.textInput}
           value={list.name}
         />

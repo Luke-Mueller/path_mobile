@@ -220,24 +220,34 @@ const NewListScreen = ({ navigation, route }) => {
       <View style={styles.container}>
         {showAddItemModal && (
           <Modal>
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              <TextInput
-                label="Item"
-                multiline={true}
-                onChangeText={setNewItemInput}
-                style={{ ...styles.textInput, color: "white" }}
-                textAlignVertical="top"
-                value={newItemInput}
-              />
-              <TextInput
-                label="Details"
-                multiline={true}
-                onChangeText={setNewDetailsInput}
-                style={{ ...styles.textInput, color: "white" }}
-                textAlignVertical="top"
-                value={newDetailsInput}
-              />
-              <View style={{ flexDirection: "row", alignSelf: "center" }}>
+            <View style={{ flex: 1, justifyContent: "flex-start" }}>
+              <View style={{ flex: 1, marginTop: 50, marginBottom: 25 }}>
+                <TextInput
+                  label="Item"
+                  letterSpacing={1.25}
+                  multiline={true}
+                  onChangeText={setNewItemInput}
+                  style={styles.textInput}
+                  textAlignVertical="top"
+                  value={newItemInput}
+                />
+                <TextInput
+                  label="Details"
+                  letterSpacing={1.25}
+                  multiline={true}
+                  onChangeText={setNewDetailsInput}
+                  style={styles.textInput}
+                  textAlignVertical="top"
+                  value={newDetailsInput}
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignSelf: "center",
+                  marginVertical: 50,
+                }}
+              >
                 <Button
                   onPress={() => {
                     setShowAddItemModal(false);
@@ -258,6 +268,7 @@ const NewListScreen = ({ navigation, route }) => {
               <View style={{ marginTop: 50, marginBottom: 25 }}>
                 <TextInput
                   label="Sub list name"
+                  letterSpacing={1.25}
                   onChangeText={(input) =>
                     dispatchNL({ type: listActions.SETSUBNAME, subName: input })
                   }
@@ -268,6 +279,7 @@ const NewListScreen = ({ navigation, route }) => {
                   multiline={true}
                   onChangeText={setNewItemInputSub}
                   label="Sub list item"
+                  letterSpacing={1.25}
                   style={styles.textInput}
                   value={newItemInputSub}
                   right={
@@ -305,8 +317,8 @@ const NewListScreen = ({ navigation, route }) => {
                 style={{
                   flexDirection: "row",
                   alignSelf: "center",
-                  marginTop: 10,
                   marginBottom: 50,
+                  marginTop: 10,
                 }}
               >
                 <Button
@@ -409,6 +421,7 @@ const styles = StyleSheet.create({
     margin: 5,
     backgroundColor: "rgba(0,0,0,0)",
     alignSelf: "center",
+    letterSpacing: 1.5,
   },
   listContainer: {
     flex: 1,
