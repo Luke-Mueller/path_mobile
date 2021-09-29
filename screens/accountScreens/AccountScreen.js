@@ -25,11 +25,11 @@ const AccountScreen = ({ navigation }) => {
           title="drawer"
           IconComponent={Feather}
           iconName="menu"
-          buttonStyle={
-            isThemeDark
-              ? { color: CombinedDarkTheme.colors.placeholder }
-              : { color: CombinedDefaultTheme.colors.placeholder }
-          }
+          // buttonStyle={
+          //   isThemeDark
+          //     ? { color: CombinedDarkTheme.colors.placeholder }
+          //     : { color: CombinedDefaultTheme.colors.placeholder }
+          // }
           onPress={() => navigation.toggleDrawer()}
         />
       </HeaderButtons>
