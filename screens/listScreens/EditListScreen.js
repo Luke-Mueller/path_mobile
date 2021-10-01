@@ -334,7 +334,7 @@ const EditListScreen = ({ navigation, route }) => {
                           // }
                         />
                       )}
-                      titleStyle={{ letterSpacing: 1.25 }}
+                      descriptionStyle={{ letterSpacing: 1.25 }}
                       title={item}
                     />
                   </Card.Content>
@@ -375,9 +375,8 @@ const EditListScreen = ({ navigation, route }) => {
       <View
         style={{
           flexDirection: "row",
-          alignItems: "center",
           justifyContent: "center",
-          marginVertical: 25,
+          marginBottom: 25,
         }}
       >
         <Portal>
@@ -431,6 +430,7 @@ const EditListScreen = ({ navigation, route }) => {
               >
                 <Card.Content style={styles.cardContent}>
                   <List.Item
+                    descriptionStyle={{ letterSpacing: 1.25 }}
                     style={{ padding: 0 }}
                     description={item.details}
                     onPress={() => {
@@ -490,13 +490,10 @@ const EditListScreen = ({ navigation, route }) => {
                   }}
                   right={() => null}
                   left={(props) => (
-                    <List.Icon
-                      {...props}
-                      icon="chevron-right-circle-outline"
-                    />
+                    <List.Icon {...props} icon="chevron-right-circle-outline" />
                   )}
                   titleStyle={{
-                    letterSpacing: 1.25,
+                    // letterSpacing: 1.25,
                     color: DefaultTheme.colors.text,
                     opacity: 0.87,
                   }}
@@ -507,7 +504,7 @@ const EditListScreen = ({ navigation, route }) => {
                     <List.Item
                       title={subItem.item ? subItem.item : subItem}
                       key={index}
-                      titleStyle={{ letterSpacing: 1.25 }}
+                      descriptionStyle={{ letterSpacing: 1.25 }}
                       style={{ paddingLeft: 50 }}
                     />
                   ))}

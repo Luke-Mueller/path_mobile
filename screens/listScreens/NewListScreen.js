@@ -288,12 +288,16 @@ const NewListScreen = ({ navigation, route }) => {
                 />
               </View>
               <FlatList
+                // style={{ alignItems: "center" }}
                 data={list.subList.subItems}
                 keyExtractor={(_, index) => index.toString()}
                 renderItem={({ item, index }) => (
                   <Card style={styles.card}>
                     <Card.Content style={styles.cardContent}>
                       <List.Item
+                        description={item.details || "fas"}
+                        descriptionNumberOfLines={1}
+                        descriptionEllipsizeMode="tail"
                         right={() => (
                           <Button
                             style={{ justifyContent: "center" }}
@@ -357,38 +361,36 @@ const NewListScreen = ({ navigation, route }) => {
             onPress={() => setOpen(!open)}
           />
         </Portal>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <FlatList
-            data={list.newList.items}
-            ItemSeparatorComponent={Divider}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item, index }) => (
-              <Card style={styles.card}>
-                <Card.Content style={styles.cardContent}>
-                  <List.Item
-                    description={item.details}
-                    descriptionNumberOfLines={1}
-                    descriptionEllipsizeMode="tail"
-                    right={() => (
-                      <Button
-                        style={{ justifyContent: "center" }}
-                        icon="trash-can-outline"
-                        onPress={() =>
-                          dispatchNL({
-                            type: "REMOVEITEM",
-                            itemType: "item",
-                            idx: index,
-                          })
-                        }
-                      />
-                    )}
-                    title={item.item ? item.item : item.subName}
-                  />
-                </Card.Content>
-              </Card>
-            )}
-          />
-        </View>
+        <FlatList
+          data={list.newList.items}
+          ItemSeparatorComponent={Divider}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <Card style={styles.card}>
+              <Card.Content style={styles.cardContent}>
+                <List.Item
+                  description={item.details || " "}
+                  descriptionNumberOfLines={1}
+                  descriptionEllipsizeMode="tail"
+                  right={() => (
+                    <Button
+                      style={{ justifyContent: "center" }}
+                      icon="trash-can-outline"
+                      onPress={() =>
+                        dispatchNL({
+                          type: "REMOVEITEM",
+                          itemType: "item",
+                          idx: index,
+                        })
+                      }
+                    />
+                  )}
+                  title={item.item ? item.item : item.subName}
+                />
+              </Card.Content>
+            </Card>
+          )}
+        />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -403,6 +405,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: width * 0.9,
+    minHeight: 67.5,
     alignSelf: "center",
     marginVertical: 2,
     backgroundColor: "#2C394B",
@@ -422,10 +425,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0)",
     alignSelf: "center",
     letterSpacing: 1.5,
-  },
-  listContainer: {
-    flex: 1,
-    justifyContent: "center",
   },
 });
 
